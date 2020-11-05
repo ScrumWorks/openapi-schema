@@ -6,5 +6,7 @@
             "email": "tomas.lang@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "zircote/swagger-php": "^3.1"
+    }
 }
