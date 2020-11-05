@@ -1,0 +1,10 @@
+{
+    "name": "admin/apitte-entities",
+    "authors": [
+        {
+            "name": "Tomas Lang",
+            "email": "tomas.lang@gmail.com"
+        }
+    ],
+    "require": {}
+}
