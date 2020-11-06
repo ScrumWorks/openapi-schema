@@ -38,9 +38,9 @@ class Test
      * @var integer
      * @description Some good data
      */
-    //public int $test;
+    public int $test;
 
-    //public ?string $name;
+    public ?string $name;
 
     /**
      * @var int[]
@@ -53,8 +53,8 @@ $reflection = new ReflectionObject($test);
 $xxxMapping = new \Lang\OpenApiDefinition\XxxMapping();
 $schema = $xxxMapping->xxx($reflection);
 
-/*$objectMapping = new \Lang\OpenApiDefinition\ObjectMapping();
-$schema = $objectMapping->getSchema($reflection);*/
+//$objectMapping = new \Lang\OpenApiDefinition\ObjectMapping();
+//$openApiValueSchema = $objectMapping->getSchema($reflection);
 
 $openApiTranslator = new OpenApiTranslator();
 $openApiValueSchema = $openApiTranslator->translateValueSchema($schema);

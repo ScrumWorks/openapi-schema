@@ -5,6 +5,7 @@
 namespace Lang\OpenApiDefinition;
 
 use Lang\OpenApiDefinition\ValueSchema\Builder\AbstractSchemaBuilder;
+use Lang\OpenApiDefinition\ValueSchema\Builder\ArraySchemaBuilder;
 use Lang\OpenApiDefinition\ValueSchema\Builder\BooleanSchemaBuilder;
 use Lang\OpenApiDefinition\ValueSchema\Builder\FloatSchemaBuilder;
 use Lang\OpenApiDefinition\ValueSchema\Builder\IntegerSchemaBuilder;
@@ -54,26 +55,28 @@ final class XxxMapping
 
         $mergedInfo = $this->mergePropertyInfos($infoFromType, $infoFromPhpDoc);
 
-        switch ($mergedInfo['typeInfo']['general']) {
-            case 'scalar':
-                $schemaBuilder = $this->createSchemaBuilderFromScalar($mergedInfo['typeInfo']['type'], $property);
-            case 'array':
-                $schemaBuilder = $this->createSchemaBuilderFromArray($mergedInfo['typeInfo']['type'], $property);
-        }
-        // @TODO also solve @description
-        return $schemaBuilder->withNullable($mergedInfo['nullable'])->build();
+
+
+        $info = $mergedInfo['typeInfo'] + ['nullable' => $mergedInfo['nullable']];
+        return $this->createSchemaFromPropertyInfo($info, $property);
     }
 
     private function createSchemaFromPropertyInfo(array $info, \ReflectionProperty $property): ValueSchemaInterface
     {
         switch ($info['general']) {
             case 'scalar':
-                $schemaBuilder = $this->createSchemaBuilderFromScalar($info['typeInfo']['type'], $property);
+                $schemaBuilder = $this->createSchemaBuilderFromScalar($info['type'], $property);
+                break;
             case 'array':
-                $schemaBuilder = $this->createSchemaBuilderFromArray($info['typeInfo']['type'], $property);
+                $schemaBuilder = $this->createSchemaBuilderFromArray($info['type'], $property);
+                break;
         }
+
         // @TODO also solve @description
-        return $schemaBuilder->withNullable($mergedInfo['nullable'])->build();
+        if (isset($info['nullable'])) {
+            $schemaBuilder = $schemaBuilder->withNullable($info['nullable']);
+        }
+        return $schemaBuilder->build();
     }
 
     private function createSchemaBuilderFromScalar(string $scalarType, \ReflectionProperty $property): AbstractSchemaBuilder
@@ -100,7 +103,10 @@ final class XxxMapping
 
     private function createSchemaBuilderFromArray(array $arraySchema, \ReflectionProperty $property): AbstractSchemaBuilder
     {
-        var_dump($arraySchema);die;
+        // TODO: fix this solution
+        $arraySchemaBuilder = new ArraySchemaBuilder();
+        $itemSchema = $this->createSchemaFromPropertyInfo($arraySchema, $property);
+        return $arraySchemaBuilder->withItemsSchema($itemSchema);
     }
 
     private function mergePropertyInfos(array $A, array $B): array
