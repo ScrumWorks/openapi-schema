@@ -7,6 +7,14 @@
         }
     ],
     "require": {
-        "zircote/swagger-php": "^3.1"
+        "nette/utils": "^3.1",
+        "symfony/yaml": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lang\\": [
+                "src"
+            ]
+        }
     }
 }
