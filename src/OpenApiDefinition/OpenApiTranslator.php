@@ -127,6 +127,15 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
             'type' => 'array',
             'items' => $this->translateValueSchema($schema->itemsSchema),
         ];
+        if ($schema->minItems) {
+            $definition['minItems'] = $schema->minItems;
+        }
+        if ($schema->maxItems) {
+            $definition['maxItems'] = $schema->maxItems;
+        }
+        if ($schema->uniqueItems) {
+            $definition['uniqueItems'] = $schema->uniqueItems;
+        }
         return $definition;
     }
 
@@ -152,8 +161,8 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
     {
         $enum = $schema->enum;
         if ($schema->nullable) {
-            if (!in_array('null', $enum)) {
-                $enum[] = 'null'; // null must be in enum to work with nullable type
+            if (!in_array(null, $enum, true)) {
+                $enum[] = null; // null must be in enum to work with nullable type
             }
         }
         $definition = [
