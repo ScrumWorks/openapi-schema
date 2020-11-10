@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-use _HumbugBoxb854c950819b\Nette\Neon\Exception;
+use Exception;
 
 final class HashmapSchema extends AbstractValueSchema
 {
@@ -24,7 +24,7 @@ final class HashmapSchema extends AbstractValueSchema
         parent::__construct($nullable, $description);
 
         if ($requiredProperties && $itemsSchema === null) {
-            throw new \Exception('TODO');
+            throw new Exception('TODO');
         }
 
         $this->itemsSchema = $itemsSchema;
