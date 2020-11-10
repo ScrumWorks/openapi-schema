@@ -1,5 +1,9 @@
 {
     "name": "scrumworks/openapi-schema",
+    "description": "OpenAPI schema reader/generator",
+    "license": "MIT",
+    "type": "library",
+    "keywords": ["openapi"],
     "authors": [
         {
             "name": "Tomas Lang",
