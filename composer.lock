@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d0f8e4668cbbfa048a5c3c66873f0f97",
+    "content-hash": "35606797c0b5d8def2dc58ed2ea84100",
     "packages": [
         {
             "name": "nette/utils",
@@ -86,16 +86,16 @@
         },
         {
             "name": "scrumworks/property-reader",
-            "version": "v0.2.2",
+            "version": "v0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ScrumWorks/property-reader.git",
-                "reference": "519657287cfa4eb375d80b8ba96d6154426522d4"
+                "reference": "7a6dc64b292463aaaba83b31f37eb5d58e95d2cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ScrumWorks/property-reader/zipball/519657287cfa4eb375d80b8ba96d6154426522d4",
-                "reference": "519657287cfa4eb375d80b8ba96d6154426522d4",
+                "url": "https://api.github.com/repos/ScrumWorks/property-reader/zipball/7a6dc64b292463aaaba83b31f37eb5d58e95d2cb",
+                "reference": "7a6dc64b292463aaaba83b31f37eb5d58e95d2cb",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
             "keywords": [
                 "property"
             ],
-            "time": "2020-11-10T15:06:36+00:00"
+            "time": "2020-11-10T15:44:01+00:00"
         }
     ],
     "packages-dev": [

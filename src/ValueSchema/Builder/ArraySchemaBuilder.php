@@ -12,13 +12,13 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
  */
 final class ArraySchemaBuilder extends AbstractSchemaBuilder
 {
-    private ValueSchemaInterface $itemsSchema;
+    protected ValueSchemaInterface $itemsSchema;
 
-    private ?int $minItems = null;
+    protected ?int $minItems = null;
 
-    private ?int $maxItems = null;
+    protected ?int $maxItems = null;
 
-    private ?bool $uniqueItems = null;
+    protected ?bool $uniqueItems = null;
 
     /**
      * @return static
