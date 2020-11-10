@@ -11,7 +11,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
  */
 final class EnumSchemaBuilder extends AbstractSchemaBuilder
 {
-    private array $enum;
+    protected array $enum;
 
     /**
      * @param array<?string> $enum

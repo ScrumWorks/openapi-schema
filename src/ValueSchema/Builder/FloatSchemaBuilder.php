@@ -11,15 +11,15 @@ use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
  */
 final class FloatSchemaBuilder extends AbstractSchemaBuilder
 {
-    private ?float $minimum = null;
+    protected ?float $minimum = null;
 
-    private ?float $maximum = null;
+    protected ?float $maximum = null;
 
-    private ?bool $exclusiveMinimum = null;
+    protected ?bool $exclusiveMinimum = null;
 
-    private ?bool $exclusiveMaximum = null;
+    protected ?bool $exclusiveMaximum = null;
 
-    private ?float $multipleOf = null;
+    protected ?float $multipleOf = null;
 
     /**
      * @return static

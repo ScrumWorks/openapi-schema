@@ -15,12 +15,12 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @var array<string, ValueSchemaInterface>
      */
-    private array $propertiesSchemas = [];
+    protected array $propertiesSchemas = [];
 
     /**
      * @var string[]
      */
-    private array $requiredProperties = [];
+    protected array $requiredProperties = [];
 
     /**
      * @param array<string, ValueSchemaInterface> $propertiesSchemas
