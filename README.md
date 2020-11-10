@@ -1,6 +1,6 @@
 # OpenApi schema parser
 
-[![Build Status](https://github.com/ScrumWorks/property-reader/workflows/build/badge.svg?branch=master)](https://github.com/ScrumWorks/openapi-schema)
+[![Build Status](https://github.com/ScrumWorks/openapi-schema/workflows/build/badge.svg?branch=master)](https://github.com/ScrumWorks/openapi-schema)
 
 ## Installation
 ```
