@@ -1,15 +1,7 @@
-# OpenApi schema parser
+<?php
 
-[![Build Status](https://github.com/ScrumWorks/openapi-schema/workflows/build/badge.svg?branch=master)](https://github.com/ScrumWorks/openapi-schema)
+require_once __DIR__ . '/vendor/autoload.php';
 
-## Installation
-```
-composer require scrumworks/openapi-schema
-```
-
-## Example
-
-```php
 class User
 {
     public string $name;
@@ -38,24 +30,8 @@ $schemaParser = new \ScrumWorks\OpenApiSchema\SchemaParser(
 );
 $schema = $schemaParser->getEntitySchema('Test');
 // Now you can get informations about entity schema
-assert($schema->propertiesSchemas[0] instanceof \ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema);
+assert($schema->getPropertiesSchemas()['test'] instanceof \ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema);
 
 // Getting OpenAPI entity schema (result is PHP array)
 $openApiTranslator = new \ScrumWorks\OpenApiSchema\OpenApiTranslator();
 $openApiValueSchema = $openApiTranslator->translateValueSchema($schema);
-```
-
-## Testing
-You can run the tests with:
-
-```
-composer run-script test
-```
-
-## Contribution Guide
-Feel free to open an Issue or add a Pull request.
-
-## Credits
-People:
-- [Tomas Lang](https://github.com/detrandix)
-- [Adam Lutka](https://github.com/AdamLutka)

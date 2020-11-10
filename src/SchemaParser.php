@@ -2,13 +2,6 @@
 
 namespace ScrumWorks\OpenApiSchema;
 
-use Amateri\PropertyReader\PropertyReaderInterface;
-use Amateri\PropertyReader\VariableType\ArrayVariableType;
-use Amateri\PropertyReader\VariableType\ClassVariableType;
-use Amateri\PropertyReader\VariableType\MixedVariableType;
-use Amateri\PropertyReader\VariableType\ScalarVariableType;
-use Amateri\PropertyReader\VariableType\UnionVariableType;
-use Amateri\PropertyReader\VariableType\VariableTypeInterface;
 use Exception;
 use ReflectionClass;
 use ReflectionProperty;
@@ -21,26 +14,33 @@ use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
+use ScrumWorks\PropertyReader\PropertyTypeReaderInterface;
+use ScrumWorks\PropertyReader\VariableType\ArrayVariableType;
+use ScrumWorks\PropertyReader\VariableType\ClassVariableType;
+use ScrumWorks\PropertyReader\VariableType\MixedVariableType;
+use ScrumWorks\PropertyReader\VariableType\ScalarVariableType;
+use ScrumWorks\PropertyReader\VariableType\UnionVariableType;
+use ScrumWorks\PropertyReader\VariableType\VariableTypeInterface;
 
 /**
  * @TODO: probably new name
  */
 final class SchemaParser implements SchemaParserInterface
 {
-    private PropertyReaderInterface $propertyReader;
+    private PropertyTypeReaderInterface $propertyReader;
 
-    public function __construct(PropertyReaderInterface $propertyReader)
+    public function __construct(PropertyTypeReaderInterface $propertyReader)
     {
         $this->propertyReader = $propertyReader;
     }
 
     public function getEntitySchema(string $class): ObjectSchema
     {
-        $builder = $this->getClassSchemaBuilder($class);
+        $builder = $this->createClassSchemaBuilder($class);
         return $builder->build();
     }
 
-    private function getClassSchemaBuilder(string $class): ObjectSchemaBuilder
+    private function createClassSchemaBuilder(string $class): ObjectSchemaBuilder
     {
         if (! \class_exists($class)) {
             throw new Exception('TODO');
@@ -75,7 +75,7 @@ final class SchemaParser implements SchemaParserInterface
         } elseif ($variableType instanceof MixedVariableType) {
             throw new Exception('TODO');
         } elseif ($variableType instanceof ScalarVariableType) {
-            switch ($variableType->type) {
+            switch ($variableType->getType()) {
                 case ScalarVariableType::TYPE_INTEGER:
                     $schemaBuilder = new IntegerSchemaBuilder();
                     break;
@@ -90,14 +90,14 @@ final class SchemaParser implements SchemaParserInterface
                     break;
             }
         } elseif ($variableType instanceof ArrayVariableType) {
-            if ($variableType->keyType === null) {
+            if ($variableType->getKeyType() === null) {
                 $schemaBuilder = new ArraySchemaBuilder();
             } else {
                 $schemaBuilder = new HashmapSchemaBuilder();
             }
-            $schemaBuilder = $schemaBuilder->withItemsSchema($this->translate($variableType->itemType, []));
+            $schemaBuilder = $schemaBuilder->withItemsSchema($this->translate($variableType->getItemType(), []));
         } elseif ($variableType instanceof ClassVariableType) {
-            $schemaBuilder = $this->getClassSchemaBuilder($variableType->class);
+            $schemaBuilder = $this->createClassSchemaBuilder($variableType->getClass());
         } elseif ($variableType instanceof UnionVariableType) {
             throw new Exception('Union types are not supported');
         }
@@ -105,7 +105,7 @@ final class SchemaParser implements SchemaParserInterface
         if (! isset($schemaBuilder)) {
             throw new Exception('TODO');
         }
-        $schemaBuilder = $schemaBuilder->withNullable($variableType->nullable);
+        $schemaBuilder = $schemaBuilder->withNullable($variableType->isNullable());
 
         return $schemaBuilder->build();
     }
