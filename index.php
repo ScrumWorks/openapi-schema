@@ -30,8 +30,10 @@ $schemaParser = new \ScrumWorks\OpenApiSchema\SchemaParser(
 );
 $schema = $schemaParser->getEntitySchema('Test');
 // Now you can get informations about entity schema
-assert($schema->getPropertiesSchemas()['test'] instanceof \ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema);
+assert($schema->getPropertySchema('test') instanceof \ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema);
 
 // Getting OpenAPI entity schema (result is PHP array)
 $openApiTranslator = new \ScrumWorks\OpenApiSchema\OpenApiTranslator();
 $openApiValueSchema = $openApiTranslator->translateValueSchema($schema);
+
+var_dump($openApiValueSchema);
