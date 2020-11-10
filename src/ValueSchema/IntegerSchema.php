@@ -4,24 +4,17 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-/**
- * @property-read ?int $minimum
- * @property-read ?int $maximum
- * @property-read ?bool $exclusiveMinimum
- * @property-read ?bool $exclusiveMaximum
- * @property-read ?int $multipleOf
- */
-class IntegerSchema extends AbstractValueSchema
+final class IntegerSchema extends AbstractValueSchema
 {
-    protected ?int $minimum;
+    private ?int $minimum;
 
-    protected ?int $maximum;
+    private ?int $maximum;
 
-    protected ?bool $exclusiveMinimum;
+    private ?bool $exclusiveMinimum;
 
-    protected ?bool $exclusiveMaximum;
+    private ?bool $exclusiveMaximum;
 
-    protected ?int $multipleOf;
+    private ?int $multipleOf;
 
     public function __construct(
         ?int $minimum,
@@ -41,27 +34,27 @@ class IntegerSchema extends AbstractValueSchema
         $this->multipleOf = $multipleOf;
     }
 
-    protected function getMinimum(): ?int
+    public function getMinimum(): ?int
     {
         return $this->minimum;
     }
 
-    protected function getMaximum(): ?int
+    public function getMaximum(): ?int
     {
         return $this->maximum;
     }
 
-    protected function getExclusiveMinimum(): ?bool
+    public function getExclusiveMinimum(): ?bool
     {
         return $this->exclusiveMinimum;
     }
 
-    protected function getExclusiveMaximum(): ?bool
+    public function getExclusiveMaximum(): ?bool
     {
         return $this->exclusiveMaximum;
     }
 
-    protected function getMultipleOf(): ?int
+    public function getMultipleOf(): ?int
     {
         return $this->multipleOf;
     }

@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-/**
- * @property-read ValueSchemaInterface[] $propertiesSchemas
- * @property-read string[] $requiredProperties
- */
-class ObjectSchema extends AbstractValueSchema
+final class ObjectSchema extends AbstractValueSchema
 {
-    protected array $propertiesSchemas;
+    /**
+     * @var array<string, ValueSchemaInterface>
+     */
+    private array $propertiesSchemas;
 
-    protected array $requiredProperties;
+    /**
+     * @var string[]
+     */
+    private array $requiredProperties;
 
     /**
      * @param array<string, ValueSchemaInterface> $propertiesSchemas
-     * @param array<string> $requiredProperties
+     * @param string[] $requiredProperties
      */
     public function __construct(
         array $propertiesSchemas,
@@ -32,11 +34,17 @@ class ObjectSchema extends AbstractValueSchema
         $this->requiredProperties = $requiredProperties;
     }
 
+    /**
+     * @return array<string, ValueSchemaInterface>
+     */
     public function getPropertiesSchemas(): array
     {
         return $this->propertiesSchemas;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRequiredProperties(): array
     {
         return $this->requiredProperties;

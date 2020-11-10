@@ -4,21 +4,15 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-/**
- * @property-read ValueSchemaInterface $itemsSchema
- * @property-read ?int $minItems
- * @property-read ?int $maxItems
- * @property-read ?bool $uniqueItems
- */
-class ArraySchema extends AbstractValueSchema
+final class ArraySchema extends AbstractValueSchema
 {
-    protected ValueSchemaInterface $itemsSchema;
+    private ValueSchemaInterface $itemsSchema;
 
-    protected ?int $minItems;
+    private ?int $minItems;
 
-    protected ?int $maxItems;
+    private ?int $maxItems;
 
-    protected ?bool $uniqueItems;
+    private ?bool $uniqueItems;
 
     public function __construct(
         ValueSchemaInterface $itemsSchema,
@@ -51,7 +45,7 @@ class ArraySchema extends AbstractValueSchema
         return $this->uniqueItems;
     }
 
-    protected function getItemsSchema(): ValueSchemaInterface
+    public function getItemsSchema(): ValueSchemaInterface
     {
         return $this->itemsSchema;
     }

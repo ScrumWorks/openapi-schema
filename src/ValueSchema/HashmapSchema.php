@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-/**
- * @property-read ?ValueSchemaInterface $itemsSchema;
- */
-class HashmapSchema extends AbstractValueSchema
+final class HashmapSchema extends AbstractValueSchema
 {
-    protected ?ValueSchemaInterface $itemsSchema;
+    private ?ValueSchemaInterface $itemsSchema;
 
     public function __construct(?ValueSchemaInterface $itemsSchema, bool $nullable, ?string $description)
     {
@@ -18,7 +15,7 @@ class HashmapSchema extends AbstractValueSchema
         $this->itemsSchema = $itemsSchema;
     }
 
-    protected function getItemsSchema(): ?ValueSchemaInterface
+    public function getItemsSchema(): ?ValueSchemaInterface
     {
         return $this->itemsSchema;
     }

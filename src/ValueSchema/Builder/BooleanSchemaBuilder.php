@@ -9,7 +9,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
 /**
  * @method BooleanSchema build()
  */
-class BooleanSchemaBuilder extends AbstractSchemaBuilder
+final class BooleanSchemaBuilder extends AbstractSchemaBuilder
 {
     protected function createInstance(): BooleanSchema
     {

@@ -9,9 +9,9 @@ use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 /**
  * @method EnumSchema build()
  */
-class EnumSchemaBuilder extends AbstractSchemaBuilder
+final class EnumSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected array $enum;
+    private array $enum;
 
     /**
      * @param array<?string> $enum

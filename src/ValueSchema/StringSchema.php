@@ -4,25 +4,18 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-/**
- * @property-read ?int $minLength
- * @property-read ?int $maxLength
- * @property-read ?int $format
- * @property-read ?int $pattern
- */
-class StringSchema extends AbstractValueSchema
+final class StringSchema extends AbstractValueSchema
 {
-    protected ?int $minLength;
+    private ?int $minLength;
 
-    protected ?int $maxLength;
+    private ?int $maxLength;
 
-    protected ?string $format;
+    private ?string $format;
 
-    protected ?string $pattern;
+    private ?string $pattern;
 
     /**
      * @TODO $format and $pattern is probably exclusive
-     * @TODO $format enum?
      */
     public function __construct(
         ?int $minLength,

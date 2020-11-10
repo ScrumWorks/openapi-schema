@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-/**
- * @property-read string[] $enum
- */
-class EnumSchema extends AbstractValueSchema
+final class EnumSchema extends AbstractValueSchema
 {
-    protected array $enum;
+    /**
+     * @var array<?string>
+     */
+    private array $enum;
 
     /**
      * @param array<?string> $enum
@@ -22,7 +22,10 @@ class EnumSchema extends AbstractValueSchema
         // assert count($enum) > 0
     }
 
-    protected function getEnum(): array
+    /**
+     * @return array<?string>
+     */
+    public function getEnum(): array
     {
         return $this->enum;
     }

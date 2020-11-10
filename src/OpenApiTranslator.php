@@ -2,7 +2,6 @@
 
 namespace ScrumWorks\OpenApiSchema;
 
-use Nette\SmartObject;
 use ScrumWorks\OpenApiSchema\ValueSchema\AbstractValueSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
@@ -16,8 +15,6 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 final class OpenApiTranslator implements OpenApiTranslatorInterface
 {
-    use SmartObject;
-
     public function translateValueSchema(ValueSchemaInterface $valueSchema): array
     {
         $definition = [];
@@ -50,17 +47,17 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         $definition = [
             'type' => 'string',
         ];
-        if ($schema->minLength !== null) {
-            $definition['minLength'] = $schema->minLength;
+        if ($schema->getMinLength() !== null) {
+            $definition['minLength'] = $schema->getMinLength();
         }
-        if ($schema->maxLength !== null) {
-            $definition['maxLength'] = $schema->maxLength;
+        if ($schema->getMaxLength() !== null) {
+            $definition['maxLength'] = $schema->getMaxLength();
         }
-        if ($schema->format !== null) {
-            $definition['format'] = $schema->format;
+        if ($schema->getFormat() !== null) {
+            $definition['format'] = $schema->getFormat();
         }
-        if ($schema->pattern !== null) {
-            $definition['pattern'] = $schema->pattern;
+        if ($schema->getPattern() !== null) {
+            $definition['pattern'] = $schema->getPattern();
         }
         return $definition;
     }
@@ -72,20 +69,20 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
             // JSON use 32bit integers
             'format' => 'int32',
         ];
-        if ($schema->minimum !== null) {
-            $definition['minimum'] = $schema->minimum;
+        if ($schema->getMinimum() !== null) {
+            $definition['minimum'] = $schema->getMinimum();
         }
-        if ($schema->maximum !== null) {
-            $definition['maximum'] = $schema->maximum;
+        if ($schema->getMaximum() !== null) {
+            $definition['maximum'] = $schema->getMaximum();
         }
-        if ($schema->exclusiveMinimum !== null) {
-            $definition['exclusiveMinimum'] = $schema->exclusiveMinimum;
+        if ($schema->getExclusiveMinimum() !== null) {
+            $definition['exclusiveMinimum'] = $schema->getExclusiveMinimum();
         }
-        if ($schema->exclusiveMaximum !== null) {
-            $definition['exclusiveMaximum'] = $schema->exclusiveMaximum;
+        if ($schema->getExclusiveMaximum() !== null) {
+            $definition['exclusiveMaximum'] = $schema->getExclusiveMaximum();
         }
-        if ($schema->multipleOf !== null) {
-            $definition['multipleOf'] = $schema->multipleOf;
+        if ($schema->getMultipleOf() !== null) {
+            $definition['multipleOf'] = $schema->getMultipleOf();
         }
         return $definition;
     }
@@ -96,20 +93,20 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
             'type' => 'number',
             'format' => 'float',
         ];
-        if ($schema->minimum !== null) {
-            $definition['minimum'] = $schema->minimum;
+        if ($schema->getMinimum() !== null) {
+            $definition['minimum'] = $schema->getMinimum();
         }
-        if ($schema->maximum !== null) {
-            $definition['maximum'] = $schema->maximum;
+        if ($schema->getMaximum() !== null) {
+            $definition['maximum'] = $schema->getMaximum();
         }
-        if ($schema->exclusiveMinimum !== null) {
-            $definition['exclusiveMinimum'] = $schema->exclusiveMinimum;
+        if ($schema->getExclusiveMinimum() !== null) {
+            $definition['exclusiveMinimum'] = $schema->getExclusiveMinimum();
         }
-        if ($schema->exclusiveMaximum !== null) {
-            $definition['exclusiveMaximum'] = $schema->exclusiveMaximum;
+        if ($schema->getExclusiveMaximum() !== null) {
+            $definition['exclusiveMaximum'] = $schema->getExclusiveMaximum();
         }
-        if ($schema->multipleOf !== null) {
-            $definition['multipleOf'] = $schema->multipleOf;
+        if ($schema->getMultipleOf() !== null) {
+            $definition['multipleOf'] = $schema->getMultipleOf();
         }
         return $definition;
     }
@@ -125,36 +122,35 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
     {
         $definition = [
             'type' => 'array',
-            'items' => $this->translateValueSchema($schema->itemsSchema),
+            'items' => $this->translateValueSchema($schema->getItemsSchema()),
         ];
-        if ($schema->minItems) {
-            $definition['minItems'] = $schema->minItems;
+        if ($schema->getMinItems()) {
+            $definition['minItems'] = $schema->getMinItems();
         }
-        if ($schema->maxItems) {
-            $definition['maxItems'] = $schema->maxItems;
+        if ($schema->getMaxItems()) {
+            $definition['maxItems'] = $schema->getMaxItems();
         }
-        if ($schema->uniqueItems) {
-            $definition['uniqueItems'] = $schema->uniqueItems;
+        if ($schema->getUniqueItems()) {
+            $definition['uniqueItems'] = $schema->getUniqueItems();
         }
         return $definition;
     }
 
     private function translateObjectSchema(ObjectSchema $schema): array
     {
-        // TODO: tady se jeste musi vyresit prace s classes - protoze ty budeme potrebovat
         $definition = [
             'type' => 'object',
         ];
         // we also support "free-form objects without defined properties
-        if ($schema->propertiesSchemas) {
+        if ($schema->getPropertiesSchemas()) {
             // we use property of `array_map` function that preserve keys
             $definition['properties'] = \array_map(
                 fn (ValueSchemaInterface $property) => $this->translateValueSchema($property),
-                $schema->propertiesSchemas
+                $schema->getPropertiesSchemas()
             );
 
-            if ($schema->requiredProperties) {
-                $definition['required'] = $schema->requiredProperties;
+            if ($schema->getRequiredProperties()) {
+                $definition['required'] = $schema->getRequiredProperties();
             }
         }
         return $definition;
@@ -162,8 +158,8 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
 
     private function translateEnumSchema(EnumSchema $schema): array
     {
-        $enum = $schema->enum;
-        if ($schema->nullable) {
+        $enum = $schema->getEnum();
+        if ($schema->isNullable()) {
             // @phpstan-ignore-next-line
             if (! \in_array(null, $enum, true)) {
                 // null must be in enum to work with nullable type
@@ -181,8 +177,8 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         $definition = [
             'type' => 'object',
         ];
-        if ($schema->itemsSchema) {
-            $definition['additionalProperties'] = $this->translateValueSchema($schema->itemsSchema);
+        if ($schema->getItemsSchema()) {
+            $definition['additionalProperties'] = $this->translateValueSchema($schema->getItemsSchema());
         } else {
             // "free-form" hashmap
             $definition['additionalProperties'] = true;
@@ -193,10 +189,10 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
     private function translateGenericProperties(AbstractValueSchema $schema): array
     {
         $definition = [
-            'nullable' => $schema->nullable,
+            'nullable' => $schema->isNullable(),
         ];
-        if ($schema->description) {
-            $definition['description'] = $schema->description;
+        if ($schema->getDescription()) {
+            $definition['description'] = $schema->getDescription();
         }
         return $definition;
     }

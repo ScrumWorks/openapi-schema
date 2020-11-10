@@ -6,13 +6,10 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use Error;
 use Exception;
-use Nette\SmartObject;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 abstract class AbstractSchemaBuilder
 {
-    use SmartObject;
-
     protected bool $nullable = false;
 
     protected ?string $description = null;

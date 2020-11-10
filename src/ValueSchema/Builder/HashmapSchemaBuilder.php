@@ -10,9 +10,9 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 /**
  * @method HashmapSchema build()
  */
-class HashmapSchemaBuilder extends AbstractSchemaBuilder
+final class HashmapSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected ?ValueSchemaInterface $itemsSchema = null;
+    private ?ValueSchemaInterface $itemsSchema = null;
 
     /**
      * @return static

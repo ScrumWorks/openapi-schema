@@ -10,11 +10,17 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 /**
  * @method ObjectSchema build()
  */
-class ObjectSchemaBuilder extends AbstractSchemaBuilder
+final class ObjectSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected array $propertiesSchemas = [];
+    /**
+     * @var array<string, ValueSchemaInterface>
+     */
+    private array $propertiesSchemas = [];
 
-    protected array $requiredProperties = [];
+    /**
+     * @var string[]
+     */
+    private array $requiredProperties = [];
 
     /**
      * @param array<string, ValueSchemaInterface> $propertiesSchemas

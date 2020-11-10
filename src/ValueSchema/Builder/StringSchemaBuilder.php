@@ -9,15 +9,15 @@ use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 /**
  * @method StringSchema build()
  */
-class StringSchemaBuilder extends AbstractSchemaBuilder
+final class StringSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected ?int $minLength = null;
+    private ?int $minLength = null;
 
-    protected ?int $maxLength = null;
+    private ?int $maxLength = null;
 
-    protected ?string $format = null;
+    private ?string $format = null;
 
-    protected ?string $pattern = null;
+    private ?string $pattern = null;
 
     /**
      * @return static

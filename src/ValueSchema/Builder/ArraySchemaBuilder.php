@@ -10,15 +10,15 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 /**
  * @method ArraySchema build()
  */
-class ArraySchemaBuilder extends AbstractSchemaBuilder
+final class ArraySchemaBuilder extends AbstractSchemaBuilder
 {
-    protected ValueSchemaInterface $itemsSchema;
+    private ValueSchemaInterface $itemsSchema;
 
-    protected ?int $minItems = null;
+    private ?int $minItems = null;
 
-    protected ?int $maxItems = null;
+    private ?int $maxItems = null;
 
-    protected ?bool $uniqueItems = null;
+    private ?bool $uniqueItems = null;
 
     /**
      * @return static

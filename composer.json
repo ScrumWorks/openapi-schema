@@ -11,8 +11,6 @@
         }
     ],
     "require": {
-        "nette/utils": "^3.1",
-        "symfony/yaml": "^5.1",
         "scrumworks/property-reader": "^0.1.0"
     },
     "require-dev": {

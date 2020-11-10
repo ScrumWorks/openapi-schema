@@ -9,17 +9,17 @@ use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 /**
  * @method IntegerSchema build()
  */
-class IntegerSchemaBuilder extends AbstractSchemaBuilder
+final class IntegerSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected ?int $minimum = null;
+    private ?int $minimum = null;
 
-    protected ?int $maximum = null;
+    private ?int $maximum = null;
 
-    protected ?bool $exclusiveMinimum = null;
+    private ?bool $exclusiveMinimum = null;
 
-    protected ?bool $exclusiveMaximum = null;
+    private ?bool $exclusiveMaximum = null;
 
-    protected ?int $multipleOf = null;
+    private ?int $multipleOf = null;
 
     /**
      * @return static
