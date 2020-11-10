@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
+use Exception;
+
 final class ObjectSchema extends AbstractValueSchema
 {
     /**
@@ -40,6 +42,14 @@ final class ObjectSchema extends AbstractValueSchema
     public function getPropertiesSchemas(): array
     {
         return $this->propertiesSchemas;
+    }
+
+    public function getPropertySchema(string $property): ValueSchemaInterface
+    {
+        if (! isset($this->propertiesSchemas[$property])) {
+            throw new Exception('TODO');
+        }
+        return $this->propertiesSchemas[$property];
     }
 
     /**
