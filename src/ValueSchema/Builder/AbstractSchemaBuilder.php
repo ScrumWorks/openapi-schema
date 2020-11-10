@@ -41,7 +41,7 @@ abstract class AbstractSchemaBuilder
     protected function assertRequiredProperty(string $property): void
     {
         try {
-            $this->{$property};
+            assert($this->{$property});
         } catch (\Error $e) {
             // TODO: make our own Exception
             throw new \Exception(sprintf("Property '%s' isn't filled", $property));

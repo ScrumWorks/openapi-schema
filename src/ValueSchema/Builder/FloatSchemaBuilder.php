@@ -38,7 +38,7 @@ class FloatSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withExclusiveMinimum(?float $exclusiveMinimum)
+    public function withExclusiveMinimum(?bool $exclusiveMinimum)
     {
         $this->exclusiveMinimum = $exclusiveMinimum;
         return $this;
@@ -47,7 +47,7 @@ class FloatSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withExclusiveMaximum(?float $exclusiveMaximum)
+    public function withExclusiveMaximum(?bool $exclusiveMaximum)
     {
         $this->exclusiveMaximum = $exclusiveMaximum;
         return $this;

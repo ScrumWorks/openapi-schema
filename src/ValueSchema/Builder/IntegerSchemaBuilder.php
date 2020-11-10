@@ -38,7 +38,7 @@ class IntegerSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withExclusiveMinimum(?int $exclusiveMinimum)
+    public function withExclusiveMinimum(?bool $exclusiveMinimum)
     {
         $this->exclusiveMinimum = $exclusiveMinimum;
         return $this;
@@ -47,7 +47,7 @@ class IntegerSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withExclusiveMaximum(?int $exclusiveMaximum)
+    public function withExclusiveMaximum(?bool $exclusiveMaximum)
     {
         $this->exclusiveMaximum = $exclusiveMaximum;
         return $this;

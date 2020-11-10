@@ -22,7 +22,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 /**
  * @TODO: probably new name
  */
-final class SchemaParser
+final class SchemaParser implements SchemaParserInterface
 {
     private PropertyReaderInterface $propertyReader;
 
@@ -67,11 +67,9 @@ final class SchemaParser
     private function translate(?VariableTypeInterface $variableType, array $annotations): ValueSchemaInterface
     {
         if ($variableType === null) {
-            // TODO: mixed
-        }
-
-        if ($variableType instanceof MixedVariableType) {
-            // TODO: mixed
+            throw new \Exception('TODO');
+        } elseif ($variableType instanceof MixedVariableType) {
+            throw new \Exception('TODO');
         } elseif ($variableType instanceof ScalarVariableType) {
             switch ($variableType->type) {
                 case ScalarVariableType::TYPE_INTEGER:
@@ -102,6 +100,9 @@ final class SchemaParser
             throw new \Exception('Union types are not supported');
         }
 
+        if (!isset($schemaBuilder)) {
+            throw new \Exception('TODO');
+        }
         $schemaBuilder = $schemaBuilder->withNullable($variableType->nullable);
 
         return $schemaBuilder->build();

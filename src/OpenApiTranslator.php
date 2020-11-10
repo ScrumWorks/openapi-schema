@@ -161,6 +161,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
     {
         $enum = $schema->enum;
         if ($schema->nullable) {
+            // @phpstan-ignore-next-line
             if (!in_array(null, $enum, true)) {
                 $enum[] = null; // null must be in enum to work with nullable type
             }

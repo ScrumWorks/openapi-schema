@@ -14,6 +14,7 @@ class EnumSchemaBuilder extends AbstractSchemaBuilder
     protected array $enum;
 
     /**
+     * @param array<?string> $enum
      * @return static
      */
     public function withEnum(array $enum)

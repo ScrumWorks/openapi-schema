@@ -12,7 +12,7 @@ class EnumSchema extends AbstractValueSchema
     protected array $enum;
 
     /**
-     * @param string[] $enum
+     * @param array<?string> $enum
      */
     public function __construct(
         array $enum,

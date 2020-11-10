@@ -37,7 +37,7 @@ class StringSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withFormat(?int $format)
+    public function withFormat(?string $format)
     {
         $this->format = $format;
         return $this;
@@ -46,7 +46,7 @@ class StringSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withPattern(?int $pattern)
+    public function withPattern(?string $pattern)
     {
         $this->pattern = $pattern;
         return $this;
