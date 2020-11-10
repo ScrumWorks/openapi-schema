@@ -1,0 +1,22 @@
+parameters:
+    level: 5
+
+    paths:
+        - src
+        - tests
+
+    # to allow installing with various phsptan versions without reporting old errors here
+    reportUnmatchedIgnoredErrors: false
+
+    checkMissingIterableValueType: false
+
+    scanFiles:
+        - vendor/autoload.php
+
+    inferPrivatePropertyTypeFromConstructor: true
+
+    parallel:
+        processTimeout: 300.0
+
+includes:
+    - vendor/symplify/phpstan-extensions/config/config.neon

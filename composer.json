@@ -15,11 +15,34 @@
         "symfony/yaml": "^5.1",
         "scrumworks/property-reader": "^0.1.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4.2",
+        "php-parallel-lint/php-parallel-lint": "^1.2",
+        "phpstan/phpstan": "^0.12.48",
+        "symplify/easy-coding-standard": "^8.3",
+        "symplify/easy-testing": "^8.3",
+        "migrify/template-checker": "^0.3.49",
+        "symplify/phpstan-extensions": "^8.3",
+        "slevomat/coding-standard": "^6.4"
+    },
     "autoload": {
         "psr-4": {
             "ScrumWorks\\OpenApiSchema\\": [
                 "src"
             ]
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ScrumWorks\\OpenApiSchema\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "check-cs": "php vendor/bin/ecs check --ansi",
+        "fix-cs": "php vendor/bin/ecs check --fix --ansi",
+        "lint" : "php vendor/bin/parallel-lint src tests",
+        "phpstan" : "php -d memory_limit=2048M vendor/bin/phpstan.phar analyse --ansi --error-format symplify",
+        "phpunit": "php vendor/bin/phpunit -c ./phpunit.xml",
+        "test": ["@lint", "@check-cs", "@phpstan", "@phpunit"]
     }
 }
