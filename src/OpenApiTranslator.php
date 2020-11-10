@@ -177,6 +177,13 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         $definition = [
             'type' => 'object',
         ];
+        if ($schema->getRequiredProperties()) {
+            $definition['properties'] = [];
+            foreach ($schema->getRequiredProperties() as $property) {
+                $definition['properties'][$property] = $this->translateValueSchema($schema->getItemsSchema());
+            }
+            $definition['required'] = $schema->getRequiredProperties();
+        }
         if ($schema->getItemsSchema()) {
             $definition['additionalProperties'] = $this->translateValueSchema($schema->getItemsSchema());
         } else {

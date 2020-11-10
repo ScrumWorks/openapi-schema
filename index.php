@@ -37,3 +37,9 @@ $openApiTranslator = new \ScrumWorks\OpenApiSchema\OpenApiTranslator();
 $openApiValueSchema = $openApiTranslator->translateValueSchema($schema);
 
 var_dump($openApiValueSchema);
+
+$builder = new \ScrumWorks\OpenApiSchema\ValueSchema\Builder\HashmapSchemaBuilder();
+$builder->withItemsSchema($schema->getPropertySchema('test'));
+$builder->withRequiredProperties(['test', 'test2']);
+$hashmap = $builder->build();
+var_dump($openApiTranslator->translateValueSchema($hashmap));

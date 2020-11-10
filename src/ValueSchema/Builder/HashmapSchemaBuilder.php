@@ -15,6 +15,11 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
     protected ?ValueSchemaInterface $itemsSchema = null;
 
     /**
+     * @var string[]
+     */
+    protected array $requiredProperties;
+
+    /**
      * @return static
      */
     public function withItemsSchema(?ValueSchemaInterface $itemsSchema)
@@ -23,8 +28,22 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    /**
+     * @return static
+     */
+    public function withRequiredProperties(array $requiredProperties)
+    {
+        $this->requiredProperties = $requiredProperties;
+        return $this;
+    }
+
     protected function createInstance(): HashmapSchema
     {
-        return new HashmapSchema($this->itemsSchema, $this->nullable, $this->description);
+        return new HashmapSchema(
+            $this->itemsSchema,
+            $this->requiredProperties,
+            $this->nullable,
+            $this->description
+        );
     }
 }
