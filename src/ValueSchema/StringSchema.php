@@ -13,8 +13,11 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema;
 class StringSchema extends AbstractValueSchema
 {
     protected ?int $minLength;
+
     protected ?int $maxLength;
+
     protected ?string $format;
+
     protected ?string $pattern;
 
     /**

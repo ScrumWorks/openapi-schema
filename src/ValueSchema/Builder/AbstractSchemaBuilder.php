@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
-use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
+use Error;
+use Exception;
 use Nette\SmartObject;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 abstract class AbstractSchemaBuilder
 {
     use SmartObject;
 
     protected bool $nullable = false;
+
     protected ?string $description = null;
 
     /**
@@ -41,10 +44,10 @@ abstract class AbstractSchemaBuilder
     protected function assertRequiredProperty(string $property): void
     {
         try {
-            assert($this->{$property});
-        } catch (\Error $e) {
+            \assert($this->{$property});
+        } catch (Error $e) {
             // TODO: make our own Exception
-            throw new \Exception(sprintf("Property '%s' isn't filled", $property));
+            throw new Exception(\sprintf("Property '%s' isn't filled", $property));
         }
     }
 

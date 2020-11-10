@@ -2,6 +2,7 @@
 
 namespace ScrumWorks\OpenApiSchema;
 
+use Nette\SmartObject;
 use ScrumWorks\OpenApiSchema\ValueSchema\AbstractValueSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
@@ -12,7 +13,6 @@ use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
-use Nette\SmartObject;
 
 final class OpenApiTranslator implements OpenApiTranslatorInterface
 {
@@ -67,9 +67,10 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
 
     private function translateIntegerSchema(IntegerSchema $schema): array
     {
-        $definition =  [
+        $definition = [
             'type' => 'integer',
-            'format' => 'int32', // JSON use 32bit integers
+            // JSON use 32bit integers
+            'format' => 'int32',
         ];
         if ($schema->minimum !== null) {
             $definition['minimum'] = $schema->minimum;
@@ -91,7 +92,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
 
     private function translateFloatSchema(FloatSchema $schema): array
     {
-        $definition =  [
+        $definition = [
             'type' => 'number',
             'format' => 'float',
         ];
@@ -115,10 +116,9 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
 
     private function translateBooleanSchema(BooleanSchema $schema): array
     {
-        $definition = [
+        return [
             'type' => 'boolean',
         ];
-        return $definition;
     }
 
     private function translateArraySchema(ArraySchema $schema): array
@@ -148,7 +148,10 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         // we also support "free-form objects without defined properties
         if ($schema->propertiesSchemas) {
             // we use property of `array_map` function that preserve keys
-            $definition['properties'] = array_map(fn (ValueSchemaInterface $property) => $this->translateValueSchema($property), $schema->propertiesSchemas);
+            $definition['properties'] = \array_map(
+                fn (ValueSchemaInterface $property) => $this->translateValueSchema($property),
+                $schema->propertiesSchemas
+            );
 
             if ($schema->requiredProperties) {
                 $definition['required'] = $schema->requiredProperties;
@@ -162,15 +165,15 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         $enum = $schema->enum;
         if ($schema->nullable) {
             // @phpstan-ignore-next-line
-            if (!in_array(null, $enum, true)) {
-                $enum[] = null; // null must be in enum to work with nullable type
+            if (! \in_array(null, $enum, true)) {
+                // null must be in enum to work with nullable type
+                $enum[] = null;
             }
         }
-        $definition = [
+        return [
             'type' => 'string',
             'enum' => $enum,
         ];
-        return $definition;
     }
 
     private function translateHashmapSchema(HashmapSchema $schema): array
@@ -181,14 +184,17 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         if ($schema->itemsSchema) {
             $definition['additionalProperties'] = $this->translateValueSchema($schema->itemsSchema);
         } else {
-            $definition['additionalProperties'] = true; // "free-form" hashmap
+            // "free-form" hashmap
+            $definition['additionalProperties'] = true;
         }
         return $definition;
     }
 
     private function translateGenericProperties(AbstractValueSchema $schema): array
     {
-        $definition = ['nullable' => $schema->nullable];
+        $definition = [
+            'nullable' => $schema->nullable,
+        ];
         if ($schema->description) {
             $definition['description'] = $schema->description;
         }

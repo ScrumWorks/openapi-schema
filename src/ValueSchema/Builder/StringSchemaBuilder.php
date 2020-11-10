@@ -12,8 +12,11 @@ use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 class StringSchemaBuilder extends AbstractSchemaBuilder
 {
     protected ?int $minLength = null;
+
     protected ?int $maxLength = null;
+
     protected ?string $format = null;
+
     protected ?string $pattern = null;
 
     /**

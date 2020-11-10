@@ -11,11 +11,8 @@ class HashmapSchema extends AbstractValueSchema
 {
     protected ?ValueSchemaInterface $itemsSchema;
 
-    public function __construct(
-        ?ValueSchemaInterface $itemsSchema,
-        bool $nullable,
-        ?string $description
-    ) {
+    public function __construct(?ValueSchemaInterface $itemsSchema, bool $nullable, ?string $description)
+    {
         parent::__construct($nullable, $description);
 
         $this->itemsSchema = $itemsSchema;

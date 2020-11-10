@@ -14,9 +14,13 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema;
 class FloatSchema extends AbstractValueSchema
 {
     protected ?float $minimum;
+
     protected ?float $maximum;
+
     protected ?bool $exclusiveMinimum;
+
     protected ?bool $exclusiveMaximum;
+
     protected ?float $multipleOf;
 
     public function __construct(

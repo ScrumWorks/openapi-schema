@@ -13,8 +13,11 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 class ArraySchemaBuilder extends AbstractSchemaBuilder
 {
     protected ValueSchemaInterface $itemsSchema;
+
     protected ?int $minItems = null;
+
     protected ?int $maxItems = null;
+
     protected ?bool $uniqueItems = null;
 
     /**
@@ -56,6 +59,7 @@ class ArraySchemaBuilder extends AbstractSchemaBuilder
     protected function validate(): void
     {
         parent::validate();
+
         $this->assertRequiredProperty('itemsSchema');
     }
 

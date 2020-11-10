@@ -13,6 +13,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 class ObjectSchemaBuilder extends AbstractSchemaBuilder
 {
     protected array $propertiesSchemas = [];
+
     protected array $requiredProperties = [];
 
     /**

@@ -25,10 +25,6 @@ class HashmapSchemaBuilder extends AbstractSchemaBuilder
 
     protected function createInstance(): HashmapSchema
     {
-        return new HashmapSchema(
-            $this->itemsSchema,
-            $this->nullable,
-            $this->description
-        );
+        return new HashmapSchema($this->itemsSchema, $this->nullable, $this->description);
     }
 }

@@ -15,6 +15,7 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
     use SmartObject;
 
     protected bool $nullable;
+
     protected ?string $description;
 
     public function __construct(bool $nullable, ?string $description)

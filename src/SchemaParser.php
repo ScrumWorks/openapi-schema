@@ -9,6 +9,9 @@ use Amateri\PropertyReader\VariableType\MixedVariableType;
 use Amateri\PropertyReader\VariableType\ScalarVariableType;
 use Amateri\PropertyReader\VariableType\UnionVariableType;
 use Amateri\PropertyReader\VariableType\VariableTypeInterface;
+use Exception;
+use ReflectionClass;
+use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\FloatSchemaBuilder;
@@ -39,16 +42,16 @@ final class SchemaParser implements SchemaParserInterface
 
     private function getClassSchemaBuilder(string $class): ObjectSchemaBuilder
     {
-        if (!class_exists($class)) {
-            throw new \Exception("TODO");
+        if (! \class_exists($class)) {
+            throw new Exception('TODO');
         }
 
-        $reflection = new \ReflectionClass($class);
+        $reflection = new ReflectionClass($class);
 
         $propertiesSchemas = [];
         foreach ($reflection->getProperties() as $propertyReflection) {
             // if property is not public, then skip it.
-            if (!$propertyReflection->isPublic()) {
+            if (! $propertyReflection->isPublic()) {
                 continue;
             }
 
@@ -57,19 +60,20 @@ final class SchemaParser implements SchemaParserInterface
         return (new ObjectSchemaBuilder())->withPropertiesSchemas($propertiesSchemas);
     }
 
-    private function getPropertySchema(\ReflectionProperty $propertyReflection): ValueSchemaInterface
+    private function getPropertySchema(ReflectionProperty $propertyReflection): ValueSchemaInterface
     {
         $variableType = $this->propertyReader->readUnifiedVariableType($propertyReflection);
-        $annotations = []; // TODO
+        // TODO
+        $annotations = [];
         return $this->translate($variableType, $annotations);
     }
 
     private function translate(?VariableTypeInterface $variableType, array $annotations): ValueSchemaInterface
     {
         if ($variableType === null) {
-            throw new \Exception('TODO');
+            throw new Exception('TODO');
         } elseif ($variableType instanceof MixedVariableType) {
-            throw new \Exception('TODO');
+            throw new Exception('TODO');
         } elseif ($variableType instanceof ScalarVariableType) {
             switch ($variableType->type) {
                 case ScalarVariableType::TYPE_INTEGER:
@@ -91,17 +95,15 @@ final class SchemaParser implements SchemaParserInterface
             } else {
                 $schemaBuilder = new HashmapSchemaBuilder();
             }
-            $schemaBuilder = $schemaBuilder->withItemsSchema(
-                $this->translate($variableType->itemType, [])
-            );
+            $schemaBuilder = $schemaBuilder->withItemsSchema($this->translate($variableType->itemType, []));
         } elseif ($variableType instanceof ClassVariableType) {
             $schemaBuilder = $this->getClassSchemaBuilder($variableType->class);
         } elseif ($variableType instanceof UnionVariableType) {
-            throw new \Exception('Union types are not supported');
+            throw new Exception('Union types are not supported');
         }
 
-        if (!isset($schemaBuilder)) {
-            throw new \Exception('TODO');
+        if (! isset($schemaBuilder)) {
+            throw new Exception('TODO');
         }
         $schemaBuilder = $schemaBuilder->withNullable($variableType->nullable);
 

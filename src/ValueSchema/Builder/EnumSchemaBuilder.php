@@ -26,15 +26,12 @@ class EnumSchemaBuilder extends AbstractSchemaBuilder
     protected function validate(): void
     {
         parent::validate();
+
         $this->assertRequiredProperty('enum');
     }
 
     protected function createInstance(): EnumSchema
     {
-        return new EnumSchema(
-            $this->enum,
-            $this->nullable,
-            $this->description
-        );
+        return new EnumSchema($this->enum, $this->nullable, $this->description);
     }
 }

@@ -11,6 +11,7 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema;
 class ObjectSchema extends AbstractValueSchema
 {
     protected array $propertiesSchemas;
+
     protected array $requiredProperties;
 
     /**

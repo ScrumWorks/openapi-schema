@@ -14,9 +14,13 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema;
 class IntegerSchema extends AbstractValueSchema
 {
     protected ?int $minimum;
+
     protected ?int $maximum;
+
     protected ?bool $exclusiveMinimum;
+
     protected ?bool $exclusiveMaximum;
+
     protected ?int $multipleOf;
 
     public function __construct(
