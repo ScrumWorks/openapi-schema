@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Lang\OpenApiDefinition\ValueSchema\Builder;
+namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
-use Lang\OpenApiDefinition\ValueSchema\FloatSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 
 /**
- * @method FloatSchema build()
+ * @method IntegerSchema build()
  */
-class FloatSchemaBuilder extends AbstractSchemaBuilder
+class IntegerSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected ?float $minimum = null;
-    protected ?float $maximum = null;
+    protected ?int $minimum = null;
+    protected ?int $maximum = null;
     protected ?bool $exclusiveMinimum = null;
     protected ?bool $exclusiveMaximum = null;
-    protected ?float $multipleOf = null;
+    protected ?int $multipleOf = null;
 
     /**
      * @return static
      */
-    public function withMinimum(?float $minimum)
+    public function withMinimum(?int $minimum)
     {
         $this->minimum = $minimum;
         return $this;
@@ -29,7 +29,7 @@ class FloatSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withMaximum(?float $maximum)
+    public function withMaximum(?int $maximum)
     {
         $this->maximum = $maximum;
         return $this;
@@ -38,7 +38,7 @@ class FloatSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withExclusiveMinimum(?float $exclusiveMinimum)
+    public function withExclusiveMinimum(?int $exclusiveMinimum)
     {
         $this->exclusiveMinimum = $exclusiveMinimum;
         return $this;
@@ -47,7 +47,7 @@ class FloatSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withExclusiveMaximum(?float $exclusiveMaximum)
+    public function withExclusiveMaximum(?int $exclusiveMaximum)
     {
         $this->exclusiveMaximum = $exclusiveMaximum;
         return $this;
@@ -56,15 +56,15 @@ class FloatSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withMultipleOf(?float $multipleOf)
+    public function withMultipleOf(?int $multipleOf)
     {
         $this->multipleOf = $multipleOf;
         return $this;
     }
 
-    protected function createInstance(): FloatSchema
+    protected function createInstance(): IntegerSchema
     {
-        return new FloatSchema(
+        return new IntegerSchema(
             $this->minimum,
             $this->maximum,
             $this->exclusiveMinimum,

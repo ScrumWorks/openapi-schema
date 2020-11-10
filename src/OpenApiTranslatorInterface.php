@@ -1,8 +1,8 @@
 <?php
 
-namespace Lang\OpenApiDefinition;
+namespace ScrumWorks\OpenApiSchema;
 
-use Lang\OpenApiDefinition\ValueSchema\ValueSchemaInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 interface OpenApiTranslatorInterface
 {

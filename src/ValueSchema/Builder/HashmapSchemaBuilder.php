@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Lang\OpenApiDefinition\ValueSchema\Builder;
+namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
-use Lang\OpenApiDefinition\ValueSchema\HashmapSchema;
-use Lang\OpenApiDefinition\ValueSchema\ValueSchemaInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 /**
  * @method HashmapSchema build()

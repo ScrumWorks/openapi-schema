@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Lang\OpenApiDefinition\ValueSchema\Builder;
+namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
-use Lang\OpenApiDefinition\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
 /**
  * @method StringSchema build()

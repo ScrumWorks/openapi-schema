@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Lang\OpenApiDefinition\ValueSchema\Builder;
+namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
-use Lang\OpenApiDefinition\ValueSchema\ObjectSchema;
-use Lang\OpenApiDefinition\ValueSchema\ValueSchemaInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 /**
  * @method ObjectSchema build()

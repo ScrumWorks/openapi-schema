@@ -1,6 +1,6 @@
 <?php
 
-use Lang\OpenApiDefinition\OpenApiTranslator;
+use ScrumWorks\OpenApiSchema\OpenApiTranslator;
 use Symfony\Component\Yaml\Yaml;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -14,7 +14,6 @@ class Test
 {
     /**
      * @var integer
-     * @description Some good data
      */
     public int $test;
 
@@ -33,7 +32,7 @@ class Test
     public array $test2;
 }
 
-$schemaParser = new \Lang\OpenApiDefinition\SchemaParser(
+$schemaParser = new \ScrumWorks\OpenApiSchema\SchemaParser(
     new \Amateri\PropertyReader\PropertyReader(
         new \Amateri\PropertyReader\VariableTypeUnifyService()
     )

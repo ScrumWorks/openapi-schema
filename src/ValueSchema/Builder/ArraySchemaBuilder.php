@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Lang\OpenApiDefinition\ValueSchema\Builder;
+namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
-use Lang\OpenApiDefinition\ValueSchema\ArraySchema;
-use Lang\OpenApiDefinition\ValueSchema\ValueSchemaInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 /**
  * @method ArraySchema build()

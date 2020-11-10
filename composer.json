@@ -1,5 +1,5 @@
 {
-    "name": "admin/apitte-entities",
+    "name": "scrumworks/openapi-schema",
     "authors": [
         {
             "name": "Tomas Lang",
@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Lang\\": [
+            "ScrumWorks\\OpenApiSchema\\": [
                 "src"
             ]
         }

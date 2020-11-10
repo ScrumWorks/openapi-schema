@@ -1,6 +1,6 @@
 <?php
 
-namespace Lang\OpenApiDefinition;
+namespace ScrumWorks\OpenApiSchema;
 
 use Amateri\PropertyReader\PropertyReaderInterface;
 use Amateri\PropertyReader\VariableType\ArrayVariableType;
@@ -9,15 +9,15 @@ use Amateri\PropertyReader\VariableType\MixedVariableType;
 use Amateri\PropertyReader\VariableType\ScalarVariableType;
 use Amateri\PropertyReader\VariableType\UnionVariableType;
 use Amateri\PropertyReader\VariableType\VariableTypeInterface;
-use Lang\OpenApiDefinition\ValueSchema\Builder\ArraySchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\BooleanSchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\FloatSchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\HashmapSchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\IntegerSchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\ObjectSchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\StringSchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\ObjectSchema;
-use Lang\OpenApiDefinition\ValueSchema\ValueSchemaInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\FloatSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\HashmapSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\IntegerSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 /**
  * @TODO: probably new name

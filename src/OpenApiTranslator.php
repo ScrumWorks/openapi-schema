@@ -1,17 +1,17 @@
 <?php
 
-namespace Lang\OpenApiDefinition;
+namespace ScrumWorks\OpenApiSchema;
 
-use Lang\OpenApiDefinition\ValueSchema\AbstractValueSchema;
-use Lang\OpenApiDefinition\ValueSchema\ArraySchema;
-use Lang\OpenApiDefinition\ValueSchema\BooleanSchema;
-use Lang\OpenApiDefinition\ValueSchema\EnumSchema;
-use Lang\OpenApiDefinition\ValueSchema\FloatSchema;
-use Lang\OpenApiDefinition\ValueSchema\HashmapSchema;
-use Lang\OpenApiDefinition\ValueSchema\IntegerSchema;
-use Lang\OpenApiDefinition\ValueSchema\ObjectSchema;
-use Lang\OpenApiDefinition\ValueSchema\StringSchema;
-use Lang\OpenApiDefinition\ValueSchema\ValueSchemaInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\AbstractValueSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 use Nette\SmartObject;
 
 final class OpenApiTranslator implements OpenApiTranslatorInterface

@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Lang\OpenApiDefinition\ValueSchema\Builder;
+namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
-use Lang\OpenApiDefinition\ValueSchema\IntegerSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
 
 /**
- * @method IntegerSchema build()
+ * @method FloatSchema build()
  */
-class IntegerSchemaBuilder extends AbstractSchemaBuilder
+class FloatSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected ?int $minimum = null;
-    protected ?int $maximum = null;
+    protected ?float $minimum = null;
+    protected ?float $maximum = null;
     protected ?bool $exclusiveMinimum = null;
     protected ?bool $exclusiveMaximum = null;
-    protected ?int $multipleOf = null;
+    protected ?float $multipleOf = null;
 
     /**
      * @return static
      */
-    public function withMinimum(?int $minimum)
+    public function withMinimum(?float $minimum)
     {
         $this->minimum = $minimum;
         return $this;
@@ -29,7 +29,7 @@ class IntegerSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withMaximum(?int $maximum)
+    public function withMaximum(?float $maximum)
     {
         $this->maximum = $maximum;
         return $this;
@@ -38,7 +38,7 @@ class IntegerSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withExclusiveMinimum(?int $exclusiveMinimum)
+    public function withExclusiveMinimum(?float $exclusiveMinimum)
     {
         $this->exclusiveMinimum = $exclusiveMinimum;
         return $this;
@@ -47,7 +47,7 @@ class IntegerSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withExclusiveMaximum(?int $exclusiveMaximum)
+    public function withExclusiveMaximum(?float $exclusiveMaximum)
     {
         $this->exclusiveMaximum = $exclusiveMaximum;
         return $this;
@@ -56,15 +56,15 @@ class IntegerSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withMultipleOf(?int $multipleOf)
+    public function withMultipleOf(?float $multipleOf)
     {
         $this->multipleOf = $multipleOf;
         return $this;
     }
 
-    protected function createInstance(): IntegerSchema
+    protected function createInstance(): FloatSchema
     {
-        return new IntegerSchema(
+        return new FloatSchema(
             $this->minimum,
             $this->maximum,
             $this->exclusiveMinimum,
