@@ -1,37 +1,15 @@
 <?php
 
 use Lang\OpenApiDefinition\OpenApiTranslator;
-use Lang\OpenApiDefinition\ValueSchema\Builder\ArraySchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\EnumSchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\ObjectSchemaBuilder;
-use Lang\OpenApiDefinition\ValueSchema\Builder\StringSchemaBuilder;
 use Symfony\Component\Yaml\Yaml;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-/*$userBuilder = new ObjectSchemaBuilder();
-$userSchema = $userBuilder
-    ->withPropertiesSchemas([
-        'name' => (new StringSchemaBuilder())->build(),
-        'surname' => (new StringSchemaBuilder())->build(),
-        'sex' => (new EnumSchemaBuilder())->withEnum(['F', 'M'])->build(),
-        'note' => (new StringSchemaBuilder())->withNullable(true)->build(),
-    ])
-    ->withRequiredProperties(['name', 'surname', 'sex'])
-    ->build();
-
-$arrayBuilder = new ArraySchemaBuilder();
-$arraySchema = $arrayBuilder
-    ->withItemsSchema($userSchema)
-    ->withMinItems(1)
-    ->build();
-
-$openApiTranslator = new OpenApiTranslator();
-$openApiValueSchema = $openApiTranslator->translateValueSchema($arraySchema);
-
-$schema = Yaml::dump($openApiValueSchema);
-print "$schema\n";*/
-
+class User
+{
+    public string $name;
+    public string $surname;
+}
 class Test
 {
     /**
@@ -43,18 +21,24 @@ class Test
     public ?string $name;
 
     /**
-     * @var int[]
+     * @var int[][]
      */
     public array $arr;
+
+    public User $user;
+
+    /**
+     * @var User[]
+     */
+    public array $test2;
 }
-$test = new Test();
-$reflection = new ReflectionObject($test);
 
-$xxxMapping = new \Lang\OpenApiDefinition\XxxMapping();
-$schema = $xxxMapping->xxx($reflection);
-
-//$objectMapping = new \Lang\OpenApiDefinition\ObjectMapping();
-//$openApiValueSchema = $objectMapping->getSchema($reflection);
+$schemaParser = new \Lang\OpenApiDefinition\SchemaParser(
+    new \Amateri\PropertyReader\PropertyReader(
+        new \Amateri\PropertyReader\VariableTypeUnifyService()
+    )
+);
+$schema = $schemaParser->getEntitySchema('Test');
 
 $openApiTranslator = new OpenApiTranslator();
 $openApiValueSchema = $openApiTranslator->translateValueSchema($schema);

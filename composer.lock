@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f650f3b24fa300e81a23af11cf6f7ea",
+    "content-hash": "ce0b87cf1a14222ffbb3260340b0d8ed",
     "packages": [
         {
             "name": "nette/utils",
@@ -83,6 +83,57 @@
                 "validation"
             ],
             "time": "2020-08-07T10:34:21+00:00"
+        },
+        {
+            "name": "scrumworks/property-reader",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ScrumWorks/property-reader.git",
+                "reference": "58be750e6f2faeff6c6d7c538f36277426787ba8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ScrumWorks/property-reader/zipball/58be750e6f2faeff6c6d7c538f36277426787ba8",
+                "reference": "58be750e6f2faeff6c6d7c538f36277426787ba8",
+                "shasum": ""
+            },
+            "require": {
+                "nette/utils": "^3.1",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "migrify/template-checker": "^0.3.49",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan": "^0.12.48",
+                "phpunit/phpunit": "^9.4.2",
+                "slevomat/coding-standard": "^6.4",
+                "symplify/easy-coding-standard": "^8.3",
+                "symplify/easy-testing": "^8.3",
+                "symplify/phpstan-extensions": "^8.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Amateri\\PropertyReader\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tomas Lang",
+                    "email": "tomas.lang@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Property reader which can work with typed properties and phpdoc",
+            "keywords": [
+                "property"
+            ],
+            "time": "2020-11-09T02:42:17+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
