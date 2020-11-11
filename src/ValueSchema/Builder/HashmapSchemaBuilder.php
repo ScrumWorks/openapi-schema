@@ -37,6 +37,16 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function getItemsSchema(): ?ValueSchemaInterface
+    {
+        return $this->itemsSchema;
+    }
+
+    public function getRequiredProperties(): array
+    {
+        return $this->requiredProperties;
+    }
+
     protected function createInstance(): HashmapSchema
     {
         return new HashmapSchema(

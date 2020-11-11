@@ -23,6 +23,11 @@ final class EnumSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function getEnum(): array
+    {
+        return $this->enum;
+    }
+
     protected function validate(): void
     {
         parent::validate();

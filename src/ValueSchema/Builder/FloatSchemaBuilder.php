@@ -66,6 +66,31 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function getMinimum(): ?float
+    {
+        return $this->minimum;
+    }
+
+    public function getMaximum(): ?float
+    {
+        return $this->maximum;
+    }
+
+    public function getExclusiveMinimum(): ?bool
+    {
+        return $this->exclusiveMinimum;
+    }
+
+    public function getExclusiveMaximum(): ?bool
+    {
+        return $this->exclusiveMaximum;
+    }
+
+    public function getMultipleOf(): ?float
+    {
+        return $this->multipleOf;
+    }
+
     protected function createInstance(): FloatSchema
     {
         return new FloatSchema(

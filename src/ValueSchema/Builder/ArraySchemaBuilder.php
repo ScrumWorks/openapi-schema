@@ -56,6 +56,26 @@ final class ArraySchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function getItemsSchema(): ValueSchemaInterface
+    {
+        return $this->itemsSchema;
+    }
+
+    public function getMinItems(): ?int
+    {
+        return $this->minItems;
+    }
+
+    public function getMaxItems(): ?int
+    {
+        return $this->maxItems;
+    }
+
+    public function getUniqueItems(): ?bool
+    {
+        return $this->uniqueItems;
+    }
+
     protected function validate(): void
     {
         parent::validate();

@@ -32,6 +32,16 @@ abstract class AbstractSchemaBuilder
         return $this;
     }
 
+    public function isNullable(): bool
+    {
+        return $this->nullable;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
     public function build(): ValueSchemaInterface
     {
         $this->validate();
