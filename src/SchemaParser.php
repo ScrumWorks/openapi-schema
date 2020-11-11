@@ -181,8 +181,11 @@ final class SchemaParser implements SchemaParserInterface
 
     private function createStringSchemaBuilder(array $annotations): AbstractSchemaBuilder
     {
-        // try is its hashmap
-        if ($annotation = $this->findAnnotation($annotations, OA\EnumValue::class)) {
+        // try is its enum
+        if ($annotation = $this->findAnnotation($annotations, OA\EnumValue::class, false)) {
+            // ensure there is only EnumValue annotation, not StringValue
+            $this->findAnnotation($annotations, OA\EnumValue::class);
+
             $schemaBuilder = new EnumSchemaBuilder();
             /** @var ?OA\EnumValue $annotation */
             if ($annotation->enum) {
@@ -282,12 +285,11 @@ final class SchemaParser implements SchemaParserInterface
         string $annotationClass,
         bool $exceptionOnAnotherValueInterface = true
     ) {
+        $found = null;
         foreach ($annotations as $annotation) {
             if (\get_class($annotation) === $annotationClass) {
-                return $annotation;
-            }
-
-            if (
+                $found = $annotation;
+            } elseif (
                 $exceptionOnAnotherValueInterface
                 && \is_subclass_of($annotation, OA\ValueInterface::class)
              ) {
@@ -295,6 +297,6 @@ final class SchemaParser implements SchemaParserInterface
             }
         }
 
-        return null;
+        return $found;
     }
 }

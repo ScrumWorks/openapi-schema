@@ -11,12 +11,12 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
 final class FloatValue implements ValueInterface
 {
     /**
-     * @var int|float
+     * @var float
      */
     public $minimum;
 
     /**
-     * @var int|float
+     * @var float
      */
     public $maximum;
 
@@ -31,7 +31,7 @@ final class FloatValue implements ValueInterface
     public $exclusiveMaximum;
 
     /**
-     * @var int|float
+     * @var float
      */
     public $multipleOf;
 }
