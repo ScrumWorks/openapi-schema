@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Tests\SchemaParser;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
+use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 use ScrumWorks\PropertyReader\PropertyTypeReader;
@@ -23,7 +24,9 @@ abstract class AbstractParserTest extends TestCase
             new PropertyTypeReader(
                 new VariableTypeUnifyService()
             ),
-            new AnnotationReader()
+            new AnnotationPropertySchemaDecorator(
+                new AnnotationReader()
+            )
         );
         $this->reflection = $this->createReflectionClass();
     }
