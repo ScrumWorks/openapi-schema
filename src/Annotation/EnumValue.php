@@ -8,7 +8,7 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
-final class EnumValue
+final class EnumValue implements ValueInterface
 {
     /**
      * @var string[]

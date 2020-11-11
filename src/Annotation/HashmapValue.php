@@ -8,7 +8,7 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
-final class HashmapValue
+final class HashmapValue implements ValueInterface
 {
     /**
      * @var string[]

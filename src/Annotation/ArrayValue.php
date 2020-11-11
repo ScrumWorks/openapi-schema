@@ -8,7 +8,7 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
-final class ArrayValue
+final class ArrayValue implements ValueInterface
 {
     /**
      * @var int
