@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
+use InvalidArgumentException;
+
 final class EnumSchema extends AbstractValueSchema
 {
     /**
@@ -16,10 +18,9 @@ final class EnumSchema extends AbstractValueSchema
      */
     public function __construct(array $enum, bool $nullable = false, ?string $description = null)
     {
-        parent::__construct($nullable, $description);
-
         $this->enum = $enum;
-        // assert count($enum) > 0
+
+        parent::__construct($nullable, $description);
     }
 
     /**
@@ -28,5 +29,19 @@ final class EnumSchema extends AbstractValueSchema
     public function getEnum(): array
     {
         return $this->enum;
+    }
+
+    protected function validate(): void
+    {
+        if (! $this->enum) {
+            throw new InvalidArgumentException('Minimal one enum item is required');
+        }
+
+        // TODO: maybe change this later for also support int, etc
+        foreach ($this->enum as $enum) {
+            if (! \is_string($enum)) {
+                throw new InvalidArgumentException('Only strings are allowed for enum properties');
+            }
+        }
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
+use InvalidArgumentException;
+
 final class StringSchema extends AbstractValueSchema
 {
     private ?int $minLength;
@@ -14,9 +16,6 @@ final class StringSchema extends AbstractValueSchema
 
     private ?string $pattern;
 
-    /**
-     * @TODO $format and $pattern is probably exclusive
-     */
     public function __construct(
         ?int $minLength = null,
         ?int $maxLength = null,
@@ -25,12 +24,12 @@ final class StringSchema extends AbstractValueSchema
         bool $nullable = false,
         ?string $description = null
     ) {
-        parent::__construct($nullable, $description);
-
         $this->minLength = $minLength;
         $this->maxLength = $maxLength;
         $this->format = $format;
         $this->pattern = $pattern;
+
+        parent::__construct($nullable, $description);
     }
 
     public function getMinLength(): ?int
@@ -51,5 +50,20 @@ final class StringSchema extends AbstractValueSchema
     public function getPattern(): ?string
     {
         return $this->pattern;
+    }
+
+    protected function validate(): void
+    {
+        if ($this->minLength !== null && $this->minLength < 0) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'minLength'", $this->minLength));
+        }
+        if ($this->maxLength !== null && $this->maxLength < 0) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maxLength'", $this->maxLength));
+        }
+        if ($this->minLength !== null && $this->maxLength !== null && $this->maxLength < $this->minLength) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maxLength'", $this->maxLength));
+        }
+        // TODO assert for $pattern
+        // TODO $format and $pattern is probably exclusive
     }
 }

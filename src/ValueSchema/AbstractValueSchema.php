@@ -14,6 +14,7 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
     {
         $this->nullable = $nullable;
         $this->description = $description;
+        $this->validate();
     }
 
     public function isNullable(): bool
@@ -25,4 +26,6 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
     {
         return $this->description;
     }
+
+    abstract protected function validate();
 }

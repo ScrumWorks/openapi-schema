@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
+use InvalidArgumentException;
+
 final class IntegerSchema extends AbstractValueSchema
 {
     private ?int $minimum;
@@ -25,13 +27,13 @@ final class IntegerSchema extends AbstractValueSchema
         bool $nullable = false,
         ?string $description = null
     ) {
-        parent::__construct($nullable, $description);
-
         $this->minimum = $minimum;
         $this->maximum = $maximum;
         $this->exclusiveMinimum = $exclusiveMinimum;
         $this->exclusiveMaximum = $exclusiveMaximum;
         $this->multipleOf = $multipleOf;
+
+        parent::__construct($nullable, $description);
     }
 
     public function getMinimum(): ?int
@@ -57,5 +59,24 @@ final class IntegerSchema extends AbstractValueSchema
     public function getMultipleOf(): ?int
     {
         return $this->multipleOf;
+    }
+
+    protected function validate(): void
+    {
+        if ($this->minimum !== null && $this->minimum < 0) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'minimum'", $this->minimum));
+        }
+        if ($this->maximum !== null && $this->maximum < 0) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maximum'", $this->maximum));
+        }
+        if ($this->minimum !== null && $this->maximum !== null && $this->maximum < $this->minimum) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maximum'", $this->maximum));
+        }
+        if ($this->minimum === null && $this->exclusiveMinimum !== null) {
+            throw new InvalidArgumentException("Can't set 'exclusiveMinimum' without 'minimum' argument");
+        }
+        if ($this->maximum === null && $this->exclusiveMaximum !== null) {
+            throw new InvalidArgumentException("Can't set 'exclusiveMaximum' without 'maximum' argument");
+        }
     }
 }

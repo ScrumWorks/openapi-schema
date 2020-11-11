@@ -19,10 +19,10 @@ final class HashmapSchema extends AbstractValueSchema
         bool $nullable = false,
         ?string $description = null
     ) {
-        parent::__construct($nullable, $description);
-
         $this->itemsSchema = $itemsSchema;
         $this->requiredProperties = $requiredProperties;
+
+        parent::__construct($nullable, $description);
     }
 
     public function getItemsSchema(): ValueSchemaInterface
@@ -36,5 +36,9 @@ final class HashmapSchema extends AbstractValueSchema
     public function getRequiredProperties(): array
     {
         return $this->requiredProperties;
+    }
+
+    protected function validate(): void
+    {
     }
 }

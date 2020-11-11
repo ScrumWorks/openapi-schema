@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
+use InvalidArgumentException;
+
 final class ArraySchema extends AbstractValueSchema
 {
     private ValueSchemaInterface $itemsSchema;
@@ -22,12 +24,12 @@ final class ArraySchema extends AbstractValueSchema
         bool $nullable = false,
         ?string $description = null
     ) {
-        parent::__construct($nullable, $description);
-
         $this->itemsSchema = $itemsSchema;
         $this->minItems = $minItems;
         $this->maxItems = $maxItems;
         $this->uniqueItems = $uniqueItems;
+
+        parent::__construct($nullable, $description);
     }
 
     public function getMinItems(): ?int
@@ -48,5 +50,18 @@ final class ArraySchema extends AbstractValueSchema
     public function getItemsSchema(): ValueSchemaInterface
     {
         return $this->itemsSchema;
+    }
+
+    protected function validate(): void
+    {
+        if ($this->minItems !== null && $this->minItems < 0) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'minItems'", $this->minItems));
+        }
+        if ($this->maxItems !== null && $this->maxItems < 0) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maxItems'", $this->maxItems));
+        }
+        if ($this->minItems !== null && $this->maxItems !== null && $this->maxItems < $this->minItems) {
+            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maxItems'", $this->maxItems));
+        }
     }
 }

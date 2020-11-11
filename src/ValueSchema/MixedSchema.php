@@ -6,4 +6,7 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
 final class MixedSchema extends AbstractValueSchema
 {
+    protected function validate(): void
+    {
+    }
 }

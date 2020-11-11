@@ -6,4 +6,7 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
 class BooleanSchema extends AbstractValueSchema
 {
+    protected function validate(): void
+    {
+    }
 }

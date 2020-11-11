@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
 use Exception;
+use InvalidArgumentException;
 
 final class ObjectSchema extends AbstractValueSchema
 {
@@ -28,12 +29,12 @@ final class ObjectSchema extends AbstractValueSchema
         bool $nullable = false,
         ?string $description = null
     ) {
-        parent::__construct($nullable, $description);
+        // TODO: maybe $propertiesSchemas as stdClass?
 
-        // TODO assert that $propertiesSchemas are all of ValueSchemaInterface instance
         $this->propertiesSchemas = $propertiesSchemas;
-        // TODO assert that $requiredProperties values are in $propertiesSchemas keys
         $this->requiredProperties = $requiredProperties;
+
+        parent::__construct($nullable, $description);
     }
 
     /**
@@ -58,5 +59,30 @@ final class ObjectSchema extends AbstractValueSchema
     public function getRequiredProperties(): array
     {
         return $this->requiredProperties;
+    }
+
+    protected function validate(): void
+    {
+        $properties = [];
+        foreach ($this->propertiesSchemas as $property => $schema) {
+            if (! \is_string($property)) {
+                throw new InvalidArgumentException(\sprintf("Property key '%s' must be string", $property));
+            }
+            if (! ($schema instanceof ValueSchemaInterface)) {
+                throw new InvalidArgumentException(\sprintf(
+                    'Invalid schema (must be instance of %s)',
+                    ValueSchemaInterface::class
+                ));
+            }
+            $properties[] = $property;
+        }
+
+        $excludingRequiredProperties = \array_diff($this->requiredProperties, $properties);
+        if ($excludingRequiredProperties) {
+            throw new InvalidArgumentException(\sprintf(
+                'Required properties are not listed in schema (%s)',
+                \implode(', ', $excludingRequiredProperties)
+            ));
+        }
     }
 }
