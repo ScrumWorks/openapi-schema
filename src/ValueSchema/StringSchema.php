@@ -18,12 +18,12 @@ final class StringSchema extends AbstractValueSchema
      * @TODO $format and $pattern is probably exclusive
      */
     public function __construct(
-        ?int $minLength,
-        ?int $maxLength,
-        ?string $format,
-        ?string $pattern,
-        bool $nullable,
-        ?string $description
+        ?int $minLength = null,
+        ?int $maxLength = null,
+        ?string $format = null,
+        ?string $pattern = null,
+        bool $nullable = false,
+        ?string $description = null
     ) {
         parent::__construct($nullable, $description);
 

@@ -24,9 +24,9 @@ final class ObjectSchema extends AbstractValueSchema
      */
     public function __construct(
         array $propertiesSchemas,
-        array $requiredProperties,
-        bool $nullable,
-        ?string $description
+        array $requiredProperties = [],
+        bool $nullable = false,
+        ?string $description = null
     ) {
         parent::__construct($nullable, $description);
 

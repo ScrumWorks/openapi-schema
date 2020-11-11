@@ -16,11 +16,11 @@ final class ArraySchema extends AbstractValueSchema
 
     public function __construct(
         ValueSchemaInterface $itemsSchema,
-        ?int $minItems,
-        ?int $maxItems,
-        ?bool $uniqueItems,
-        bool $nullable,
-        ?string $description
+        ?int $minItems = null,
+        ?int $maxItems = null,
+        ?bool $uniqueItems = null,
+        bool $nullable = false,
+        ?string $description = null
     ) {
         parent::__construct($nullable, $description);
 

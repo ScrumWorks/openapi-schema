@@ -17,13 +17,13 @@ final class IntegerSchema extends AbstractValueSchema
     private ?int $multipleOf;
 
     public function __construct(
-        ?int $minimum,
-        ?int $maximum,
-        ?bool $exclusiveMinimum,
-        ?bool $exclusiveMaximum,
-        ?int $multipleOf,
-        bool $nullable,
-        ?string $description
+        ?int $minimum = null,
+        ?int $maximum = null,
+        ?bool $exclusiveMinimum = null,
+        ?bool $exclusiveMaximum = null,
+        ?int $multipleOf = null,
+        bool $nullable = false,
+        ?string $description = null
     ) {
         parent::__construct($nullable, $description);
 

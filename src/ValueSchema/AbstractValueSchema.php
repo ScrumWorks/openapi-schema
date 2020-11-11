@@ -10,7 +10,7 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
 
     protected ?string $description;
 
-    public function __construct(bool $nullable, ?string $description)
+    public function __construct(bool $nullable = false, ?string $description = null)
     {
         $this->nullable = $nullable;
         $this->description = $description;
