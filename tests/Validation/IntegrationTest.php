@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
@@ -94,6 +95,6 @@ class IntegrationTest extends TestCase
     {
         $variableTypeUnifyService = new VariableTypeUnifyService();
         $propertyReader = new PropertyTypeReader($variableTypeUnifyService);
-        return new SchemaParser($propertyReader);
+        return new SchemaParser($propertyReader, new AnnotationReader());
     }
 }
