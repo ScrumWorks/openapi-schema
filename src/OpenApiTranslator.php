@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema;
 
-use ScrumWorks\OpenApiSchema\ValueSchema\AbstractValueSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
@@ -37,10 +36,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         } elseif ($valueSchema instanceof HashmapSchema) {
             $definition += $this->translateHashmapSchema($valueSchema);
         }
-        // TODO maybe create GenericSchema as new generic parent?
-        if ($valueSchema instanceof AbstractValueSchema) {
-            $definition += $this->translateGenericProperties($valueSchema);
-        }
+        $definition += $this->translateGenericProperties($valueSchema);
         return $definition;
     }
 
@@ -195,7 +191,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    private function translateGenericProperties(AbstractValueSchema $schema): array
+    private function translateGenericProperties(ValueSchemaInterface $schema): array
     {
         $definition = [
             'nullable' => $schema->isNullable(),

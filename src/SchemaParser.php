@@ -12,6 +12,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\FloatSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\HashmapSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\IntegerSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\MixedSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
@@ -73,9 +74,9 @@ final class SchemaParser implements SchemaParserInterface
     private function translate(?VariableTypeInterface $variableType, array $annotations): ValueSchemaInterface
     {
         if ($variableType === null) {
-            throw new Exception('TODO');
+            $schemaBuilder = new MixedSchemaBuilder();
         } elseif ($variableType instanceof MixedVariableType) {
-            throw new Exception('TODO');
+            $schemaBuilder = new MixedSchemaBuilder();
         } elseif ($variableType instanceof ScalarVariableType) {
             switch ($variableType->getType()) {
                 case ScalarVariableType::TYPE_INTEGER:
@@ -107,7 +108,11 @@ final class SchemaParser implements SchemaParserInterface
         if (! isset($schemaBuilder)) {
             throw new Exception('TODO');
         }
-        $schemaBuilder = $schemaBuilder->withNullable($variableType->isNullable());
+        if ($schemaBuilder instanceof MixedSchemaBuilder) {
+            $schemaBuilder = $schemaBuilder->withNullable(true);
+        } else {
+            $schemaBuilder = $schemaBuilder->withNullable($variableType->isNullable());
+        }
 
         return $schemaBuilder->build();
     }
