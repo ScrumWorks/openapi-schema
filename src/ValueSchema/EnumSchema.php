@@ -7,12 +7,12 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema;
 final class EnumSchema extends AbstractValueSchema
 {
     /**
-     * @var array<?string>
+     * @var string[]
      */
     private array $enum;
 
     /**
-     * @param array<?string> $enum
+     * @param string[] $enum
      */
     public function __construct(array $enum, bool $nullable = false, ?string $description = null)
     {
@@ -23,7 +23,7 @@ final class EnumSchema extends AbstractValueSchema
     }
 
     /**
-     * @return array<?string>
+     * @return string[]
      */
     public function getEnum(): array
     {
