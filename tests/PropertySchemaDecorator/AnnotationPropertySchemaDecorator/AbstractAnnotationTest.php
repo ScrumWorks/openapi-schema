@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace ScrumWorks\OpenApiSchema\Tests\Annotation;
+namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;

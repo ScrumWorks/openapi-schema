@@ -2,17 +2,16 @@
 
 declare(strict_types = 1);
 
-namespace ScrumWorks\OpenApiSchema\Tests\SchemaParser;
+namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\SimplePropertySchemaDecorator;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
+use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\SimplePropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 use ScrumWorks\PropertyReader\PropertyTypeReader;
 use ScrumWorks\PropertyReader\VariableTypeUnifyService;
 
-abstract class AbstractParserTest extends TestCase
+abstract class AbstractDecoratorTest extends TestCase
 {
     protected SchemaParser $schemaParser;
 
@@ -22,11 +21,9 @@ abstract class AbstractParserTest extends TestCase
     {
         $this->schemaParser = new SchemaParser(
             new PropertyTypeReader(
-                new VariableTypeUnifyService()
+                new VariableTypeUnifyService(),
             ),
-            new AnnotationPropertySchemaDecorator(
-                new AnnotationReader()
-            )
+            new SimplePropertySchemaDecorator()
         );
         $this->reflection = $this->createReflectionClass();
     }

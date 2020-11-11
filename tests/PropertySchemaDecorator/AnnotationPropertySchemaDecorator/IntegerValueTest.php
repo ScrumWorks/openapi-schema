@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace ScrumWorks\OpenApiSchema\Tests\Annotation;
+namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
