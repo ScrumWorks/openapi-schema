@@ -10,6 +10,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
@@ -120,6 +121,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
     {
         $definition = [
             'type' => 'array',
+            // TODO: maybe also solve MixedSchema?
             'items' => $this->translateValueSchema($schema->getItemsSchema()),
         ];
         if ($schema->getMinItems()) {
@@ -182,11 +184,11 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
             }
             $definition['required'] = $schema->getRequiredProperties();
         }
-        if ($schema->getItemsSchema()) {
-            $definition['additionalProperties'] = $this->translateValueSchema($schema->getItemsSchema());
-        } else {
+        if ($schema->getItemsSchema() instanceof MixedSchema) {
             // "free-form" hashmap
             $definition['additionalProperties'] = true;
+        } else {
+            $definition['additionalProperties'] = $this->translateValueSchema($schema->getItemsSchema());
         }
         return $definition;
     }

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-use Exception;
-
 final class HashmapSchema extends AbstractValueSchema
 {
-    private ?ValueSchemaInterface $itemsSchema;
+    private ValueSchemaInterface $itemsSchema;
 
     /**
      * @var string[]
@@ -16,22 +14,18 @@ final class HashmapSchema extends AbstractValueSchema
     private array $requiredProperties;
 
     public function __construct(
-        ?ValueSchemaInterface $itemsSchema,
+        ValueSchemaInterface $itemsSchema,
         array $requiredProperties,
         bool $nullable,
         ?string $description
     ) {
         parent::__construct($nullable, $description);
 
-        if ($requiredProperties && $itemsSchema === null) {
-            throw new Exception('TODO');
-        }
-
         $this->itemsSchema = $itemsSchema;
         $this->requiredProperties = $requiredProperties;
     }
 
-    public function getItemsSchema(): ?ValueSchemaInterface
+    public function getItemsSchema(): ValueSchemaInterface
     {
         return $this->itemsSchema;
     }
