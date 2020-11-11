@@ -55,6 +55,26 @@ final class StringSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function getMinLength(): ?int
+    {
+        return $this->minLength;
+    }
+
+    public function getMaxLength(): ?int
+    {
+        return $this->maxLength;
+    }
+
+    public function getFormat(): ?string
+    {
+        return $this->format;
+    }
+
+    public function getPattern(): ?string
+    {
+        return $this->pattern;
+    }
+
     protected function createInstance(): StringSchema
     {
         return new StringSchema(

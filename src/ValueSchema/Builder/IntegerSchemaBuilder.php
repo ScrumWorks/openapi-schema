@@ -66,6 +66,31 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function getMinimum(): ?int
+    {
+        return $this->minimum;
+    }
+
+    public function getMaximum(): ?int
+    {
+        return $this->maximum;
+    }
+
+    public function getExclusiveMinimum(): ?bool
+    {
+        return $this->exclusiveMinimum;
+    }
+
+    public function getExclusiveMaximum(): ?bool
+    {
+        return $this->exclusiveMaximum;
+    }
+
+    public function getMultipleOf(): ?int
+    {
+        return $this->multipleOf;
+    }
+
     protected function createInstance(): IntegerSchema
     {
         return new IntegerSchema(
