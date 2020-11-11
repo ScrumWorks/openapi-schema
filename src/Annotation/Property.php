@@ -14,4 +14,9 @@ final class Property
      * @var string
      */
     public $description;
+
+    /**
+     * @var bool
+     */
+    public $required;
 }

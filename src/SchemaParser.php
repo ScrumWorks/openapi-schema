@@ -254,20 +254,41 @@ final class SchemaParser implements SchemaParserInterface
             throw new Exception('TODO');
         }
 
-        // TODO read annotation from class definition and add them to $annotations
+        // TODO maybe also read annotations from class iteself
 
         $reflection = new ReflectionClass($class);
+        $objectDefaultValues = $reflection->getDefaultProperties();
 
         $propertiesSchemas = [];
+        $requiredProperties = [];
         foreach ($reflection->getProperties() as $propertyReflection) {
             // if property is not public, then skip it.
             if (! $propertyReflection->isPublic()) {
                 continue;
             }
 
-            $propertiesSchemas[$propertyReflection->getName()] = $this->getPropertySchema($propertyReflection);
+            $propertyName = $propertyReflection->getName();
+            if ($this->isPropertyRequired($propertyReflection, $objectDefaultValues)) {
+                $requiredProperties[] = $propertyName;
+            }
+            $propertiesSchemas[$propertyName] = $this->getPropertySchema($propertyReflection);
         }
-        return (new ObjectSchemaBuilder())->withPropertiesSchemas($propertiesSchemas);
+        return (new ObjectSchemaBuilder())
+            ->withPropertiesSchemas($propertiesSchemas)
+            ->withRequiredProperties($requiredProperties);
+    }
+
+    private function isPropertyRequired(ReflectionProperty $propertyReflection, array $objectDefaultValues): bool
+    {
+        // TODO: not most effective solution, because we read annotations again in `getPropertySchema`
+        $annotations = (array) $this->annotationReader->getPropertyAnnotations($propertyReflection);
+        /** @var ?OA\Property $annotation */
+        $annotation = $this->findAnnotation($annotations, OA\Property::class);
+        if ($annotation && $annotation->required !== null) {
+            return $annotation->required;
+        }
+
+        return ! \array_key_exists($propertyReflection->getName(), $objectDefaultValues);
     }
 
     private function createUnionSchemaBuilder(
@@ -288,6 +309,11 @@ final class SchemaParser implements SchemaParserInterface
         $found = null;
         foreach ($annotations as $annotation) {
             if (\get_class($annotation) === $annotationClass) {
+                // micro-optimalization
+                if (! $exceptionOnAnotherValueInterface) {
+                    return $annotation;
+                }
+
                 $found = $annotation;
             } elseif (
                 $exceptionOnAnotherValueInterface
