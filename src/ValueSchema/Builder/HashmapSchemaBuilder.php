@@ -17,7 +17,7 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @var string[]
      */
-    protected array $requiredProperties;
+    protected array $requiredProperties = [];
 
     /**
      * @return static

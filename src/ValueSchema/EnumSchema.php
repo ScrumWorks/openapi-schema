@@ -14,7 +14,7 @@ final class EnumSchema extends AbstractValueSchema
     /**
      * @param array<?string> $enum
      */
-    public function __construct(array $enum, bool $nullable, ?string $description)
+    public function __construct(array $enum, bool $nullable = false, ?string $description = null)
     {
         parent::__construct($nullable, $description);
 

@@ -15,9 +15,9 @@ final class HashmapSchema extends AbstractValueSchema
 
     public function __construct(
         ValueSchemaInterface $itemsSchema,
-        array $requiredProperties,
-        bool $nullable,
-        ?string $description
+        array $requiredProperties = [],
+        bool $nullable = false,
+        ?string $description = null
     ) {
         parent::__construct($nullable, $description);
 

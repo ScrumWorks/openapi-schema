@@ -17,13 +17,13 @@ final class FloatSchema extends AbstractValueSchema
     private ?float $multipleOf;
 
     public function __construct(
-        ?float $minimum,
-        ?float $maximum,
-        ?bool $exclusiveMinimum,
-        ?bool $exclusiveMaximum,
-        ?float $multipleOf,
-        bool $nullable,
-        ?string $description
+        ?float $minimum = null,
+        ?float $maximum = null,
+        ?bool $exclusiveMinimum = null,
+        ?bool $exclusiveMaximum = null,
+        ?float $multipleOf = null,
+        bool $nullable = false,
+        ?string $description = null
     ) {
         parent::__construct($nullable, $description);
 
