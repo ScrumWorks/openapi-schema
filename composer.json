@@ -12,7 +12,9 @@
     ],
     "require": {
         "doctrine/annotations": "^1.11",
+        "ext-json": "*",
         "nette/utils": "^3.1",
+        "php": ">=7.4",
         "scrumworks/property-reader": "^0.3.0"
     },
     "require-dev": {
