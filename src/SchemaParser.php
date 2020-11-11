@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema;
 
-use Doctrine\Common\Annotations\Reader;
 use Exception;
-use LogicException;
 use ReflectionClass;
 use ReflectionProperty;
-use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\PropertySchemaDecoratorInterface;
+use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\SimplePropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
@@ -34,68 +33,79 @@ final class SchemaParser implements SchemaParserInterface
 {
     private PropertyTypeReaderInterface $propertyReader;
 
-    private Reader $annotationReader;
+    private PropertySchemaDecoratorInterface $propertySchemaDecorator;
 
-    public function __construct(PropertyTypeReaderInterface $propertyReader, Reader $annotationReader)
-    {
+    public function __construct(
+        PropertyTypeReaderInterface $propertyReader,
+        ?PropertySchemaDecoratorInterface $propertySchemaDecorator = null
+    ) {
         $this->propertyReader = $propertyReader;
-        $this->annotationReader = $annotationReader;
+        $propertySchemaDecorator ??= new SimplePropertySchemaDecorator();
+        $this->propertySchemaDecorator = $propertySchemaDecorator;
+    }
+
+    public function setPropertySchemaDecorator(PropertySchemaDecoratorInterface $propertySchemaDecorator): void
+    {
+        $this->propertySchemaDecorator = $propertySchemaDecorator;
     }
 
     public function getEntitySchema(string $class): ObjectSchema
     {
-        $builder = $this->createClassSchemaBuilder($class, []);
+        $builder = $this->createClassSchemaBuilder($class, null);
         return $builder->build();
     }
 
     public function getPropertySchema(ReflectionProperty $propertyReflection): ValueSchemaInterface
     {
         $variableType = $this->propertyReader->readUnifiedVariableType($propertyReflection);
-        $annotations = (array) $this->annotationReader->getPropertyAnnotations($propertyReflection);
-        return $this->variableTypeToVariableSchema($variableType, $annotations);
+        return $this->variableTypeToVariableSchema($variableType, $propertyReflection);
     }
 
     public function getVariableTypeSchema(?VariableTypeInterface $variableType): ValueSchemaInterface
     {
-        return $this->variableTypeToVariableSchema($variableType, []);
+        return $this->variableTypeToVariableSchema($variableType, null);
     }
 
     private function variableTypeToVariableSchema(
         ?VariableTypeInterface $variableType,
-        array $annotations
+        ?ReflectionProperty $propertyReflexion
     ): ValueSchemaInterface {
         if ($variableType === null) {
-            $schemaBuilder = $this->createMixedSchemaBuilder($annotations);
+            $schemaBuilder = $this->createMixedSchemaBuilder($propertyReflexion);
         } elseif ($variableType instanceof MixedVariableType) {
-            $schemaBuilder = $this->createMixedSchemaBuilder($annotations);
+            $schemaBuilder = $this->createMixedSchemaBuilder($propertyReflexion);
         } elseif ($variableType instanceof ScalarVariableType) {
             switch ($variableType->getType()) {
                 case ScalarVariableType::TYPE_INTEGER:
-                    $schemaBuilder = $this->createIntegerSchemaBuilder($annotations);
+                    $schemaBuilder = $this->createIntegerSchemaBuilder($propertyReflexion);
                     break;
                 case ScalarVariableType::TYPE_FLOAT:
-                    $schemaBuilder = $this->createFloatSchemaBuilder($annotations);
+                    $schemaBuilder = $this->createFloatSchemaBuilder($propertyReflexion);
                     break;
                 case ScalarVariableType::TYPE_BOOLEAN:
-                    $schemaBuilder = $this->createBooleanSchemaBuilder($annotations);
+                    $schemaBuilder = $this->createBooleanSchemaBuilder($propertyReflexion);
                     break;
                 case ScalarVariableType::TYPE_STRING:
-                    $schemaBuilder = $this->createStringSchemaBuilder($annotations);
+                    if ($propertyReflexion && $this->propertySchemaDecorator->isEnum($propertyReflexion)) {
+                        $schemaBuilder = $this->createEnumSchemaBuilder($propertyReflexion);
+                    } else {
+                        $schemaBuilder = $this->createStringSchemaBuilder($propertyReflexion);
+                    }
                     break;
             }
         } elseif ($variableType instanceof ArrayVariableType) {
             if ($variableType->getKeyType() === null) {
-                $schemaBuilder = $this->createArraySchemaBuilder($annotations);
+                $schemaBuilder = $this->createArraySchemaBuilder($propertyReflexion);
             } else {
-                $schemaBuilder = $this->createHashmapSchemaBuilder($annotations);
+                $schemaBuilder = $this->createHashmapSchemaBuilder($propertyReflexion);
             }
             $schemaBuilder = $schemaBuilder->withItemsSchema(
-                $this->variableTypeToVariableSchema($variableType->getItemType(), [])
+                $this->variableTypeToVariableSchema($variableType->getItemType(), null)
             );
         } elseif ($variableType instanceof ClassVariableType) {
-            $schemaBuilder = $this->createClassSchemaBuilder($variableType->getClass(), []);
+            $schemaBuilder = $this->createClassSchemaBuilder($variableType->getClass(), $propertyReflexion);
         } elseif ($variableType instanceof UnionVariableType) {
-            $schemaBuilder = $this->createUnionSchemaBuilder($variableType, $annotations);
+            $schemaBuilder = $this->createUnionSchemaBuilder($variableType, $propertyReflexion);
         }
         if (! isset($schemaBuilder)) {
             throw new Exception('TODO');
@@ -107,222 +117,140 @@ final class SchemaParser implements SchemaParserInterface
             $schemaBuilder = $schemaBuilder->withNullable($variableType->isNullable());
         }
 
-        if ($annotation = $this->findAnnotation($annotations, OA\Property::class, false)) {
-            /** @var ?OA\Property $annotation */
-            if ($annotation->description !== null) {
-                $schemaBuilder = $schemaBuilder->withDescription($annotation->description);
-            }
+        if ($propertyReflexion) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateValueSchemaBuilder(
+                $schemaBuilder,
+                $propertyReflexion
+            );
         }
 
         return $schemaBuilder->build();
     }
 
-    private function createMixedSchemaBuilder(array $annotations): MixedSchemaBuilder
+    private function createMixedSchemaBuilder(?ReflectionProperty $propertyReflection): MixedSchemaBuilder
     {
-        return new MixedSchemaBuilder();
+        $schemaBuilder = new MixedSchemaBuilder();
+        if ($propertyReflection) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateMixedSchemaBuilder(
+                $schemaBuilder,
+                $propertyReflection
+            );
+        }
+        return $schemaBuilder;
     }
 
-    private function createIntegerSchemaBuilder(array $annotations): IntegerSchemaBuilder
+    private function createIntegerSchemaBuilder(?ReflectionProperty $propertyReflection): IntegerSchemaBuilder
     {
         $schemaBuilder = new IntegerSchemaBuilder();
-
-        if ($annotation = $this->findAnnotation($annotations, OA\IntegerValue::class)) {
-            /** @var ?OA\IntegerValue $annotation */
-            if ($annotation->minimum !== null) {
-                $schemaBuilder = $schemaBuilder->withMinimum($annotation->minimum);
-            }
-            if ($annotation->maximum !== null) {
-                $schemaBuilder = $schemaBuilder->withMaximum($annotation->maximum);
-            }
-            if ($annotation->exclusiveMinimum !== null) {
-                $schemaBuilder = $schemaBuilder->withExclusiveMinimum($annotation->exclusiveMinimum);
-            }
-            if ($annotation->exclusiveMaximum !== null) {
-                $schemaBuilder = $schemaBuilder->withExclusiveMaximum($annotation->exclusiveMaximum);
-            }
-            if ($annotation->multipleOf !== null) {
-                $schemaBuilder = $schemaBuilder->withMultipleOf($annotation->multipleOf);
-            }
+        if ($propertyReflection) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateIntegerSchemaBuilder(
+                $schemaBuilder,
+                $propertyReflection
+            );
         }
-
         return $schemaBuilder;
     }
 
-    private function createFloatSchemaBuilder(array $annotations): FloatSchemaBuilder
+    private function createFloatSchemaBuilder(?ReflectionProperty $propertyReflection): FloatSchemaBuilder
     {
         $schemaBuilder = new FloatSchemaBuilder();
-
-        if ($annotation = $this->findAnnotation($annotations, OA\FloatValue::class)) {
-            /** @var ?OA\FloatValue $annotation */
-            if ($annotation->minimum !== null) {
-                $schemaBuilder = $schemaBuilder->withMinimum($annotation->minimum);
-            }
-            if ($annotation->maximum !== null) {
-                $schemaBuilder = $schemaBuilder->withMaximum($annotation->maximum);
-            }
-            if ($annotation->exclusiveMinimum !== null) {
-                $schemaBuilder = $schemaBuilder->withExclusiveMinimum($annotation->exclusiveMinimum);
-            }
-            if ($annotation->exclusiveMaximum !== null) {
-                $schemaBuilder = $schemaBuilder->withExclusiveMaximum($annotation->exclusiveMaximum);
-            }
-            if ($annotation->multipleOf !== null) {
-                $schemaBuilder = $schemaBuilder->withMultipleOf($annotation->multipleOf);
-            }
+        if ($propertyReflection) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateFloatSchemaBuilder(
+                $schemaBuilder,
+                $propertyReflection
+            );
         }
-
         return $schemaBuilder;
     }
 
-    private function createBooleanSchemaBuilder(array $annotations): BooleanSchemaBuilder
+    private function createBooleanSchemaBuilder(?ReflectionProperty $propertyReflection): BooleanSchemaBuilder
     {
-        return new BooleanSchemaBuilder();
+        $schemaBuilder = new BooleanSchemaBuilder();
+        if ($propertyReflection) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateBooleanSchemaBuilder(
+                $schemaBuilder,
+                $propertyReflection
+            );
+        }
+        return $schemaBuilder;
     }
 
-    private function createStringSchemaBuilder(array $annotations): AbstractSchemaBuilder
+    private function createStringSchemaBuilder(?ReflectionProperty $propertyReflection): AbstractSchemaBuilder
     {
-        // try is its enum
-        if ($annotation = $this->findAnnotation($annotations, OA\EnumValue::class, false)) {
-            // ensure there is only EnumValue annotation, not StringValue
-            $this->findAnnotation($annotations, OA\EnumValue::class);
-
-            $schemaBuilder = new EnumSchemaBuilder();
-            /** @var ?OA\EnumValue $annotation */
-            if ($annotation->enum) {
-                $schemaBuilder = $schemaBuilder->withEnum($annotation->enum);
-            }
-            return $schemaBuilder;
-        }
-
         $schemaBuilder = new StringSchemaBuilder();
-        if ($annotation = $this->findAnnotation($annotations, OA\StringValue::class)) {
-            /** @var ?OA\StringValue $annotation */
-            if ($annotation->minLength !== null) {
-                $schemaBuilder = $schemaBuilder->withMinLength($annotation->minLength);
-            }
-            if ($annotation->maxLength !== null) {
-                $schemaBuilder = $schemaBuilder->withMaxLength($annotation->maxLength);
-            }
-            if ($annotation->format !== null) {
-                $schemaBuilder = $schemaBuilder->withFormat($annotation->format);
-            }
-            if ($annotation->pattern !== null) {
-                $schemaBuilder = $schemaBuilder->withPattern($annotation->pattern);
-            }
+        if ($propertyReflection) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateStringSchemaBuilder(
+                $schemaBuilder,
+                $propertyReflection
+            );
         }
-
         return $schemaBuilder;
     }
 
-    private function createArraySchemaBuilder(array $annotations): ArraySchemaBuilder
+    private function createEnumSchemaBuilder(?ReflectionProperty $propertyReflection): AbstractSchemaBuilder
+    {
+        $schemaBuilder = new EnumSchemaBuilder();
+        if ($propertyReflection) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateEnumSchemaBuilder(
+                $schemaBuilder,
+                $propertyReflection
+            );
+        }
+        return $schemaBuilder;
+    }
+
+    private function createArraySchemaBuilder(?ReflectionProperty $propertyReflection): ArraySchemaBuilder
     {
         $schemaBuilder = new ArraySchemaBuilder();
-
-        if ($annotation = $this->findAnnotation($annotations, OA\ArrayValue::class)) {
-            /** @var ?OA\ArrayValue $annotation */
-            if ($annotation->minItems !== null) {
-                $schemaBuilder = $schemaBuilder->withMinItems($annotation->minItems);
-            }
-            if ($annotation->maxItems !== null) {
-                $schemaBuilder = $schemaBuilder->withMaxItems($annotation->maxItems);
-            }
-            if ($annotation->uniqueItems !== null) {
-                $schemaBuilder = $schemaBuilder->withUniqueItems($annotation->uniqueItems);
-            }
+        if ($propertyReflection) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateArraySchemaBuilder(
+                $schemaBuilder,
+                $propertyReflection
+            );
         }
-
         return $schemaBuilder;
     }
 
-    private function createHashmapSchemaBuilder(array $annotations): HashmapSchemaBuilder
+    private function createHashmapSchemaBuilder(?ReflectionProperty $propertyReflection): HashmapSchemaBuilder
     {
         $schemaBuilder = new HashmapSchemaBuilder();
-
-        if ($annotation = $this->findAnnotation($annotations, OA\HashmapValue::class)) {
-            /** @var ?OA\HashmapValue $annotation */
-            if ($annotation->requiredProperties !== null) {
-                $schemaBuilder = $schemaBuilder->withRequiredProperties($annotation->requiredProperties);
-            }
+        if ($propertyReflection) {
+            $schemaBuilder = $this->propertySchemaDecorator->decorateHashmapSchemaBuilder(
+                $schemaBuilder,
+                $propertyReflection
+            );
         }
-
         return $schemaBuilder;
     }
 
-    private function createClassSchemaBuilder(string $class, array $annotations): ObjectSchemaBuilder
-    {
+    private function createClassSchemaBuilder(
+        string $class,
+        ?ReflectionProperty $propertyReflection
+    ): ObjectSchemaBuilder {
         if (! \class_exists($class)) {
             throw new Exception('TODO');
         }
 
-        // TODO maybe also read annotations from class iteself
-
-        $reflection = new ReflectionClass($class);
-        $objectDefaultValues = $reflection->getDefaultProperties();
+        $classReflexion = new ReflectionClass($class);
 
         $propertiesSchemas = [];
-        $requiredProperties = [];
-        foreach ($reflection->getProperties() as $propertyReflection) {
+        foreach ($classReflexion->getProperties() as $classPropertyReflexion) {
             // if property is not public, then skip it.
-            if (! $propertyReflection->isPublic()) {
+            if (! $classPropertyReflexion->isPublic()) {
                 continue;
             }
 
-            $propertyName = $propertyReflection->getName();
-            if ($this->isPropertyRequired($propertyReflection, $objectDefaultValues)) {
-                $requiredProperties[] = $propertyName;
-            }
-            $propertiesSchemas[$propertyName] = $this->getPropertySchema($propertyReflection);
-        }
-        return (new ObjectSchemaBuilder())
-            ->withPropertiesSchemas($propertiesSchemas)
-            ->withRequiredProperties($requiredProperties);
-    }
-
-    private function isPropertyRequired(ReflectionProperty $propertyReflection, array $objectDefaultValues): bool
-    {
-        // TODO: not most effective solution, because we read annotations again in `getPropertySchema`
-        $annotations = (array) $this->annotationReader->getPropertyAnnotations($propertyReflection);
-        /** @var ?OA\Property $annotation */
-        $annotation = $this->findAnnotation($annotations, OA\Property::class);
-        if ($annotation && $annotation->required !== null) {
-            return $annotation->required;
+            $propertiesSchemas[$classPropertyReflexion->getName()] = $this->getPropertySchema($classPropertyReflexion);
         }
 
-        return ! \array_key_exists($propertyReflection->getName(), $objectDefaultValues);
+        $schemaBuilder = (new ObjectSchemaBuilder())->withPropertiesSchemas($propertiesSchemas);
+        return $this->propertySchemaDecorator->decorateObjectSchemaBuilder($schemaBuilder, $classReflexion);
     }
 
     private function createUnionSchemaBuilder(
         UnionVariableType $unionVariableType,
-        array $annotations
+        ?ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         throw new Exception('Union types are not supported');
-    }
-
-    /**
-     * @return ?mixed
-     */
-    private function findAnnotation(
-        array $annotations,
-        string $annotationClass,
-        bool $exceptionOnAnotherValueInterface = true
-    ) {
-        $found = null;
-        foreach ($annotations as $annotation) {
-            if (\get_class($annotation) === $annotationClass) {
-                // micro-optimalization
-                if (! $exceptionOnAnotherValueInterface) {
-                    return $annotation;
-                }
-
-                $found = $annotation;
-            } elseif (
-                $exceptionOnAnotherValueInterface
-                && \is_subclass_of($annotation, OA\ValueInterface::class)
-             ) {
-                throw new LogicException(\sprintf("Unexpected annotation '%s'", \get_class($annotation)));
-            }
-        }
-
-        return $found;
     }
 }

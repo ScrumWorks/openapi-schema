@@ -42,6 +42,22 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    /**
+     * @return ValueSchemaInterface[]
+     */
+    public function getPropertiesSchemas(): array
+    {
+        return $this->propertiesSchemas;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRequiredProperties(): array
+    {
+        return $this->requiredProperties;
+    }
+
     protected function createInstance(): ObjectSchema
     {
         return new ObjectSchema(

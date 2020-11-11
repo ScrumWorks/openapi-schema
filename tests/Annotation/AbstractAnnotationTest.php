@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Tests\Annotation;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
+use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 use ScrumWorks\PropertyReader\PropertyTypeReader;
@@ -21,9 +22,11 @@ abstract class AbstractAnnotationTest extends TestCase
     {
         $this->schemaParser = new SchemaParser(
             new PropertyTypeReader(
-                new VariableTypeUnifyService()
+                new VariableTypeUnifyService(),
             ),
-            new AnnotationReader()
+            new AnnotationPropertySchemaDecorator(
+                new AnnotationReader()
+            )
         );
         $this->reflection = $this->createReflectionClass();
     }
