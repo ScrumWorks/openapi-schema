@@ -119,7 +119,7 @@ class ValueValidatorTest extends TestCase
             'enum:valid' => [new EnumSchema(['a', 'b', 'c']), 'b', []],
             'enum:valid-null' => [new EnumSchema(['a', 'b', 'c'], true), null, []],
             'enum:null' => [new EnumSchema(['a']), null, [[1001, 'Unexpected NULL value.', '']]],
-            'enum:type' => [new EnumSchema([]), false, [[1002, "Type 'string' expected.", '']]],
+            'enum:type' => [new EnumSchema(['a']), false, [[1002, "Type 'string' expected.", '']]],
             'enum:invalid-choice' => [
                 new EnumSchema(['a', 'b']),
                 'c',
@@ -395,6 +395,7 @@ class ValueValidatorTest extends TestCase
                     'obj' => new ObjectSchema([
                         'arr' => new ArraySchema(new IntegerSchema()),
                     ]),
+                    'reqProp' => new StringSchema(),
                 ], ['reqProp']),
                 (object)[
                     'int1' => false,
