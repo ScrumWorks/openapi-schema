@@ -34,7 +34,8 @@ class Test
 $schemaParser = new \ScrumWorks\OpenApiSchema\SchemaParser(
     new \ScrumWorks\PropertyReader\PropertyTypeReader(
         new \ScrumWorks\PropertyReader\VariableTypeUnifyService()
-    )
+    ),
+    new \Doctrine\Common\Annotations\AnnotationReader()
 );
 $schema = $schemaParser->getEntitySchema('Test');
 // Now you can get informations about entity schema

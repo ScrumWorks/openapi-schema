@@ -8,7 +8,7 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
-final class FloatValue
+final class FloatValue implements ValueInterface
 {
     /**
      * @var int|float
