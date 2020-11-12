@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema;
 
 use Exception;
+use LogicException;
 use ReflectionClass;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\PropertySchemaDecoratorInterface;
@@ -108,10 +109,14 @@ final class SchemaParser implements SchemaParserInterface
             $schemaBuilder = $this->createUnionSchemaBuilder($variableType, $propertyReflexion);
         }
         if (! isset($schemaBuilder)) {
-            throw new Exception('TODO');
+            throw new LogicException(\sprintf(
+                "Unprocessable VariableTypeInterface '%s' (class %s)",
+                $variableType->getTypeName(),
+                \get_class($variableType)
+            ));
         }
 
-        if ($schemaBuilder instanceof MixedSchemaBuilder) {
+        if ($variableType === null) {
             $schemaBuilder = $schemaBuilder->withNullable(true);
         } else {
             $schemaBuilder = $schemaBuilder->withNullable($variableType->isNullable());
