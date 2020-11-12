@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use Error;
-use Exception;
+use LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 abstract class AbstractSchemaBuilder
@@ -53,8 +53,7 @@ abstract class AbstractSchemaBuilder
         try {
             \assert($this->{$property});
         } catch (Error $e) {
-            // TODO: make our own Exception
-            throw new Exception(\sprintf("Property '%s' isn't filled", $property));
+            throw new LogicException(\sprintf("Property '%s' isn't filled", $property));
         }
     }
 

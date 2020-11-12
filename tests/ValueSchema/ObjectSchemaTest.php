@@ -44,4 +44,12 @@ class ObjectSchemaTest extends TestCase
             ['string', 'int', 'bool']
         );
     }
+
+    public function testNotExistsProperty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Property 'not-exists' doesn't exists");
+        $schema = new ObjectSchema([]);
+        $schema->getPropertySchema('not-exists');
+    }
 }

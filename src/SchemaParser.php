@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema;
 
-use Exception;
+use DomainException;
 use LogicException;
 use ReflectionClass;
 use ReflectionProperty;
@@ -233,7 +233,7 @@ final class SchemaParser implements SchemaParserInterface
         ?ReflectionProperty $propertyReflection
     ): ObjectSchemaBuilder {
         if (! \class_exists($class)) {
-            throw new Exception('TODO');
+            throw new LogicException(\sprintf("Class '${class}' doesn't exists"));
         }
 
         $classReflexion = new ReflectionClass($class);
@@ -256,6 +256,6 @@ final class SchemaParser implements SchemaParserInterface
         UnionVariableType $unionVariableType,
         ?ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
-        throw new Exception('Union types are not supported');
+        throw new DomainException('Union types are not supported');
     }
 }

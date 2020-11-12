@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
-use Exception;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -64,8 +63,8 @@ class SchemaParserTest extends TestCase
 
     public function testGetEntitySchemaOnNonExistingClass(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('TODO');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage("Class 'abc-not-existing' doesn't exists");
         $this->schemaParser->getEntitySchema('abc-not-existing');
     }
 
