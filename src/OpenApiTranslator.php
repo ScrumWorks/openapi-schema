@@ -194,9 +194,10 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
 
     private function translateGenericProperties(ValueSchemaInterface $schema): array
     {
-        $definition = [
-            'nullable' => $schema->isNullable(),
-        ];
+        $definition = [];
+        if ($schema->isNullable()) {
+            $definition['nullable'] = true;
+        }
         if ($schema->getDescription()) {
             $definition['description'] = $schema->getDescription();
         }
