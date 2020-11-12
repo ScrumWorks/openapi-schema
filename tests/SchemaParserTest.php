@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionProperty;
@@ -14,6 +15,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\EnumSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
@@ -130,6 +132,15 @@ class SchemaParserTest extends TestCase
         $this->assertInstanceOf(ObjectSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
     }
 
+    public function testDateTime(): void
+    {
+        $variableType = new ClassVariableType(DateTime::class, false);
+        $this->assertEquals(
+            new StringSchema(null, null, 'date-time'),
+            $this->schemaParser->getVariableTypeSchema($variableType)
+        );
+    }
+
     public function testEnum(): void
     {
         $schemaParser = new SchemaParser(
@@ -140,10 +151,11 @@ class SchemaParserTest extends TestCase
                     return true;
                 }
 
-                public function decorateEnumSchemaBuilder(
-                    EnumSchemaBuilder $builder,
-                    ReflectionProperty $propertyReflection
+                public function decorateStringSchemaBuilder(
+                    StringSchemaBuilder $builder,
+                    ?ReflectionProperty $propertyReflection
                 ): EnumSchemaBuilder {
+                    $builder = new EnumSchemaBuilder();
                     return $builder->withEnum(['a', 'b']);
                 }
             }
@@ -174,7 +186,7 @@ class SchemaParserTest extends TestCase
             new class() extends SimplePropertySchemaDecorator {
                 public function decorateValueSchemaBuilder(
                     AbstractSchemaBuilder $builder,
-                    ReflectionProperty $propertyReflection
+                    ?ReflectionProperty $propertyReflection
                 ): AbstractSchemaBuilder {
                     return $builder->withDescription('SOME DESCRIPTION');
                 }

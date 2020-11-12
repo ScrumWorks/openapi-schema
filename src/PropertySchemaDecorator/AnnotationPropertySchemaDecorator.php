@@ -20,7 +20,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\Builder\MixedSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 
-final class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterface
+class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterface
 {
     private Reader $annotationReader;
 
@@ -29,20 +29,14 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
         $this->annotationReader = $annotationReader;
     }
 
-    public function isEnum(ReflectionProperty $propertyReflection): bool
-    {
-        $annotations = $this->getPropertyAnnotation($propertyReflection);
-        return $this->findAnnotation($annotations, OA\EnumValue::class, false) !== null;
-    }
-
     public function decorateValueSchemaBuilder(
         AbstractSchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
+        ?ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
-        $annotations = $this->getPropertyAnnotation($propertyReflection);
+        $annotations = $this->getPropertyAnnotations($propertyReflection);
 
         if ($annotation = $this->findAnnotation($annotations, OA\Property::class, false)) {
-            /** @var ?OA\Property $annotation */
+            /** @var OA\Property $annotation */
             if ($annotation->description !== null) {
                 $builder = $builder->withDescription($annotation->description);
             }
@@ -53,19 +47,19 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
 
     public function decorateMixedSchemaBuilder(
         MixedSchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
-    ): MixedSchemaBuilder {
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateIntegerSchemaBuilder(
         IntegerSchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
-    ): IntegerSchemaBuilder {
-        $annotations = $this->getPropertyAnnotation($propertyReflection);
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
+        $annotations = $this->getPropertyAnnotations($propertyReflection);
 
         if ($annotation = $this->findAnnotation($annotations, OA\IntegerValue::class)) {
-            /** @var ?OA\IntegerValue $annotation */
+            /** @var OA\IntegerValue $annotation */
             if ($annotation->minimum !== null) {
                 $builder = $builder->withMinimum($annotation->minimum);
             }
@@ -88,12 +82,12 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
 
     public function decorateFloatSchemaBuilder(
         FloatSchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
-    ): FloatSchemaBuilder {
-        $annotations = $this->getPropertyAnnotation($propertyReflection);
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
+        $annotations = $this->getPropertyAnnotations($propertyReflection);
 
         if ($annotation = $this->findAnnotation($annotations, OA\FloatValue::class)) {
-            /** @var ?OA\FloatValue $annotation */
+            /** @var OA\FloatValue $annotation */
             if ($annotation->minimum !== null) {
                 $builder = $builder->withMinimum($annotation->minimum);
             }
@@ -116,19 +110,24 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
 
     public function decorateBooleanSchemaBuilder(
         BooleanSchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
-    ): BooleanSchemaBuilder {
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateStringSchemaBuilder(
         StringSchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
-    ): StringSchemaBuilder {
-        $annotations = $this->getPropertyAnnotation($propertyReflection);
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
+        $annotations = $this->getPropertyAnnotations($propertyReflection);
+
+        if ($this->findAnnotation($annotations, OA\EnumValue::class, false)) {
+            $builder = new EnumSchemaBuilder();
+            return $this->decorateEnumSchemaBuilder($builder, $propertyReflection);
+        }
 
         if ($annotation = $this->findAnnotation($annotations, OA\StringValue::class)) {
-            /** @var ?OA\StringValue $annotation */
+            /** @var OA\StringValue $annotation */
             if ($annotation->minLength !== null) {
                 $builder = $builder->withMinLength($annotation->minLength);
             }
@@ -148,12 +147,12 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
 
     public function decorateEnumSchemaBuilder(
         EnumSchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
-    ): EnumSchemaBuilder {
-        $annotations = $this->getPropertyAnnotation($propertyReflection);
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
+        $annotations = $this->getPropertyAnnotations($propertyReflection);
 
         if ($annotation = $this->findAnnotation($annotations, OA\EnumValue::class)) {
-            /** @var ?OA\EnumValue $annotation */
+            /** @var OA\EnumValue $annotation */
             if ($annotation->enum) {
                 $builder = $builder->withEnum($annotation->enum);
             }
@@ -164,12 +163,12 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
 
     public function decorateArraySchemaBuilder(
         ArraySchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
-    ): ArraySchemaBuilder {
-        $annotations = $this->getPropertyAnnotation($propertyReflection);
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
+        $annotations = $this->getPropertyAnnotations($propertyReflection);
 
         if ($annotation = $this->findAnnotation($annotations, OA\ArrayValue::class)) {
-            /** @var ?OA\ArrayValue $annotation */
+            /** @var OA\ArrayValue $annotation */
             if ($annotation->minItems !== null) {
                 $builder = $builder->withMinItems($annotation->minItems);
             }
@@ -186,12 +185,12 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
 
     public function decorateHashmapSchemaBuilder(
         HashmapSchemaBuilder $builder,
-        ReflectionProperty $propertyReflection
-    ): HashmapSchemaBuilder {
-        $annotations = $this->getPropertyAnnotation($propertyReflection);
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
+        $annotations = $this->getPropertyAnnotations($propertyReflection);
 
         if ($annotation = $this->findAnnotation($annotations, OA\HashmapValue::class)) {
-            /** @var ?OA\HashmapValue $annotation */
+            /** @var OA\HashmapValue $annotation */
             if ($annotation->requiredProperties !== null) {
                 $builder = $builder->withRequiredProperties($annotation->requiredProperties);
             }
@@ -202,8 +201,9 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
 
     public function decorateObjectSchemaBuilder(
         ObjectSchemaBuilder $builder,
-        ReflectionClass $classReflexion
-    ): ObjectSchemaBuilder {
+        ReflectionClass $classReflexion,
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
         $objectDefaultValues = $classReflexion->getDefaultProperties();
         $requiredProperties = [];
         foreach (\array_keys($builder->getPropertiesSchemas()) as $propertyName) {
@@ -215,9 +215,9 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
         return $builder->withRequiredProperties($requiredProperties);
     }
 
-    private function isPropertyRequired(ReflectionProperty $propertyReflection, array $objectDefaultValues): bool
+    private function isPropertyRequired(?ReflectionProperty $propertyReflection, array $objectDefaultValues): bool
     {
-        $annotations = (array) $this->annotationReader->getPropertyAnnotations($propertyReflection);
+        $annotations = $this->getPropertyAnnotations($propertyReflection);
         /** @var ?OA\Property $annotation */
         $annotation = $this->findAnnotation($annotations, OA\Property::class);
         if ($annotation && $annotation->required !== null) {
@@ -226,19 +226,19 @@ final class AnnotationPropertySchemaDecorator implements PropertySchemaDecorator
         return ! \array_key_exists($propertyReflection->getName(), $objectDefaultValues);
     }
 
-    private function getPropertyAnnotation(ReflectionProperty $propertyReflection): array
+    private function getPropertyAnnotations(?ReflectionProperty $propertyReflection): array
     {
+        if ($propertyReflection === null) {
+            return [];
+        }
         return (array) $this->annotationReader->getPropertyAnnotations($propertyReflection);
     }
 
-    /**
-     * @return ?object
-     */
     private function findAnnotation(
         array $annotations,
         string $annotationClass,
         bool $exceptionOnAnotherValueInterface = true
-    ) {
+    ): ?object {
         $found = null;
         foreach ($annotations as $annotation) {
             if (\get_class($annotation) === $annotationClass) {

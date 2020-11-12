@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPrope
 
 use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 
 class ObjectValueTestClass
 {
@@ -28,6 +29,7 @@ class ObjectValueTest extends AbstractAnnotationTest
 {
     public function testRequiredProperties(): void
     {
+        /** @var ObjectSchema $schema */
         $schema = $this->schemaParser->getEntitySchema(ObjectValueTestClass::class);
         // $a is required, because doesn't have default value
         // $b isn't required, because it's have default value
