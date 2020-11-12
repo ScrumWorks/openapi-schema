@@ -37,4 +37,14 @@ final class EnumValidator extends AbstractValidator
             $resultBuilder->addChoicesViolation($this->schema->getEnum(), $breadCrumbPath);
         }
     }
+
+    protected function collectPossibleViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+
+        $resultBuilder->addTypeViolation('string', $breadCrumbPath);
+        $resultBuilder->addChoicesViolation($this->schema->getEnum(), $breadCrumbPath);
+    }
 }

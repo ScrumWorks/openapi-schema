@@ -51,4 +51,22 @@ final class FloatValidator extends AbstractNumberValidator
             $breadCrumbPath,
         );
     }
+
+    protected function collectPossibleViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+
+        $resultBuilder->addTypeViolation('number', $breadCrumbPath);
+        $this->collectNumberViolationExamples(
+            $resultBuilder,
+            $this->schema->getMinimum(),
+            $this->schema->getMaximum(),
+            $this->schema->getExclusiveMinimum(),
+            $this->schema->getExclusiveMaximum(),
+            $this->schema->getMultipleOf(),
+            $breadCrumbPath,
+        );
+    }
 }

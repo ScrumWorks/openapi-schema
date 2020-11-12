@@ -58,4 +58,20 @@ final class HashmapValidator extends AbstractValidator
             $resultBuilder->mergeResult($propertyValidationResult);
         }
     }
+
+    protected function collectPossibleViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+
+        $resultBuilder->addTypeViolation('object', $breadCrumbPath);
+        $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb('key'));
+        $resultBuilder->mergeViolations(
+            $this->valueValidator->getPossibleViolationExamples(
+                $this->schema->getItemsSchema(),
+                $breadCrumbPath->withNextBreadCrumb('key')
+            ),
+        );
+    }
 }

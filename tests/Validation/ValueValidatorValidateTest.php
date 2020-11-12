@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
 use PHPUnit\Framework\TestCase;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidityViolation;
-use ScrumWorks\OpenApiSchema\Validation\ValueValidator;
+use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\AssertViolationTrait;
+use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
@@ -20,8 +18,11 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
-class ValueValidatorTest extends TestCase
+class ValueValidatorValidateTest extends TestCase
 {
+    use AssertViolationTrait;
+    use CreateValidatorTrait;
+
     /**
      * @dataProvider dpTestArray
      * @dataProvider dpTestBoolean
@@ -38,31 +39,11 @@ class ValueValidatorTest extends TestCase
      */
     public function test(ValueSchemaInterface $schema, $data, array $expectedViolations): void
     {
-        $resultBuilderFactory = new class() implements ValidationResultBuilderFactoryInterface {
-            public function create(): ValidationResultBuilderInterface
-            {
-                return new TestValidationResultBuilder();
-            }
-        };
-        $validator = new ValueValidator($resultBuilderFactory);
-        $result = $validator->validate($schema, $data);
-
+        $result = $this->createValueValidator()->validate($schema, $data);
         $actualViolations = $result->getViolations();
-        $differentViolationCountMsg = \implode("\n", \array_map(
-            static fn (ValidityViolation $actualViolation) => $actualViolation->getMessage(),
-            $actualViolations
-        ));
-        $this->assertCount(\count($expectedViolations), $actualViolations, $differentViolationCountMsg);
+
+        $this->assertViolations($expectedViolations, $actualViolations);
         $this->assertSame(empty($expectedViolations), $result->isValid(), 'isValid is different');
-
-        for ($i = 0; $i < \count($expectedViolations); ++$i) {
-            $actualViolation = $actualViolations[$i];
-            $expectedViolation = $expectedViolations[$i];
-
-            $this->assertSame($expectedViolation[1], $actualViolation->getMessage());
-            $this->assertSame($expectedViolation[0], $actualViolation->getViolationCode());
-            $this->assertSame($expectedViolation[2], (string) $actualViolation->getBreadCrumbPath());
-        }
     }
 
     public function dpTestArray(): array
@@ -289,12 +270,12 @@ class ValueValidatorTest extends TestCase
             'string:format' => [
                 new StringSchema(null, null, 'date-time'),
                 '2020-12-30',
-                [[1016, 'Invalid format.', '']],
+                [[1016, "It has to match format 'date-time'.", '']],
             ],
             'string:pattern' => [
                 new StringSchema(null, null, null, '-[0-9]{3}'),
                 '2020-12-30',
-                [[1017, 'It has to match pattern.', '']],
+                [[1017, "It has to match pattern '-[0-9]{3}'.", '']],
             ],
         ];
     }

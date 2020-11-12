@@ -49,14 +49,35 @@ final class StringValidator extends AbstractValidator
         if (($pattern = $this->schema->getPattern()) !== null) {
             $escapedPattern = \str_replace('~', '\\~', $pattern);
             if (! Strings::match($data, "~${escapedPattern}~")) {
-                $resultBuilder->addPatternViolation($breadCrumbPath);
+                $resultBuilder->addPatternViolation($pattern, $breadCrumbPath);
             }
         }
         if (
             ($format = $this->schema->getFormat()) !== null
             && ! Strings::match($data, $this->formatToPattern($format))
         ) {
-            $resultBuilder->addFormatViolation($breadCrumbPath);
+            $resultBuilder->addFormatViolation($format, $breadCrumbPath);
+        }
+    }
+
+    protected function collectPossibleViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+
+        $resultBuilder->addTypeViolation('string', $breadCrumbPath);
+        if (($minLength = $this->schema->getMinLength()) !== null) {
+            $resultBuilder->addMinLengthViolation($minLength, $breadCrumbPath);
+        }
+        if (($maxLength = $this->schema->getMaxLength()) !== null) {
+            $resultBuilder->addMaxLengthViolation($maxLength, $breadCrumbPath);
+        }
+        if (($pattern = $this->schema->getPattern()) !== null) {
+            $resultBuilder->addPatternViolation($pattern, $breadCrumbPath);
+        }
+        if (($format = $this->schema->getFormat()) !== null) {
+            $resultBuilder->addFormatViolation($format, $breadCrumbPath);
         }
     }
 

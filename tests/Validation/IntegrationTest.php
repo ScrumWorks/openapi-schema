@@ -7,14 +7,15 @@ namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;
-use ScrumWorks\OpenApiSchema\Validation\ValueValidator;
+use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
+use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\TestEntity;
 use ScrumWorks\PropertyReader\PropertyTypeReader;
 use ScrumWorks\PropertyReader\VariableTypeUnifyService;
 
 class IntegrationTest extends TestCase
 {
+    use CreateValidatorTrait;
+
     public function testValid(): void
     {
         $data = \json_decode('
@@ -33,7 +34,7 @@ class IntegrationTest extends TestCase
         ');
 
         $schemaParser = $this->createSchemaParser();
-        $validator = $this->createValidator();
+        $validator = $this->createValueValidator();
 
         $schema = $schemaParser->getEntitySchema(TestEntity::class);
         $validationResult = $validator->validate($schema, $data);
@@ -60,7 +61,7 @@ class IntegrationTest extends TestCase
         ');
 
         $schemaParser = $this->createSchemaParser();
-        $validator = $this->createValidator();
+        $validator = $this->createValueValidator();
 
         $schema = $schemaParser->getEntitySchema(TestEntity::class);
         $validationResult = $validator->validate($schema, $data);
@@ -76,18 +77,6 @@ class IntegrationTest extends TestCase
 
         $this->assertSame("Type 'string' expected.", $violations[2]->getMessage());
         $this->assertSame('objekt.hash.5', (string) $violations[2]->getBreadCrumbPath());
-    }
-
-    private function createValidator(): ValueValidator
-    {
-        $resultBuilderFactory = new class() implements ValidationResultBuilderFactoryInterface {
-            public function create(): ValidationResultBuilderInterface
-            {
-                return new TestValidationResultBuilder();
-            }
-        };
-
-        return new ValueValidator($resultBuilderFactory);
     }
 
     private function createSchemaParser(): SchemaParserInterface

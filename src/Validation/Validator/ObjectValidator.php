@@ -62,4 +62,24 @@ final class ObjectValidator extends AbstractValidator
             }
         }
     }
+
+    protected function collectPossibleViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+
+        $resultBuilder->addTypeViolation('object', $breadCrumbPath);
+        $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb('property'));
+        $resultBuilder->addUnexpectedViolation($breadCrumbPath->withNextBreadCrumb('unknownProperty'));
+
+        foreach ($this->schema->getPropertiesSchemas() as $propertyName => $propertySchema) {
+            $resultBuilder->mergeViolations(
+                $this->valueValidator->getPossibleViolationExamples(
+                    $propertySchema,
+                    $breadCrumbPath->withNextBreadCrumb($propertyName)
+                ),
+            );
+        }
+    }
 }

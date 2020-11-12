@@ -22,4 +22,13 @@ final class BooleanValidator extends AbstractValidator
             $resultBuilder->addTypeViolation('boolean', $breadCrumbPath);
         }
     }
+
+    protected function collectPossibleViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+
+        $resultBuilder->addTypeViolation('boolean', $breadCrumbPath);
+    }
 }
