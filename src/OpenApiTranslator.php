@@ -65,8 +65,6 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
     {
         $definition = [
             'type' => 'integer',
-            // JSON use 32bit integers
-            'format' => 'int32',
         ];
         if ($schema->getMinimum() !== null) {
             $definition['minimum'] = $schema->getMinimum();
