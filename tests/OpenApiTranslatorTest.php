@@ -50,7 +50,7 @@ class OpenApiTranslatorTest extends TestCase
         return [
             'mixed:minimal' => [
                 new MixedSchema(),
-                ['nullable' => false]
+                []
             ],
             'mixed:full' => [
                 new MixedSchema(true, 'mixed'),
@@ -64,11 +64,11 @@ class OpenApiTranslatorTest extends TestCase
         return [
             'integer:minimal' => [
                 new IntegerSchema(),
-                ['type' => 'integer', 'format' => 'int32', 'nullable' => false]
+                ['type' => 'integer', 'format' => 'int32']
             ],
             'integer:full' => [
                 new IntegerSchema(0, 10, false, true, 2, false, 'integer'),
-                ['type' => 'integer', 'format' => 'int32', 'minimum' => 0, 'maximum' => 10, 'exclusiveMinimum' => false, 'exclusiveMaximum' => true, 'multipleOf' => 2, 'description' => 'integer', 'nullable' => false]
+                ['type' => 'integer', 'format' => 'int32', 'minimum' => 0, 'maximum' => 10, 'exclusiveMinimum' => false, 'exclusiveMaximum' => true, 'multipleOf' => 2, 'description' => 'integer']
             ]
         ];
     }
@@ -78,7 +78,7 @@ class OpenApiTranslatorTest extends TestCase
         return [
             'float:minimal' => [
                 new FloatSchema(),
-                ['type' => 'number', 'format' => 'float', 'nullable' => false]
+                ['type' => 'number', 'format' => 'float']
             ],
             'float:full' => [
                 new FloatSchema(2.2, 2.8, true, false, 0.2, true, 'float'),
@@ -92,7 +92,7 @@ class OpenApiTranslatorTest extends TestCase
         return [
             'boolean:minimal' => [
                 new BooleanSchema(),
-                ['type' => 'boolean', 'nullable' => false]
+                ['type' => 'boolean']
             ],
             'boolean:full' => [
                 new BooleanSchema(true, 'boolean'),
@@ -106,7 +106,7 @@ class OpenApiTranslatorTest extends TestCase
         return [
             'string:minimal' => [
                 new StringSchema(),
-                ['type' => 'string', 'nullable' => false]
+                ['type' => 'string']
             ],
             'string:full' => [
                 new StringSchema(2, 10, 'email', '[a-z]+', true, 'string'),
@@ -120,7 +120,7 @@ class OpenApiTranslatorTest extends TestCase
         return [
             'enum:minimal' => [
                 new EnumSchema(['value']),
-                ['type' => 'string', 'enum' => ['value'], 'nullable' => false]
+                ['type' => 'string', 'enum' => ['value']]
             ],
             'enum:nullable' => [
                 new EnumSchema(['value'], true),
@@ -128,7 +128,7 @@ class OpenApiTranslatorTest extends TestCase
             ],
             'enum:full' => [
                 new EnumSchema(['value', 'value2'], false, 'enum'),
-                ['type' => 'string', 'enum' => ['value', 'value2'], 'nullable' => false, 'description' => 'enum']
+                ['type' => 'string', 'enum' => ['value', 'value2'], 'description' => 'enum']
             ]
         ];
     }
@@ -141,10 +141,8 @@ class OpenApiTranslatorTest extends TestCase
                 [
                     'type' => 'array',
                     'items' => [
-                        'type' => 'string',
-                        'nullable' => false
-                    ],
-                    'nullable' => false
+                        'type' => 'string'
+                    ]
                 ]
             ],
             'array:mixed' => [
@@ -152,9 +150,7 @@ class OpenApiTranslatorTest extends TestCase
                 [
                     'type' => 'array',
                     'items' => [
-                        'nullable' => false
-                    ],
-                    'nullable' => false
+                    ]
                 ]
             ],
             'array:full' => [
@@ -169,14 +165,12 @@ class OpenApiTranslatorTest extends TestCase
                 [
                     'type' => 'array',
                     'items' => [
-                        'type' => 'string',
-                        'nullable' => false
+                        'type' => 'string'
                     ],
                     'minItems' => 1,
                     'maxItems' => 3,
                     'uniqueItems' => true,
-                    'description' => 'array',
-                    'nullable' => false,
+                    'description' => 'array'
                 ]
             ],
             'array:nested' => [
@@ -191,12 +185,9 @@ class OpenApiTranslatorTest extends TestCase
                         'type' => 'array',
                         'items' => [
                             'type' => 'integer',
-                            'format' => 'int32',
-                            'nullable' => false
-                        ],
-                        'nullable' => false
-                    ],
-                    'nullable' => false
+                            'format' => 'int32'
+                        ]
+                    ]
                 ]
             ]
         ];
@@ -212,8 +203,7 @@ class OpenApiTranslatorTest extends TestCase
                     'additionalProperties' => [
                         'type' => 'string',
                         'nullable' => true
-                    ],
-                    'nullable' => false
+                    ]
                 ]
             ],
             'hashmap:free-form' => [
@@ -221,7 +211,6 @@ class OpenApiTranslatorTest extends TestCase
                 [
                     'type' => 'object',
                     'additionalProperties' => true,
-                    'nullable' => false
                 ]
             ],
             'hashmap:full' => [
@@ -231,18 +220,15 @@ class OpenApiTranslatorTest extends TestCase
                     'properties' => [
                         'property' => [
                             'type' => 'integer',
-                            'format' => 'int32',
-                            'nullable' => false
+                            'format' => 'int32'
                         ]
                     ],
                     'required' => ['property'],
                     'additionalProperties' => [
                         'type' => 'integer',
-                        'format' => 'int32',
-                        'nullable' => false
+                        'format' => 'int32'
                     ],
-                    'description' => 'hashmap',
-                    'nullable' => false
+                    'description' => 'hashmap'
                 ]
             ],
         ];
@@ -257,11 +243,9 @@ class OpenApiTranslatorTest extends TestCase
                     'type' => 'object',
                     'properties' => [
                         'name' => [
-                            'type' => 'string',
-                            'nullable' => false
+                            'type' => 'string'
                         ]
                     ],
-                    'nullable' => false
                 ]
             ],
             'object:free-form' => [
@@ -269,7 +253,6 @@ class OpenApiTranslatorTest extends TestCase
                 [
                     'type' => 'object',
                     'additionalProperties' => true,
-                    'nullable' => false
                 ]
             ],
             'object:full' => [
@@ -282,17 +265,14 @@ class OpenApiTranslatorTest extends TestCase
                     'properties' => [
                         'name' => [
                             'type' => 'string',
-                            'nullable' => false
                         ],
                         'age' => [
                             'type' => 'integer',
                             'format' => 'int32',
-                            'nullable' => false
                         ]
                     ],
                     'required' => ['name'],
                     'description' => 'object',
-                    'nullable' => false
                 ]
             ]
         ];
