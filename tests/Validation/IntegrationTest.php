@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
@@ -17,7 +17,7 @@ class IntegrationTest extends TestCase
 {
     public function testValid(): void
     {
-        $data = json_decode('
+        $data = \json_decode('
             {
                 "cislo":123,
                 "retezec":"hello",
@@ -44,7 +44,7 @@ class IntegrationTest extends TestCase
 
     public function testInvalid(): void
     {
-        $data = json_decode('
+        $data = \json_decode('
             {
                 "cislo":123,
                 "retezec":"hello",
@@ -68,19 +68,19 @@ class IntegrationTest extends TestCase
         $this->assertFalse($validationResult->isValid());
         $this->assertCount(3, $violations = $validationResult->getViolations());
 
-        $this->assertSame("Unexpected NULL value.", $violations[0]->getMessage());
-        $this->assertSame("objekt.flag", (string) $violations[0]->getBreadCrumbPath());
+        $this->assertSame('Unexpected NULL value.', $violations[0]->getMessage());
+        $this->assertSame('objekt.flag', (string) $violations[0]->getBreadCrumbPath());
 
         $this->assertSame("Type 'number' expected.", $violations[1]->getMessage());
-        $this->assertSame("objekt.pole[1]", (string) $violations[1]->getBreadCrumbPath());
+        $this->assertSame('objekt.pole[1]', (string) $violations[1]->getBreadCrumbPath());
 
         $this->assertSame("Type 'string' expected.", $violations[2]->getMessage());
-        $this->assertSame("objekt.hash.5", (string) $violations[2]->getBreadCrumbPath());
+        $this->assertSame('objekt.hash.5', (string) $violations[2]->getBreadCrumbPath());
     }
 
     private function createValidator(): ValueValidator
     {
-        $resultBuilderFactory = new class implements ValidationResultBuilderFactoryInterface {
+        $resultBuilderFactory = new class() implements ValidationResultBuilderFactoryInterface {
             public function create(): ValidationResultBuilderInterface
             {
                 return new TestValidationResultBuilder();

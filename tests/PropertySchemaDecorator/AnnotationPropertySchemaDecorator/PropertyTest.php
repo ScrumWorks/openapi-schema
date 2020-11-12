@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
+use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 
 class PropertyTestClass
@@ -27,26 +28,26 @@ class PropertyTestClass
 
 class PropertyTest extends AbstractAnnotationTest
 {
-    protected function createReflectionClass(): \ReflectionClass
-    {
-        return new \ReflectionClass(PropertyTestClass::class);
-    }
-
-    public function testPropertyDescription()
+    public function testPropertyDescription(): void
     {
         $schema = $this->getPropertySchema('description');
         $this->assertEquals('my description...', $schema->getDescription());
     }
 
-    public function testPropertyDescriptionIsNullable()
+    public function testPropertyDescriptionIsNullable(): void
     {
         $schema = $this->getPropertySchema('descriptionNullable');
         $this->assertEquals(null, $schema->getDescription());
     }
 
-    public function testPropertyCanBeUserWithOtherAnnotations()
+    public function testPropertyCanBeUserWithOtherAnnotations(): void
     {
         $schema = $this->getPropertySchema('mixedAnnotations');
         $this->assertEquals('other description', $schema->getDescription());
+    }
+
+    protected function createReflectionClass(): ReflectionClass
+    {
+        return new ReflectionClass(PropertyTestClass::class);
     }
 }

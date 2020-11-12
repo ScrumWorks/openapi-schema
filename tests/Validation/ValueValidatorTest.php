@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
+use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidityViolation;
 use ScrumWorks\OpenApiSchema\Validation\ValueValidator;
-use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
@@ -38,7 +38,7 @@ class ValueValidatorTest extends TestCase
      */
     public function test(ValueSchemaInterface $schema, $data, array $expectedViolations): void
     {
-        $resultBuilderFactory = new class implements ValidationResultBuilderFactoryInterface {
+        $resultBuilderFactory = new class() implements ValidationResultBuilderFactoryInterface {
             public function create(): ValidationResultBuilderInterface
             {
                 return new TestValidationResultBuilder();
@@ -75,11 +75,7 @@ class ValueValidatorTest extends TestCase
                 ['a', null],
                 [[1002, "Type 'integer' expected.", '[0]'], [1001, 'Unexpected NULL value.', '[1]']],
             ],
-            'array:null' => [
-                new ArraySchema(new IntegerSchema()),
-                null,
-                [[1001, 'Unexpected NULL value.', '']],
-            ],
+            'array:null' => [new ArraySchema(new IntegerSchema()), null, [[1001, 'Unexpected NULL value.', '']]],
             'array:type' => [
                 new ArraySchema(new IntegerSchema()),
                 'string',
@@ -120,11 +116,7 @@ class ValueValidatorTest extends TestCase
             'enum:valid-null' => [new EnumSchema(['a', 'b', 'c'], true), null, []],
             'enum:null' => [new EnumSchema(['a']), null, [[1001, 'Unexpected NULL value.', '']]],
             'enum:type' => [new EnumSchema(['a']), false, [[1002, "Type 'string' expected.", '']]],
-            'enum:invalid-choice' => [
-                new EnumSchema(['a', 'b']),
-                'c',
-                [[1008, "It has to be one of 'a|b'.", '']],
-            ],
+            'enum:invalid-choice' => [new EnumSchema(['a', 'b']), 'c', [[1008, "It has to be one of 'a|b'.", '']]],
         ];
     }
 
@@ -139,31 +131,11 @@ class ValueValidatorTest extends TestCase
             'float:valid-ex-max' => [new FloatSchema(null, 3.0), 2.0, []],
             'float:valid-multipleOf' => [new FloatSchema(null, null, null, null, 2.3), 4.6, []],
             'float:int' => [new FloatSchema(), 1, []],
-            'float:null' => [
-                new FloatSchema(),
-                null,
-                [[1001, 'Unexpected NULL value.', '']],
-            ],
-            'float:type' => [
-                new FloatSchema(),
-                '1.0',
-                [[1002, "Type 'number' expected.", '']],
-            ],
-            'float:min' => [
-                new FloatSchema(1.0),
-                0.5,
-                [[1009, 'It has to be bigger or equal then 1.', '']],
-            ],
-            'float:ex-min' => [
-                new FloatSchema(1.0, null, true),
-                0.5,
-                [[1010, 'It has to be bigger then 1.', '']],
-            ],
-            'float:max' => [
-                new FloatSchema(null, 1.0),
-                1.5,
-                [[1011, 'It has to be less or equal then 1.', '']],
-            ],
+            'float:null' => [new FloatSchema(), null, [[1001, 'Unexpected NULL value.', '']]],
+            'float:type' => [new FloatSchema(), '1.0', [[1002, "Type 'number' expected.", '']]],
+            'float:min' => [new FloatSchema(1.0), 0.5, [[1009, 'It has to be bigger or equal then 1.', '']]],
+            'float:ex-min' => [new FloatSchema(1.0, null, true), 0.5, [[1010, 'It has to be bigger then 1.', '']]],
+            'float:max' => [new FloatSchema(null, 1.0), 1.5, [[1011, 'It has to be less or equal then 1.', '']]],
             'float:ex-max' => [
                 new FloatSchema(null, 1.0, null, true),
                 1.5,
@@ -188,36 +160,12 @@ class ValueValidatorTest extends TestCase
             'int:valid-max' => [new IntegerSchema(null, 3), 3, []],
             'int:valid-ex-max' => [new IntegerSchema(null, 3, null, true), 2, []],
             'int:valid-multipleOf' => [new IntegerSchema(null, null, null, null, 2), 4, []],
-            'int:null' => [
-                new IntegerSchema(),
-                null,
-                [[1001, 'Unexpected NULL value.', '']],
-            ],
-            'int:type' => [
-                new IntegerSchema(),
-                1.0,
-                [[1002, "Type 'integer' expected.", '']],
-            ],
-            'int:min' => [
-                new IntegerSchema(3),
-                2,
-                [[1009, 'It has to be bigger or equal then 3.', '']],
-            ],
-            'int:ex-min' => [
-                new IntegerSchema(3, null, true),
-                2,
-                [[1010, 'It has to be bigger then 3.', '']],
-            ],
-            'int:max' => [
-                new IntegerSchema(null, 1),
-                5,
-                [[1011, 'It has to be less or equal then 1.', '']],
-            ],
-            'int:ex-max' => [
-                new IntegerSchema(null, 1, null, true),
-                5,
-                [[1012, 'It has to be less then 1.', '']],
-            ],
+            'int:null' => [new IntegerSchema(), null, [[1001, 'Unexpected NULL value.', '']]],
+            'int:type' => [new IntegerSchema(), 1.0, [[1002, "Type 'integer' expected.", '']]],
+            'int:min' => [new IntegerSchema(3), 2, [[1009, 'It has to be bigger or equal then 3.', '']]],
+            'int:ex-min' => [new IntegerSchema(3, null, true), 2, [[1010, 'It has to be bigger then 3.', '']]],
+            'int:max' => [new IntegerSchema(null, 1), 5, [[1011, 'It has to be less or equal then 1.', '']]],
+            'int:ex-max' => [new IntegerSchema(null, 1, null, true), 5, [[1012, 'It has to be less then 1.', '']]],
             'int:multipleOf' => [
                 new IntegerSchema(null, null, null, null, 2),
                 5,
@@ -234,7 +182,7 @@ class ValueValidatorTest extends TestCase
                     'a' => new IntegerSchema(),
                     'b' => new IntegerSchema(),
                 ], ['a']),
-                (object)[
+                (object) [
                     'a' => 1,
                     'b' => 2,
                 ],
@@ -259,14 +207,14 @@ class ValueValidatorTest extends TestCase
                 new ObjectSchema([
                     'propertyName1' => new IntegerSchema(),
                 ], ['propertyName1']),
-                (object)[],
+                (object) [],
                 [[1003, 'It is required.', 'propertyName1']],
             ],
             'object:unexpected' => [
                 new ObjectSchema([
                     'propertyName1' => new IntegerSchema(),
                 ]),
-                (object)[
+                (object) [
                     'propertyNameUnknown' => 123,
                 ],
                 [[1004, 'It is unexpected.', 'propertyNameUnknown']],
@@ -275,7 +223,7 @@ class ValueValidatorTest extends TestCase
                 new ObjectSchema([
                     'propertyName1' => new IntegerSchema(),
                 ]),
-                (object)[
+                (object) [
                     'propertyName1' => false,
                 ],
                 [[1002, "Type 'integer' expected.", 'propertyName1']],
@@ -288,7 +236,7 @@ class ValueValidatorTest extends TestCase
         return [
             'hashmap:valid' => [
                 new HashmapSchema(new IntegerSchema(), ['a']),
-                (object)[
+                (object) [
                     'a' => 1,
                     'b' => 2,
                 ],
@@ -307,12 +255,12 @@ class ValueValidatorTest extends TestCase
             ],
             'hashmap:required' => [
                 new HashmapSchema(new IntegerSchema(), ['propertyName1']),
-                (object)[],
+                (object) [],
                 [[1003, 'It is required.', 'propertyName1']],
             ],
             'hashmap:items-validation' => [
-                new HashmapSchema(new IntegerSchema(), [],false, null),
-                (object)[
+                new HashmapSchema(new IntegerSchema(), [], false, null),
+                (object) [
                     'propertyName1' => false,
                 ],
                 [[1002, "Type 'integer' expected.", 'propertyName1']],
@@ -334,26 +282,10 @@ class ValueValidatorTest extends TestCase
                 [],
             ],
             'string:valid-pattern' => [new StringSchema(null, null, null, '[0-9]+'), '2020', []],
-            'string:null' => [
-                new StringSchema(),
-                null,
-                [[1001, 'Unexpected NULL value.', '']],
-            ],
-            'string:type' => [
-                new StringSchema(),
-                1.0,
-                [[1002, "Type 'string' expected.", '']],
-            ],
-            'string:minLength' => [
-                new StringSchema(3),
-                'nn',
-                [[1014, 'Minimal length has to be 3.', '']],
-            ],
-            'string:maxLength' => [
-                new StringSchema(null, 1),
-                'nn',
-                [[1015, 'Maximal length has to be 1.', '']],
-            ],
+            'string:null' => [new StringSchema(), null, [[1001, 'Unexpected NULL value.', '']]],
+            'string:type' => [new StringSchema(), 1.0, [[1002, "Type 'string' expected.", '']]],
+            'string:minLength' => [new StringSchema(3), 'nn', [[1014, 'Minimal length has to be 3.', '']]],
+            'string:maxLength' => [new StringSchema(null, 1), 'nn', [[1015, 'Maximal length has to be 1.', '']]],
             'string:format' => [
                 new StringSchema(null, null, 'date-time'),
                 '2020-12-30',
@@ -375,11 +307,7 @@ class ValueValidatorTest extends TestCase
             'mixed:valid-float' => [new MixedSchema(), 1.0, []],
             'mixed:valid-bool' => [new MixedSchema(), true, []],
             'mixed:valid-null' => [new MixedSchema(), null, []],
-            'mixed:null' => [
-                new MixedSchema(true),
-                null,
-                [[1001, 'Unexpected NULL value.', '']],
-            ],
+            'mixed:null' => [new MixedSchema(true), null, [[1001, 'Unexpected NULL value.', '']]],
         ];
     }
 
@@ -397,11 +325,11 @@ class ValueValidatorTest extends TestCase
                     ]),
                     'reqProp' => new StringSchema(),
                 ], ['reqProp']),
-                (object)[
+                (object) [
                     'int1' => false,
                     'int2' => 123,
                     'str' => 'hello world',
-                    'obj' => (object)[
+                    'obj' => (object) [
                         'arr' => [1, false, 3],
                     ],
                 ],

@@ -1,9 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
+use LogicException;
+use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 
@@ -22,22 +24,22 @@ class IntegerValueTestClass
 
 class IntegerValueTest extends AbstractAnnotationTest
 {
-    protected function createReflectionClass(): \ReflectionClass
-    {
-        return new \ReflectionClass(IntegerValueTestClass::class);
-    }
-
-    public function testIntegerAnnotation()
+    public function testIntegerAnnotation(): void
     {
         $schema = $this->getPropertySchema('integer');
         $expectedSchema = new IntegerSchema(10, 100, true, false, 10);
         $this->assertEquals($expectedSchema, $schema);
     }
 
-    public function testIncompatibleTypes()
+    public function testIncompatibleTypes(): void
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage("Unexpected annotation 'ScrumWorks\OpenApiSchema\Annotation\StringValue'");
         $this->getPropertySchema('incompatibleTypes');
+    }
+
+    protected function createReflectionClass(): ReflectionClass
+    {
+        return new ReflectionClass(IntegerValueTestClass::class);
     }
 }

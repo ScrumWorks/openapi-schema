@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
+use LogicException;
+use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
 class HashmapValueTestClass
@@ -25,25 +26,22 @@ class HashmapValueTestClass
 
 class HashmapValueTest extends AbstractAnnotationTest
 {
-    protected function createReflectionClass(): \ReflectionClass
-    {
-        return new \ReflectionClass(HashmapValueTestClass::class);
-    }
-
-    public function testHashmapAnnotation()
+    public function testHashmapAnnotation(): void
     {
         $schema = $this->getPropertySchema('hashmap');
-        $expectedSchema = new HashmapSchema(
-            new StringSchema(),
-            ['a', 'b']
-        );
+        $expectedSchema = new HashmapSchema(new StringSchema(), ['a', 'b']);
         $this->assertEquals($expectedSchema, $schema);
     }
 
-    public function testIncompatibleTypes()
+    public function testIncompatibleTypes(): void
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage("Unexpected annotation 'ScrumWorks\OpenApiSchema\Annotation\HashmapValue'");
         $this->getPropertySchema('incompatibleTypes');
+    }
+
+    protected function createReflectionClass(): ReflectionClass
+    {
+        return new ReflectionClass(HashmapValueTestClass::class);
     }
 }

@@ -1,17 +1,19 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
+use Exception;
+use LogicException;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\SimplePropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\EnumSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
@@ -33,7 +35,8 @@ class EnumTestClass
     public string $enum;
 }
 
-class UnknownVariableType implements VariableTypeInterface {
+class UnknownVariableType implements VariableTypeInterface
+{
     public function isNullable(): bool
     {
         return true;
@@ -54,18 +57,14 @@ class SchemaParserTest extends TestCase
 {
     protected SchemaParser $schemaParser;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->schemaParser = new SchemaParser(
-            new PropertyTypeReader(
-                new VariableTypeUnifyService(),
-            )
-        );
+        $this->schemaParser = new SchemaParser(new PropertyTypeReader(new VariableTypeUnifyService(), ));
     }
 
     public function testGetEntitySchemaOnNonExistingClass(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('TODO');
         $this->schemaParser->getEntitySchema('abc-not-existing');
     }
@@ -73,10 +72,7 @@ class SchemaParserTest extends TestCase
     public function testNullVariableType(): void
     {
         $schema = $this->schemaParser->getVariableTypeSchema(null);
-        $this->assertInstanceOf(
-            MixedSchema::class,
-            $schema
-        );
+        $this->assertInstanceOf(MixedSchema::class, $schema);
         $this->assertTrue($schema->isNullable());
     }
 
@@ -84,47 +80,32 @@ class SchemaParserTest extends TestCase
     {
         $variableType = new MixedVariableType();
         $schema = $this->schemaParser->getVariableTypeSchema($variableType);
-        $this->assertInstanceOf(
-            MixedSchema::class,
-            $schema
-        );
+        $this->assertInstanceOf(MixedSchema::class, $schema);
         $this->assertTrue($schema->isNullable());
     }
 
     public function testIntegerVariableType(): void
     {
         $variableType = new ScalarVariableType(ScalarVariableType::TYPE_INTEGER, false);
-        $this->assertInstanceOf(
-            IntegerSchema::class,
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
+        $this->assertInstanceOf(IntegerSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
     }
 
     public function testFloatVariableType(): void
     {
         $variableType = new ScalarVariableType(ScalarVariableType::TYPE_FLOAT, false);
-        $this->assertInstanceOf(
-            FloatSchema::class,
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
+        $this->assertInstanceOf(FloatSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
     }
 
     public function testBooleanVariableType(): void
     {
         $variableType = new ScalarVariableType(ScalarVariableType::TYPE_BOOLEAN, false);
-        $this->assertInstanceOf(
-            BooleanSchema::class,
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
+        $this->assertInstanceOf(BooleanSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
     }
 
     public function testStringVariableType(): void
     {
         $variableType = new ScalarVariableType(ScalarVariableType::TYPE_STRING, false);
-        $this->assertInstanceOf(
-            StringSchema::class,
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
+        $this->assertInstanceOf(StringSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
     }
 
     public function testArrayVariableType(): void
@@ -134,41 +115,27 @@ class SchemaParserTest extends TestCase
             new ScalarVariableType(ScalarVariableType::TYPE_STRING, false),
             false
         );
-        $this->assertInstanceOf(
-            ArraySchema::class,
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
+        $this->assertInstanceOf(ArraySchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
 
         $variableType = new ArrayVariableType(
             new ScalarVariableType(ScalarVariableType::TYPE_STRING, false),
             new ScalarVariableType(ScalarVariableType::TYPE_STRING, false),
             false
         );
-        $this->assertInstanceOf(
-            HashmapSchema::class,
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
+        $this->assertInstanceOf(HashmapSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
     }
 
     public function testClassVariableType(): void
     {
-        $variableType = new ClassVariableType(
-            SchemaParserTest::class,
-            false
-        );
-        $this->assertInstanceOf(
-            ObjectSchema::class,
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
+        $variableType = new ClassVariableType(self::class, false);
+        $this->assertInstanceOf(ObjectSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
     }
 
     public function testEnum(): void
     {
         $schemaParser = new SchemaParser(
-            new PropertyTypeReader(
-                new VariableTypeUnifyService(),
-            ),
-            new class extends SimplePropertySchemaDecorator {
+            new PropertyTypeReader(new VariableTypeUnifyService(), ),
+            new class() extends SimplePropertySchemaDecorator {
                 public function isEnum(ReflectionProperty $propertyReflection): bool
                 {
                     return true;
@@ -183,7 +150,7 @@ class SchemaParserTest extends TestCase
             }
         );
 
-        $classReflexion = new \ReflectionClass(EnumTestClass::class);
+        $classReflexion = new ReflectionClass(EnumTestClass::class);
 
         $this->assertInstanceOf(
             EnumSchema::class,
@@ -193,8 +160,10 @@ class SchemaParserTest extends TestCase
 
     public function testUnknownVariableType(): void
     {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("Unprocessable VariableTypeInterface 'TESTING-CLASS' (class ScrumWorks\OpenApiSchema\Tests\UnknownVariableType)");
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            "Unprocessable VariableTypeInterface 'TESTING-CLASS' (class ScrumWorks\OpenApiSchema\Tests\UnknownVariableType)"
+        );
         $variableType = new UnknownVariableType();
         $this->schemaParser->getVariableTypeSchema($variableType);
     }
@@ -202,18 +171,18 @@ class SchemaParserTest extends TestCase
     public function testDecorateValueSchema(): void
     {
         $schemaParser = new SchemaParser(
-            new PropertyTypeReader(
-                new VariableTypeUnifyService(),
-            ),
-            new class extends SimplePropertySchemaDecorator {
-                public function decorateValueSchemaBuilder(AbstractSchemaBuilder $builder, ReflectionProperty $propertyReflection): AbstractSchemaBuilder
-                {
+            new PropertyTypeReader(new VariableTypeUnifyService(), ),
+            new class() extends SimplePropertySchemaDecorator {
+                public function decorateValueSchemaBuilder(
+                    AbstractSchemaBuilder $builder,
+                    ReflectionProperty $propertyReflection
+                ): AbstractSchemaBuilder {
                     return $builder->withDescription('SOME DESCRIPTION');
                 }
             }
         );
 
-        $classReflexion = new \ReflectionClass(EnumTestClass::class);
+        $classReflexion = new ReflectionClass(EnumTestClass::class);
 
         $this->assertSame(
             'SOME DESCRIPTION',

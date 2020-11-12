@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
@@ -20,12 +21,7 @@ class AnnotationPropertySchemaDecoratorTestClass
 
 class AnnotationPropertySchemaDecoratorTest extends AbstractAnnotationTest
 {
-    protected function createReflectionClass(): \ReflectionClass
-    {
-        return new \ReflectionClass(AnnotationPropertySchemaDecoratorTestClass::class);
-    }
-
-    public function testIsEnum()
+    public function testIsEnum(): void
     {
         $decorator = new AnnotationPropertySchemaDecorator(new AnnotationReader());
 
@@ -34,5 +30,10 @@ class AnnotationPropertySchemaDecoratorTest extends AbstractAnnotationTest
 
         $notEnum = $decorator->isEnum($this->getPropertyReflection('notEnum'));
         $this->assertFalse($notEnum);
+    }
+
+    protected function createReflectionClass(): ReflectionClass
+    {
+        return new ReflectionClass(AnnotationPropertySchemaDecoratorTestClass::class);
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\SimplePropertySchemaDecorator;
 
+use ReflectionClass;
 use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\SimplePropertySchemaDecorator;
 
 class SimplePropertySchemaDecoratorTestClass
@@ -13,15 +14,15 @@ class SimplePropertySchemaDecoratorTestClass
 
 class SimplePropertySchemaDecoratorTest extends AbstractDecoratorTest
 {
-    protected function createReflectionClass(): \ReflectionClass
-    {
-        return new \ReflectionClass(SimplePropertySchemaDecoratorTestClass::class);
-    }
-
-    public function testIsEnum()
+    public function testIsEnum(): void
     {
         $decorator = new SimplePropertySchemaDecorator();
         $isEnum = $decorator->isEnum($this->getPropertyReflection('string'));
         $this->assertFalse($isEnum);
+    }
+
+    protected function createReflectionClass(): ReflectionClass
+    {
+        return new ReflectionClass(SimplePropertySchemaDecoratorTestClass::class);
     }
 }
