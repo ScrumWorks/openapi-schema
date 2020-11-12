@@ -63,14 +63,12 @@ class OpenApiTranslatorTest extends TestCase
                 new IntegerSchema(),
                 [
                     'type' => 'integer',
-                    'format' => 'int32',
                 ],
             ],
             'integer:full' => [
                 new IntegerSchema(0, 10, false, true, 2, false, 'integer'),
                 [
                     'type' => 'integer',
-                    'format' => 'int32',
                     'minimum' => 0,
                     'maximum' => 10,
                     'exclusiveMinimum' => false,
@@ -222,7 +220,6 @@ class OpenApiTranslatorTest extends TestCase
                         'type' => 'array',
                         'items' => [
                             'type' => 'integer',
-                            'format' => 'int32',
                         ],
                     ],
                 ],
@@ -257,13 +254,11 @@ class OpenApiTranslatorTest extends TestCase
                     'properties' => [
                         'property' => [
                             'type' => 'integer',
-                            'format' => 'int32',
                         ],
                     ],
                     'required' => ['property'],
                     'additionalProperties' => [
                         'type' => 'integer',
-                        'format' => 'int32',
                     ],
                     'description' => 'hashmap',
                 ],
@@ -307,7 +302,6 @@ class OpenApiTranslatorTest extends TestCase
                         ],
                         'age' => [
                             'type' => 'integer',
-                            'format' => 'int32',
                         ],
                     ],
                     'required' => ['name'],
