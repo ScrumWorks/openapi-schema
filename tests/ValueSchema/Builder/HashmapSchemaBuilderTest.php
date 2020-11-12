@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 
-use LogicException;
 use PHPUnit\Framework\TestCase;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\HashmapSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
-use LogicException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionProperty;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\SimplePropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;

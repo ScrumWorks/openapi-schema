@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 
 class EnumSchemaTest extends TestCase
