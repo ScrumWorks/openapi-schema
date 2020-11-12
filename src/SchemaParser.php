@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema;
 
+use DateTimeInterface;
 use ReflectionClass;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\Exception\DomainException;
@@ -20,7 +21,6 @@ use ScrumWorks\OpenApiSchema\ValueSchema\Builder\IntegerSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\MixedSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 use ScrumWorks\PropertyReader\PropertyTypeReaderInterface;
 use ScrumWorks\PropertyReader\VariableType\ArrayVariableType;
@@ -30,11 +30,11 @@ use ScrumWorks\PropertyReader\VariableType\ScalarVariableType;
 use ScrumWorks\PropertyReader\VariableType\UnionVariableType;
 use ScrumWorks\PropertyReader\VariableType\VariableTypeInterface;
 
-final class SchemaParser implements SchemaParserInterface
+class SchemaParser implements SchemaParserInterface
 {
-    private PropertyTypeReaderInterface $propertyReader;
+    protected PropertyTypeReaderInterface $propertyReader;
 
-    private PropertySchemaDecoratorInterface $propertySchemaDecorator;
+    protected PropertySchemaDecoratorInterface $propertySchemaDecorator;
 
     public function __construct(
         PropertyTypeReaderInterface $propertyReader,
@@ -50,9 +50,9 @@ final class SchemaParser implements SchemaParserInterface
         $this->propertySchemaDecorator = $propertySchemaDecorator;
     }
 
-    public function getEntitySchema(string $class): ObjectSchema
+    public function getEntitySchema(string $class): ValueSchemaInterface
     {
-        $builder = $this->createClassSchemaBuilder($class, null);
+        $builder = $this->createSchemaBuilderFromClass($class, null);
         return $builder->build();
     }
 
@@ -67,46 +67,22 @@ final class SchemaParser implements SchemaParserInterface
         return $this->variableTypeToVariableSchema($variableType, null);
     }
 
-    private function variableTypeToVariableSchema(
+    protected function variableTypeToVariableSchema(
         ?VariableTypeInterface $variableType,
-        ?ReflectionProperty $propertyReflexion
+        ?ReflectionProperty $propertyReflection
     ): ValueSchemaInterface {
         if ($variableType === null) {
-            $schemaBuilder = $this->createMixedSchemaBuilder($propertyReflexion);
+            $schemaBuilder = $this->createSchemaBuilderFromMixed();
         } elseif ($variableType instanceof MixedVariableType) {
-            $schemaBuilder = $this->createMixedSchemaBuilder($propertyReflexion);
+            $schemaBuilder = $this->createSchemaBuilderFromMixed();
         } elseif ($variableType instanceof ScalarVariableType) {
-            switch ($variableType->getType()) {
-                case ScalarVariableType::TYPE_INTEGER:
-                    $schemaBuilder = $this->createIntegerSchemaBuilder($propertyReflexion);
-                    break;
-                case ScalarVariableType::TYPE_FLOAT:
-                    $schemaBuilder = $this->createFloatSchemaBuilder($propertyReflexion);
-                    break;
-                case ScalarVariableType::TYPE_BOOLEAN:
-                    $schemaBuilder = $this->createBooleanSchemaBuilder($propertyReflexion);
-                    break;
-                case ScalarVariableType::TYPE_STRING:
-                    if ($propertyReflexion && $this->propertySchemaDecorator->isEnum($propertyReflexion)) {
-                        $schemaBuilder = $this->createEnumSchemaBuilder($propertyReflexion);
-                    } else {
-                        $schemaBuilder = $this->createStringSchemaBuilder($propertyReflexion);
-                    }
-                    break;
-            }
+            $schemaBuilder = $this->createSchemaBuilderFromScalar($variableType);
         } elseif ($variableType instanceof ArrayVariableType) {
-            if ($variableType->getKeyType() === null) {
-                $schemaBuilder = $this->createArraySchemaBuilder($propertyReflexion);
-            } else {
-                $schemaBuilder = $this->createHashmapSchemaBuilder($propertyReflexion);
-            }
-            $schemaBuilder = $schemaBuilder->withItemsSchema(
-                $this->variableTypeToVariableSchema($variableType->getItemType(), null)
-            );
+            $schemaBuilder = $this->createSchemaBuilderFromArray($variableType);
         } elseif ($variableType instanceof ClassVariableType) {
-            $schemaBuilder = $this->createClassSchemaBuilder($variableType->getClass(), $propertyReflexion);
+            $schemaBuilder = $this->createSchemaBuilderFromClass($variableType->getClass(), $propertyReflection);
         } elseif ($variableType instanceof UnionVariableType) {
-            $schemaBuilder = $this->createUnionSchemaBuilder($variableType, $propertyReflexion);
+            $schemaBuilder = $this->createSchemaBuilderFromUnion($variableType, $propertyReflection);
         }
         if (! isset($schemaBuilder)) {
             throw new LogicException(\sprintf(
@@ -122,140 +98,116 @@ final class SchemaParser implements SchemaParserInterface
             $schemaBuilder = $schemaBuilder->withNullable($variableType->isNullable());
         }
 
-        if ($propertyReflexion) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateValueSchemaBuilder(
-                $schemaBuilder,
-                $propertyReflexion
-            );
-        }
+        $schemaBuilder = $this->decorateSchemaBuilderByType($schemaBuilder, $propertyReflection);
 
         return $schemaBuilder->build();
     }
 
-    private function createMixedSchemaBuilder(?ReflectionProperty $propertyReflection): MixedSchemaBuilder
+    protected function createSchemaBuilderFromMixed(): MixedSchemaBuilder
     {
-        $schemaBuilder = new MixedSchemaBuilder();
-        if ($propertyReflection) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateMixedSchemaBuilder(
-                $schemaBuilder,
-                $propertyReflection
-            );
+        return new MixedSchemaBuilder();
+    }
+
+    protected function createSchemaBuilderFromScalar(ScalarVariableType $variableType): AbstractSchemaBuilder
+    {
+        switch ($variableType->getType()) {
+            case ScalarVariableType::TYPE_INTEGER:
+                $schemaBuilder = new IntegerSchemaBuilder();
+                break;
+            case ScalarVariableType::TYPE_FLOAT:
+                $schemaBuilder = new FloatSchemaBuilder();
+                break;
+            case ScalarVariableType::TYPE_BOOLEAN:
+                $schemaBuilder = new BooleanSchemaBuilder();
+                break;
+            case ScalarVariableType::TYPE_STRING:
+                $schemaBuilder = new StringSchemaBuilder();
+                break;
+            default:
+                throw new LogicException(\sprintf("Unknown scalar type '%s'", $variableType->getType()));
         }
+
         return $schemaBuilder;
     }
 
-    private function createIntegerSchemaBuilder(?ReflectionProperty $propertyReflection): IntegerSchemaBuilder
+    protected function createSchemaBuilderFromArray(ArrayVariableType $variableType): AbstractSchemaBuilder
     {
-        $schemaBuilder = new IntegerSchemaBuilder();
-        if ($propertyReflection) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateIntegerSchemaBuilder(
-                $schemaBuilder,
-                $propertyReflection
-            );
+        if ($variableType->getKeyType() === null) {
+            $schemaBuilder = new ArraySchemaBuilder();
+        } else {
+            $schemaBuilder = new HashmapSchemaBuilder();
         }
-        return $schemaBuilder;
+
+        return $schemaBuilder->withItemsSchema(
+            $this->variableTypeToVariableSchema($variableType->getItemType(), null)
+        );
     }
 
-    private function createFloatSchemaBuilder(?ReflectionProperty $propertyReflection): FloatSchemaBuilder
-    {
-        $schemaBuilder = new FloatSchemaBuilder();
-        if ($propertyReflection) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateFloatSchemaBuilder(
-                $schemaBuilder,
-                $propertyReflection
-            );
-        }
-        return $schemaBuilder;
-    }
-
-    private function createBooleanSchemaBuilder(?ReflectionProperty $propertyReflection): BooleanSchemaBuilder
-    {
-        $schemaBuilder = new BooleanSchemaBuilder();
-        if ($propertyReflection) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateBooleanSchemaBuilder(
-                $schemaBuilder,
-                $propertyReflection
-            );
-        }
-        return $schemaBuilder;
-    }
-
-    private function createStringSchemaBuilder(?ReflectionProperty $propertyReflection): AbstractSchemaBuilder
-    {
-        $schemaBuilder = new StringSchemaBuilder();
-        if ($propertyReflection) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateStringSchemaBuilder(
-                $schemaBuilder,
-                $propertyReflection
-            );
-        }
-        return $schemaBuilder;
-    }
-
-    private function createEnumSchemaBuilder(?ReflectionProperty $propertyReflection): AbstractSchemaBuilder
-    {
-        $schemaBuilder = new EnumSchemaBuilder();
-        if ($propertyReflection) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateEnumSchemaBuilder(
-                $schemaBuilder,
-                $propertyReflection
-            );
-        }
-        return $schemaBuilder;
-    }
-
-    private function createArraySchemaBuilder(?ReflectionProperty $propertyReflection): ArraySchemaBuilder
-    {
-        $schemaBuilder = new ArraySchemaBuilder();
-        if ($propertyReflection) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateArraySchemaBuilder(
-                $schemaBuilder,
-                $propertyReflection
-            );
-        }
-        return $schemaBuilder;
-    }
-
-    private function createHashmapSchemaBuilder(?ReflectionProperty $propertyReflection): HashmapSchemaBuilder
-    {
-        $schemaBuilder = new HashmapSchemaBuilder();
-        if ($propertyReflection) {
-            $schemaBuilder = $this->propertySchemaDecorator->decorateHashmapSchemaBuilder(
-                $schemaBuilder,
-                $propertyReflection
-            );
-        }
-        return $schemaBuilder;
-    }
-
-    private function createClassSchemaBuilder(
+    protected function createSchemaBuilderFromClass(
         string $class,
         ?ReflectionProperty $propertyReflection
-    ): ObjectSchemaBuilder {
+    ): AbstractSchemaBuilder {
         if (! \class_exists($class)) {
             throw new LogicException(\sprintf("Class '${class}' doesn't exists"));
+        }
+
+        // TODO: maybe move this to decorator?
+        if (\is_subclass_of($class, DateTimeInterface::class)) {
+            $schemaBuilder = new StringSchemaBuilder();
+            // TODO: move this to some constant?
+            $schemaBuilder->withFormat('date-time');
+            return $this->decorateSchemaBuilderByType($schemaBuilder, $propertyReflection);
         }
 
         $classReflexion = new ReflectionClass($class);
 
         $propertiesSchemas = [];
-        foreach ($classReflexion->getProperties() as $classPropertyReflexion) {
+        foreach ($classReflexion->getProperties() as $propertyReflection) {
             // if property is not public, then skip it.
-            if (! $classPropertyReflexion->isPublic()) {
+            if (! $propertyReflection->isPublic()) {
                 continue;
             }
 
-            $propertiesSchemas[$classPropertyReflexion->getName()] = $this->getPropertySchema($classPropertyReflexion);
+            $propertiesSchemas[$propertyReflection->getName()] = $this->getPropertySchema($propertyReflection);
         }
 
         $schemaBuilder = (new ObjectSchemaBuilder())->withPropertiesSchemas($propertiesSchemas);
-        return $this->propertySchemaDecorator->decorateObjectSchemaBuilder($schemaBuilder, $classReflexion);
+        return $this->propertySchemaDecorator->decorateObjectSchemaBuilder(
+            $schemaBuilder,
+            $classReflexion,
+            $propertyReflection
+        );
     }
 
-    private function createUnionSchemaBuilder(
+    protected function createSchemaBuilderFromUnion(
         UnionVariableType $unionVariableType,
         ?ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         throw new DomainException('Union types are not supported');
+    }
+
+    protected function decorateSchemaBuilderByType(
+        AbstractSchemaBuilder $builder,
+        ?ReflectionProperty $propertyReflection
+    ): AbstractSchemaBuilder {
+        if ($builder instanceof MixedSchemaBuilder) {
+            $builder = $this->propertySchemaDecorator->decorateMixedSchemaBuilder($builder, $propertyReflection);
+        } elseif ($builder instanceof IntegerSchemaBuilder) {
+            $builder = $this->propertySchemaDecorator->decorateIntegerSchemaBuilder($builder, $propertyReflection);
+        } elseif ($builder instanceof FloatSchemaBuilder) {
+            $builder = $this->propertySchemaDecorator->decorateFloatSchemaBuilder($builder, $propertyReflection);
+        } elseif ($builder instanceof BooleanSchemaBuilder) {
+            $builder = $this->propertySchemaDecorator->decorateBooleanSchemaBuilder($builder, $propertyReflection);
+        } elseif ($builder instanceof StringSchemaBuilder) {
+            $builder = $this->propertySchemaDecorator->decorateStringSchemaBuilder($builder, $propertyReflection);
+        } elseif ($builder instanceof EnumSchemaBuilder) {
+            $builder = $this->propertySchemaDecorator->decorateEnumSchemaBuilder($builder, $propertyReflection);
+        } elseif ($builder instanceof ArraySchemaBuilder) {
+            $builder = $this->propertySchemaDecorator->decorateArraySchemaBuilder($builder, $propertyReflection);
+        } elseif ($builder instanceof HashmapSchemaBuilder) {
+            $builder = $this->propertySchemaDecorator->decorateHashmapSchemaBuilder($builder, $propertyReflection);
+        }
+
+        return $this->propertySchemaDecorator->decorateValueSchemaBuilder($builder, $propertyReflection);
     }
 }

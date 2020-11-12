@@ -15,7 +15,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
-final class OpenApiTranslator implements OpenApiTranslatorInterface
+class OpenApiTranslator implements OpenApiTranslatorInterface
 {
     public function translateValueSchema(ValueSchemaInterface $valueSchema): array
     {
@@ -41,7 +41,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    private function translateStringSchema(StringSchema $schema): array
+    protected function translateStringSchema(StringSchema $schema): array
     {
         $definition = [
             'type' => 'string',
@@ -61,7 +61,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    private function translateIntegerSchema(IntegerSchema $schema): array
+    protected function translateIntegerSchema(IntegerSchema $schema): array
     {
         $definition = [
             'type' => 'integer',
@@ -86,7 +86,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    private function translateFloatSchema(FloatSchema $schema): array
+    protected function translateFloatSchema(FloatSchema $schema): array
     {
         $definition = [
             'type' => 'number',
@@ -110,14 +110,14 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    private function translateBooleanSchema(BooleanSchema $schema): array
+    protected function translateBooleanSchema(BooleanSchema $schema): array
     {
         return [
             'type' => 'boolean',
         ];
     }
 
-    private function translateArraySchema(ArraySchema $schema): array
+    protected function translateArraySchema(ArraySchema $schema): array
     {
         $definition = [
             'type' => 'array',
@@ -135,7 +135,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    private function translateObjectSchema(ObjectSchema $schema): array
+    protected function translateObjectSchema(ObjectSchema $schema): array
     {
         $definition = [
             'type' => 'object',
@@ -157,7 +157,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    private function translateEnumSchema(EnumSchema $schema): array
+    protected function translateEnumSchema(EnumSchema $schema): array
     {
         $enum = $schema->getEnum();
         if ($schema->isNullable()) {
@@ -170,7 +170,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         ];
     }
 
-    private function translateHashmapSchema(HashmapSchema $schema): array
+    protected function translateHashmapSchema(HashmapSchema $schema): array
     {
         $definition = [
             'type' => 'object',
@@ -191,7 +191,7 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    private function translateGenericProperties(ValueSchemaInterface $schema): array
+    protected function translateGenericProperties(ValueSchemaInterface $schema): array
     {
         $definition = [];
         if ($schema->isNullable()) {
