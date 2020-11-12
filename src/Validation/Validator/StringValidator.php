@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
 use Nette\Utils\Strings;
-use RuntimeException;
+use ScrumWorks\OpenApiSchema\Exception\RuntimeException;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPath;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use Error;
-use LogicException;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 abstract class AbstractSchemaBuilder

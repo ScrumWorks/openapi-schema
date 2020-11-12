@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
-use LogicException;
 use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 

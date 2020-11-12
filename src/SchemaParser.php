@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema;
 
-use DomainException;
-use LogicException;
 use ReflectionClass;
 use ReflectionProperty;
+use ScrumWorks\OpenApiSchema\Exception\DomainException;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\PropertySchemaDecoratorInterface;
 use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\SimplePropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;

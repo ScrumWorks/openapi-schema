@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-use InvalidArgumentException;
+use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 
 final class ArraySchema extends AbstractValueSchema
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation;
 
-use LogicException;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResult;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\Validator\AbstractValidator;

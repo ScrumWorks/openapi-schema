@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\PropertySchemaDecorator;
 
 use Doctrine\Common\Annotations\Reader;
-use LogicException;
 use ReflectionClass;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
