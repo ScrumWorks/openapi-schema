@@ -1,9 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 
+use LogicException;
+use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
@@ -16,7 +18,6 @@ class ArrayValueTestClass
      * @OA\ArrayValue(minItems=10, maxItems=20, uniqueItems=true)
      */
     public array $array;
-
 
     /**
      * @var string[]
@@ -38,19 +39,14 @@ class ArrayValueTestClass
 
 class ArrayValueTest extends AbstractAnnotationTest
 {
-    protected function createReflectionClass(): \ReflectionClass
-    {
-        return new \ReflectionClass(ArrayValueTestClass::class);
-    }
-
-    public function testArrayAnnotation()
+    public function testArrayAnnotation(): void
     {
         $schema = $this->getPropertySchema('array');
         $expectedSchema = new ArraySchema(new MixedSchema(true), 10, 20, true);
         $this->assertEquals($expectedSchema, $schema);
     }
 
-    public function testTypedArrayAnnotation()
+    public function testTypedArrayAnnotation(): void
     {
         // annotation works only outer array
         $schema = $this->getPropertySchema('typedArray');
@@ -58,22 +54,22 @@ class ArrayValueTest extends AbstractAnnotationTest
         $this->assertEquals($expectedSchema, $schema);
     }
 
-    public function testNestedArrayAnnotation()
+    public function testNestedArrayAnnotation(): void
     {
         $schema = $this->getPropertySchema('nestedArray');
-        $expectedSchema = new ArraySchema(
-            new ArraySchema(new IntegerSchema()),
-            0,
-            1,
-            false
-        );
+        $expectedSchema = new ArraySchema(new ArraySchema(new IntegerSchema()), 0, 1, false);
         $this->assertEquals($expectedSchema, $schema);
     }
 
-    public function testIncompatibleTypes()
+    public function testIncompatibleTypes(): void
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage("Unexpected annotation 'ScrumWorks\OpenApiSchema\Annotation\StringValue'");
         $this->getPropertySchema('incompatibleTypes');
+    }
+
+    protected function createReflectionClass(): ReflectionClass
+    {
+        return new ReflectionClass(ArrayValueTestClass::class);
     }
 }

@@ -47,6 +47,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set('paths', [
         __DIR__ . '/src',
+        __DIR__ . '/tests',
     ]);
 
     $parameters->set('sets', [

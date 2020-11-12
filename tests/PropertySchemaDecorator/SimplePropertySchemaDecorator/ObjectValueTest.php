@@ -1,8 +1,10 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\SimplePropertySchemaDecorator;
+
+use ReflectionClass;
 
 class ObjectValueTestClass
 {
@@ -13,14 +15,14 @@ class ObjectValueTestClass
 
 class ObjectValueTest extends AbstractDecoratorTest
 {
-    protected function createReflectionClass(): \ReflectionClass
-    {
-        return new \ReflectionClass(ObjectValueTestClass::class);
-    }
-
-    public function testRequiredProperties()
+    public function testRequiredProperties(): void
     {
         $schema = $this->schemaParser->getEntitySchema(ObjectValueTestClass::class);
         $this->assertEquals(['a'], $schema->getRequiredProperties());
+    }
+
+    protected function createReflectionClass(): ReflectionClass
+    {
+        return new ReflectionClass(ObjectValueTestClass::class);
     }
 }

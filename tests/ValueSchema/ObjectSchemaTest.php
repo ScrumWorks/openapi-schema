@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
@@ -13,26 +13,34 @@ class ObjectSchemaTest extends TestCase
 {
     public function testBadParameterKey(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Property key '1' must be string");
         // @phpstan-ignore-next-line
-        new ObjectSchema([1 => new StringSchema()]);
+        new ObjectSchema([
+            1 => new StringSchema(),
+        ]);
     }
 
     public function testBadParameterValue(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid schema (must be instance of ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface)");
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            "Invalid schema (must be instance of ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface)"
+        );
         // @phpstan-ignore-next-line
-        new ObjectSchema(['test' => 'test']);
+        new ObjectSchema([
+            'test' => 'test',
+        ]);
     }
 
     public function testBadRequiredParameters(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Required properties are not listed in schema (int, bool)");
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Required properties are not listed in schema (int, bool)');
         new ObjectSchema(
-            ['string' => new StringSchema()],
+            [
+                'string' => new StringSchema(),
+            ],
             ['string', 'int', 'bool']
         );
     }

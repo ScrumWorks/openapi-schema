@@ -23,7 +23,7 @@ class TestValidationResultBuilder implements ValidationResultBuilderInterface
 
     public function addTypeViolation(string $type, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1002, "Type '$type' expected.", $breadCrumbPath);
+        return $this->addViolation(1002, "Type '${type}' expected.", $breadCrumbPath);
     }
 
     public function addRequiredViolation(BreadCrumbPath $breadCrumbPath): self
@@ -38,12 +38,12 @@ class TestValidationResultBuilder implements ValidationResultBuilderInterface
 
     public function addMinCountViolation(int $min, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1005, "Minimal count $min expected.", $breadCrumbPath);
+        return $this->addViolation(1005, "Minimal count ${min} expected.", $breadCrumbPath);
     }
 
     public function addMaxCountViolation(int $max, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1006, "Maximal count $max expected.", $breadCrumbPath);
+        return $this->addViolation(1006, "Maximal count ${max} expected.", $breadCrumbPath);
     }
 
     public function addUniqueViolation(BreadCrumbPath $breadCrumbPath): self
@@ -57,42 +57,42 @@ class TestValidationResultBuilder implements ValidationResultBuilderInterface
     public function addChoicesViolation(array $choices, BreadCrumbPath $breadCrumbPath): self
     {
         $choicesString = \implode('|', $choices);
-        return $this->addViolation(1008, "It has to be one of '$choicesString'.", $breadCrumbPath);
+        return $this->addViolation(1008, "It has to be one of '${choicesString}'.", $breadCrumbPath);
     }
 
     public function addMinimumViolation(float $minimum, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1009, "It has to be bigger or equal then $minimum.", $breadCrumbPath);
+        return $this->addViolation(1009, "It has to be bigger or equal then ${minimum}.", $breadCrumbPath);
     }
 
     public function addExclusiveMinimumViolation(float $minimum, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1010, "It has to be bigger then $minimum.", $breadCrumbPath);
+        return $this->addViolation(1010, "It has to be bigger then ${minimum}.", $breadCrumbPath);
     }
 
     public function addMaximumViolation(float $maximum, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1011, "It has to be less or equal then $maximum.", $breadCrumbPath);
+        return $this->addViolation(1011, "It has to be less or equal then ${maximum}.", $breadCrumbPath);
     }
 
     public function addExclusiveMaximumViolation(float $maximum, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1012, "It has to be less then $maximum.", $breadCrumbPath);
+        return $this->addViolation(1012, "It has to be less then ${maximum}.", $breadCrumbPath);
     }
 
     public function addMultipleOfViolation(float $multiplier, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1013, "It has to be divisible by $multiplier.", $breadCrumbPath);
+        return $this->addViolation(1013, "It has to be divisible by ${multiplier}.", $breadCrumbPath);
     }
 
     public function addMinLengthViolation(int $minLength, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1014, "Minimal length has to be $minLength.", $breadCrumbPath);
+        return $this->addViolation(1014, "Minimal length has to be ${minLength}.", $breadCrumbPath);
     }
 
     public function addMaxLengthViolation(int $maxLength, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1015, "Maximal length has to be $maxLength.", $breadCrumbPath);
+        return $this->addViolation(1015, "Maximal length has to be ${maxLength}.", $breadCrumbPath);
     }
 
     public function addFormatViolation(BreadCrumbPath $breadCrumbPath): self
