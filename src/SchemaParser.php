@@ -162,13 +162,15 @@ class SchemaParser implements SchemaParserInterface
         $classReflexion = new ReflectionClass($class);
 
         $propertiesSchemas = [];
-        foreach ($classReflexion->getProperties() as $propertyReflection) {
+        foreach ($classReflexion->getProperties() as $classPropertyReflection) {
             // if property is not public, then skip it.
-            if (! $propertyReflection->isPublic()) {
+            if (! $classPropertyReflection->isPublic()) {
                 continue;
             }
 
-            $propertiesSchemas[$propertyReflection->getName()] = $this->getPropertySchema($propertyReflection);
+            $propertiesSchemas[$classPropertyReflection->getName()] = $this->getPropertySchema(
+                $classPropertyReflection
+            );
         }
 
         $schemaBuilder = (new ObjectSchemaBuilder())->withPropertiesSchemas($propertiesSchemas);

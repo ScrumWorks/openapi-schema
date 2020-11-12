@@ -7,31 +7,33 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
 /**
  * @Annotation
  * @Target("PROPERTY")
+ *
+ * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
  */
 final class FloatValue implements ValueInterface
 {
     /**
      * @var float
      */
-    public $minimum;
+    public ?float $minimum = null;
 
     /**
      * @var float
      */
-    public $maximum;
+    public ?float $maximum = null;
 
     /**
      * @var bool
      */
-    public $exclusiveMinimum;
+    public ?bool $exclusiveMinimum = null;
 
     /**
      * @var bool
      */
-    public $exclusiveMaximum;
+    public ?bool $exclusiveMaximum = null;
 
     /**
      * @var float
      */
-    public $multipleOf;
+    public ?float $multipleOf = null;
 }

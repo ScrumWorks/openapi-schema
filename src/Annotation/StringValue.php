@@ -7,26 +7,28 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
 /**
  * @Annotation
  * @Target("PROPERTY")
+ *
+ * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
  */
 final class StringValue implements ValueInterface
 {
     /**
      * @var int
      */
-    public $minLength;
+    public ?int $minLength = null;
 
     /**
      * @var int
      */
-    public $maxLength;
+    public ?int $maxLength = null;
 
     /**
      * @var string
      */
-    public $format;
+    public ?string $format = null;
 
     /**
      * @var string
      */
-    public $pattern;
+    public ?string $pattern = null;
 }

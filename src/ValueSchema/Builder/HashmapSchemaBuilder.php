@@ -42,6 +42,9 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
         return $this->itemsSchema;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRequiredProperties(): array
     {
         return $this->requiredProperties;

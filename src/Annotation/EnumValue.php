@@ -9,6 +9,8 @@ use Doctrine\Common\Annotations\Annotation\Required;
 /**
  * @Annotation
  * @Target("PROPERTY")
+ *
+ * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
  */
 final class EnumValue implements ValueInterface
 {
@@ -16,5 +18,5 @@ final class EnumValue implements ValueInterface
      * @var string[]
      * @Required()
      */
-    public $enum;
+    public array $enum;
 }
