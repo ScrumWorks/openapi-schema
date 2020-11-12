@@ -62,4 +62,30 @@ final class ArrayValidator extends AbstractValidator
             $resultBuilder->mergeResult($propertyValidationResult);
         }
     }
+
+    protected function collectPossibleViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+
+        $resultBuilder->addTypeViolation('array', $breadCrumbPath);
+
+        if (($min = $this->schema->getMinItems()) !== null) {
+            $resultBuilder->addMinCountViolation($min, $breadCrumbPath);
+        }
+        if (($max = $this->schema->getMaxItems()) !== null) {
+            $resultBuilder->addMaxCountViolation($max, $breadCrumbPath);
+        }
+        if ($this->schema->getUniqueItems() ?? false) {
+            $resultBuilder->addUniqueViolation($breadCrumbPath);
+        }
+
+        $resultBuilder->mergeViolations(
+            $this->valueValidator->getPossibleViolationExamples(
+                $this->schema->getItemsSchema(),
+                $breadCrumbPath->withIndex(0)
+            )
+        );
+    }
 }

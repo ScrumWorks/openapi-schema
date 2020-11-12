@@ -40,4 +40,35 @@ abstract class AbstractNumberValidator extends AbstractValidator
             $resultBuilder->addMultipleOfViolation($multipleOf, $breadCrumbPath);
         }
     }
+
+    protected function collectNumberViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        ?float $min,
+        ?float $max,
+        ?bool $exclusiveMin,
+        ?bool $exclusiveMax,
+        ?float $multipleOf,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        $exclusiveMin ??= false;
+        $exclusiveMax ??= false;
+
+        if ($min !== null) {
+            if ($exclusiveMin) {
+                $resultBuilder->addExclusiveMinimumViolation($min, $breadCrumbPath);
+            } else {
+                $resultBuilder->addMinimumViolation($min, $breadCrumbPath);
+            }
+        }
+        if ($max !== null) {
+            if ($exclusiveMax) {
+                $resultBuilder->addExclusiveMaximumViolation($max, $breadCrumbPath);
+            } else {
+                $resultBuilder->addMaximumViolation($max, $breadCrumbPath);
+            }
+        }
+        if ($multipleOf !== null) {
+            $resultBuilder->addMultipleOfViolation($multipleOf, $breadCrumbPath);
+        }
+    }
 }

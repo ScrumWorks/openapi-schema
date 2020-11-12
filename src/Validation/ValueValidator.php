@@ -7,6 +7,7 @@ namespace ScrumWorks\OpenApiSchema\Validation;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResult;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidityViolation;
 use ScrumWorks\OpenApiSchema\Validation\Validator\AbstractValidator;
 use ScrumWorks\OpenApiSchema\Validation\Validator\ArrayValidator;
 use ScrumWorks\OpenApiSchema\Validation\Validator\BooleanValidator;
@@ -46,6 +47,16 @@ final class ValueValidator
         ?BreadCrumbPath $breadCrumbPath = null
     ): ValidationResult {
         return $this->createValidator($schema)->validate($data, $breadCrumbPath);
+    }
+
+    /**
+     * @return ValidityViolation[]
+     */
+    public function getPossibleViolationExamples(
+        ValueSchemaInterface $schema,
+        ?BreadCrumbPath $breadCrumbPath = null
+    ): array {
+        return $this->createValidator($schema)->getPossibleViolationExamples($breadCrumbPath);
     }
 
     private function createValidator(ValueSchemaInterface $schema): AbstractValidator

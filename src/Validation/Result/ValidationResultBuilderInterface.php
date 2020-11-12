@@ -41,11 +41,16 @@ interface ValidationResultBuilderInterface
 
     public function addMaxLengthViolation(int $maxLength, BreadCrumbPath $breadCrumbPath): self;
 
-    public function addFormatViolation(BreadCrumbPath $breadCrumbPath): self;
+    public function addFormatViolation(string $format, BreadCrumbPath $breadCrumbPath): self;
 
-    public function addPatternViolation(BreadCrumbPath $breadCrumbPath): self;
+    public function addPatternViolation(string $pattern, BreadCrumbPath $breadCrumbPath): self;
 
     public function mergeResult(ValidationResult $validationResult): self;
+
+    /**
+     * @param ValidityViolation[] $violations
+     */
+    public function mergeViolations(array $violations): self;
 
     public function createResult(): ValidationResult;
 }

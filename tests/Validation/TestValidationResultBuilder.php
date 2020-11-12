@@ -95,19 +95,24 @@ class TestValidationResultBuilder implements ValidationResultBuilderInterface
         return $this->addViolation(1015, "Maximal length has to be ${maxLength}.", $breadCrumbPath);
     }
 
-    public function addFormatViolation(BreadCrumbPath $breadCrumbPath): self
+    public function addFormatViolation(string $format, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1016, 'Invalid format.', $breadCrumbPath);
+        return $this->addViolation(1016, "It has to match format '${format}'.", $breadCrumbPath);
     }
 
-    public function addPatternViolation(BreadCrumbPath $breadCrumbPath): self
+    public function addPatternViolation(string $pattern, BreadCrumbPath $breadCrumbPath): self
     {
-        return $this->addViolation(1017, 'It has to match pattern.', $breadCrumbPath);
+        return $this->addViolation(1017, "It has to match pattern '${pattern}'.", $breadCrumbPath);
     }
 
     public function mergeResult(ValidationResult $validationResult): self
     {
-        $this->validityViolations = \array_merge($this->validityViolations, $validationResult->getViolations());
+        return $this->mergeViolations($validationResult->getViolations());
+    }
+
+    public function mergeViolations(array $violations): self
+    {
+        $this->validityViolations = \array_merge($this->validityViolations, $violations);
         return $this;
     }
 

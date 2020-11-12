@@ -8,6 +8,7 @@ use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPath;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResult;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidityViolation;
 use ScrumWorks\OpenApiSchema\ValueSchema\AbstractValueSchema;
 
 abstract class AbstractValidator
@@ -38,6 +39,19 @@ abstract class AbstractValidator
     }
 
     /**
+     * @return ValidityViolation[]
+     */
+    public function getPossibleViolationExamples(?BreadCrumbPath $breadCrumbPath = null): array
+    {
+        $breadCrumbPath ??= new BreadCrumbPath();
+        $resultBuilder = $this->validationResultBuilderFactory->create();
+
+        $this->collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+
+        return $resultBuilder->createResult()->getViolations();
+    }
+
+    /**
      * Returns FALSE if validation should not continue
      * @param mixed $data
      */
@@ -55,6 +69,15 @@ abstract class AbstractValidator
         }
 
         return true;
+    }
+
+    protected function collectPossibleViolationExamples(
+        ValidationResultBuilderInterface $resultBuilder,
+        BreadCrumbPath $breadCrumbPath
+    ): void {
+        if (! $this->schema->isNullable()) {
+            $resultBuilder->addNullViolation($breadCrumbPath);
+        }
     }
 
     /**

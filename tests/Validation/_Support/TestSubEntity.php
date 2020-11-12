@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ScrumWorks\OpenApiSchema\Tests\Validation;
+namespace ScrumWorks\OpenApiSchema\Tests\Validation\_Support;
 
 final class TestSubEntity
 {
