@@ -51,7 +51,8 @@ abstract class AbstractSchemaBuilder
     protected function assertRequiredProperty(string $property): void
     {
         try {
-            \assert($this->{$property});
+            // @phpstan-ignore-next-line
+            $this->{$property};
         } catch (Error $e) {
             throw new LogicException(\sprintf("Property '%s' isn't filled", $property));
         }
