@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-use Exception;
 use InvalidArgumentException;
 
 final class ObjectSchema extends AbstractValueSchema
@@ -48,7 +47,7 @@ final class ObjectSchema extends AbstractValueSchema
     public function getPropertySchema(string $property): ValueSchemaInterface
     {
         if (! isset($this->propertiesSchemas[$property])) {
-            throw new Exception('TODO');
+            throw new InvalidArgumentException(\sprintf("Property '%s' doesn't exists", $property));
         }
         return $this->propertiesSchemas[$property];
     }

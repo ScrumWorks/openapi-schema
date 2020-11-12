@@ -12,7 +12,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
  */
 final class HashmapSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected ?ValueSchemaInterface $itemsSchema = null;
+    protected ValueSchemaInterface $itemsSchema;
 
     /**
      * @var string[]
@@ -22,7 +22,7 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withItemsSchema(?ValueSchemaInterface $itemsSchema)
+    public function withItemsSchema(ValueSchemaInterface $itemsSchema)
     {
         $this->itemsSchema = $itemsSchema;
         return $this;
@@ -37,7 +37,7 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
-    public function getItemsSchema(): ?ValueSchemaInterface
+    public function getItemsSchema(): ValueSchemaInterface
     {
         return $this->itemsSchema;
     }
@@ -45,6 +45,13 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
     public function getRequiredProperties(): array
     {
         return $this->requiredProperties;
+    }
+
+    protected function validate(): void
+    {
+        parent::validate();
+
+        $this->assertRequiredProperty('itemsSchema');
     }
 
     protected function createInstance(): HashmapSchema
