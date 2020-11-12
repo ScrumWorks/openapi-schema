@@ -11,10 +11,13 @@ use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
  */
 final class EnumSchemaBuilder extends AbstractSchemaBuilder
 {
+    /**
+     * @var string[]
+     */
     protected array $enum;
 
     /**
-     * @param array<?string> $enum
+     * @param string[] $enum
      * @return static
      */
     public function withEnum(array $enum)
@@ -23,6 +26,9 @@ final class EnumSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getEnum(): array
     {
         return $this->enum;

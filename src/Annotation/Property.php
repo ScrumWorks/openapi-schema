@@ -7,16 +7,18 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
 /**
  * @Annotation
  * @Target("PROPERTY")
+ *
+ * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
  */
 final class Property
 {
     /**
      * @var string
      */
-    public $description;
+    public ?string $description = null;
 
     /**
      * @var bool
      */
-    public $required;
+    public ?bool $required = null;
 }

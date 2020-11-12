@@ -219,7 +219,7 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
     {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
         /** @var ?OA\Property $annotation */
-        $annotation = $this->findAnnotation($annotations, OA\Property::class);
+        $annotation = $this->findAnnotation($annotations, OA\Property::class, false);
         if ($annotation && $annotation->required !== null) {
             return $annotation->required;
         }

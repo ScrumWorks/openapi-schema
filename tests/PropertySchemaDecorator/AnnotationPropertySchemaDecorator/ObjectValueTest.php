@@ -20,6 +20,7 @@ class ObjectValueTestClass
     public int $c;
 
     /**
+     * @OA\IntegerValue(minimum=2)
      * @OA\Property(required=true)
      */
     public int $d = 10;
@@ -35,6 +36,8 @@ class ObjectValueTest extends AbstractAnnotationTest
         // $b isn't required, because it's have default value
         // $c may be required, but it's overwritten by annotation
         // $d may not be required, but it's overwritten by annotation
+        //    also testing that required reading from @Property work
+        //    with another annotation
         $this->assertEquals(['a', 'd'], $schema->getRequiredProperties());
     }
 
