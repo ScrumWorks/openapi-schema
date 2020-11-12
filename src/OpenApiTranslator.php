@@ -141,7 +141,6 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
         $definition = [
             'type' => 'object',
         ];
-        // we also support "free-form objects without defined properties
         if ($schema->getPropertiesSchemas()) {
             // we use property of `array_map` function that preserve keys
             $definition['properties'] = \array_map(
@@ -152,6 +151,9 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
             if ($schema->getRequiredProperties()) {
                 $definition['required'] = $schema->getRequiredProperties();
             }
+        } else {
+            // we also support "free-form objects without defined properties
+            $definition['additionalProperties'] = true;
         }
         return $definition;
     }
