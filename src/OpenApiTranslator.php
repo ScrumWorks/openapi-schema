@@ -121,7 +121,6 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
     {
         $definition = [
             'type' => 'array',
-            // TODO: maybe also solve MixedSchema?
             'items' => $this->translateValueSchema($schema->getItemsSchema()),
         ];
         if ($schema->getMinItems()) {
