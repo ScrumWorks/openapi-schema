@@ -86,25 +86,25 @@ class ValueValidatorExamplesTest extends TestCase
                 new ObjectSchema([
                     'a' => new BooleanSchema(true),
                     'b' => new IntegerSchema(),
-                ]),
+                ], ['a']),
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'object' expected.", ''],
-                    [1003, 'It is required.', 'property'],
-                    [1004, 'It is unexpected.', 'unknownProperty'],
+                    [1004, 'It is unexpected.', '-unknown-property-'],
+                    [1003, 'It is required.', 'a'],
                     [1002, "Type 'boolean' expected.", 'a'],
                     [1001, 'Unexpected NULL value.', 'b'],
                     [1002, "Type 'integer' expected.", 'b'],
                 ],
             ],
             'hashmap' => [
-                new HashmapSchema(new IntegerSchema()),
+                new HashmapSchema(new IntegerSchema(), ['req']),
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'object' expected.", ''],
-                    [1003, 'It is required.', 'key'],
-                    [1001, 'Unexpected NULL value.', 'key'],
-                    [1002, "Type 'integer' expected.", 'key'],
+                    [1003, 'It is required.', 'req'],
+                    [1001, 'Unexpected NULL value.', '-key-'],
+                    [1002, "Type 'integer' expected.", '-key-'],
                 ],
             ],
             'string' => [
