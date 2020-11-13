@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPrope
 
 use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 
 class PropertyTestClass
 {
@@ -24,6 +25,11 @@ class PropertyTestClass
      * @OA\StringValue()
      */
     public string $mixedAnnotations;
+
+    /**
+     * @OA\StringValue()
+     */
+    public $mixed;
 }
 
 class PropertyTest extends AbstractAnnotationTest
@@ -44,6 +50,12 @@ class PropertyTest extends AbstractAnnotationTest
     {
         $schema = $this->getPropertySchema('mixedAnnotations');
         $this->assertEquals('other description', $schema->getDescription());
+    }
+
+    public function testAnnotationNotOverwriteType(): void
+    {
+        $schema = $this->getPropertySchema('mixed');
+        $this->assertEquals(new MixedSchema(true), $schema);
     }
 
     protected function createReflectionClass(): ReflectionClass
