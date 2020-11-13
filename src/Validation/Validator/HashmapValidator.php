@@ -66,11 +66,15 @@ final class HashmapValidator extends AbstractValidator
         parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
 
         $resultBuilder->addTypeViolation('object', $breadCrumbPath);
-        $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb('key'));
+
+        foreach ($this->schema->getRequiredProperties() as $propertyName) {
+            $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb($propertyName));
+        }
+
         $resultBuilder->mergeViolations(
             $this->valueValidator->getPossibleViolationExamples(
                 $this->schema->getItemsSchema(),
-                $breadCrumbPath->withNextBreadCrumb('key')
+                $breadCrumbPath->withNextBreadCrumb('-key-')
             ),
         );
     }

@@ -70,8 +70,11 @@ final class ObjectValidator extends AbstractValidator
         parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
 
         $resultBuilder->addTypeViolation('object', $breadCrumbPath);
-        $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb('property'));
-        $resultBuilder->addUnexpectedViolation($breadCrumbPath->withNextBreadCrumb('unknownProperty'));
+        $resultBuilder->addUnexpectedViolation($breadCrumbPath->withNextBreadCrumb('-unknown-property-'));
+
+        foreach ($this->schema->getRequiredProperties() as $propertyName) {
+            $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb($propertyName));
+        }
 
         foreach ($this->schema->getPropertiesSchemas() as $propertyName => $propertySchema) {
             $resultBuilder->mergeViolations(
