@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
+use ArrayAccess;
 use DateTime;
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionProperty;
@@ -66,8 +68,16 @@ class SchemaParserTest extends TestCase
     public function testGetEntitySchemaOnNonExistingClass(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("Class 'abc-not-existing' doesn't exists");
+        $this->expectExceptionMessage("Class or interface 'abc-not-existing' doesn't exists");
         $this->schemaParser->getEntitySchema('abc-not-existing');
+    }
+
+    public function testGetEntitySchemaOnInterface(): void
+    {
+        // DateTimeInterface is only working interface
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage("Unprocessable interface 'ArrayAccess' for creating schema");
+        $this->schemaParser->getEntitySchema(ArrayAccess::class);
     }
 
     public function testNullVariableType(): void
@@ -135,6 +145,12 @@ class SchemaParserTest extends TestCase
     public function testDateTime(): void
     {
         $variableType = new ClassVariableType(DateTime::class, false);
+        $this->assertEquals(
+            new StringSchema(null, null, 'date-time'),
+            $this->schemaParser->getVariableTypeSchema($variableType)
+        );
+
+        $variableType = new ClassVariableType(DateTimeInterface::class, false);
         $this->assertEquals(
             new StringSchema(null, null, 'date-time'),
             $this->schemaParser->getVariableTypeSchema($variableType)

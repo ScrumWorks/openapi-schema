@@ -147,16 +147,24 @@ class SchemaParser implements SchemaParserInterface
         string $class,
         ?ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
-        if (! \class_exists($class)) {
-            throw new LogicException(\sprintf("Class '${class}' doesn't exists"));
+        if (! \class_exists($class) && ! \interface_exists($class)) {
+            throw new LogicException(\sprintf("Class or interface '${class}' doesn't exists"));
         }
 
         // TODO: maybe move this to decorator?
-        if (\is_subclass_of($class, DateTimeInterface::class)) {
+        if (\is_a($class, DateTimeInterface::class, true)) {
             $schemaBuilder = new StringSchemaBuilder();
             // TODO: move this to some constant?
             $schemaBuilder->withFormat('date-time');
             return $this->decorateSchemaBuilderByType($schemaBuilder, $propertyReflection);
+        }
+
+        if (\interface_exists($class)) {
+            throw new LogicException(\sprintf("Unprocessable interface '%s' for creating schema", $class));
+        }
+
+        if (! \class_exists($class)) {
+            throw new LogicException(\sprintf("Class '${class}' doesn't exists"));
         }
 
         $classReflexion = new ReflectionClass($class);
