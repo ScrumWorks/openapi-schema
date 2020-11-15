@@ -7,18 +7,31 @@ namespace ScrumWorks\OpenApiSchema\Validation\Result;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\ValidityViolationInterface;
 
-final class ValidityViolation implements ValidityViolationInterface
+class ValidityViolation implements ValidityViolationInterface
 {
-    private int $violationCode;
+    protected int $violationCode;
 
-    private string $message;
+    protected string $messageTemplate;
 
-    private BreadCrumbPathInterface $breadCrumbPath;
+    /**
+     * @var mixed[]
+     */
+    protected array $parameters;
 
-    public function __construct(int $violationCode, string $message, BreadCrumbPathInterface $breadCrumbPath)
-    {
+    protected BreadCrumbPathInterface $breadCrumbPath;
+
+    /**
+     * @param mixed[] $parameters
+     */
+    public function __construct(
+        int $violationCode,
+        string $messageTemplate,
+        array $parameters,
+        BreadCrumbPathInterface $breadCrumbPath
+    ) {
         $this->violationCode = $violationCode;
-        $this->message = $message;
+        $this->messageTemplate = $messageTemplate;
+        $this->parameters = $parameters;
         $this->breadCrumbPath = $breadCrumbPath;
     }
 
@@ -27,9 +40,14 @@ final class ValidityViolation implements ValidityViolationInterface
         return $this->violationCode;
     }
 
-    public function getMessage(): string
+    public function getMessageTemplate(): string
     {
-        return $this->message;
+        return $this->messageTemplate;
+    }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
     }
 
     public function getBreadCrumbPath(): BreadCrumbPathInterface

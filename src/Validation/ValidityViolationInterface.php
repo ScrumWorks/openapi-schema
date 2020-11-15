@@ -6,9 +6,20 @@ namespace ScrumWorks\OpenApiSchema\Validation;
 
 interface ValidityViolationInterface
 {
+    /**
+     * Returns unique integer identifier of violation
+     */
     public function getViolationCode(): int;
 
-    public function getMessage(): string;
+    /**
+     * Returns description of violation with placeholders instead of parameters
+     */
+    public function getMessageTemplate(): string;
+
+    /**
+     * @return mixed[]
+     */
+    public function getParameters(): array;
 
     public function getBreadCrumbPath(): BreadCrumbPathInterface;
 }
