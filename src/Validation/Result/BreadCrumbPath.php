@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ScrumWorks\OpenApiSchema\Validation;
+namespace ScrumWorks\OpenApiSchema\Validation\Result;
 
-final class BreadCrumbPath
+use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
+
+final class BreadCrumbPath implements BreadCrumbPathInterface
 {
     /**
      * @var string[]

@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Result;
 
-final class ValidationResult
+use ScrumWorks\OpenApiSchema\Validation\ValidationResultInterface;
+use ScrumWorks\OpenApiSchema\Validation\ValidityViolationInterface;
+
+final class ValidationResult implements ValidationResultInterface
 {
+    /**
+     * @var ValidityViolationInterface[]
+     */
     private array $validityViolations;
 
     /**
-     * @param ValidityViolation[] $validityViolations
+     * @param ValidityViolationInterface[] $validityViolations
      */
     public function __construct(array $validityViolations)
     {
@@ -21,9 +27,6 @@ final class ValidationResult
         return ! \count($this->validityViolations);
     }
 
-    /**
-     * @return ValidityViolation[]
-     */
     public function getViolations(): array
     {
         return $this->validityViolations;

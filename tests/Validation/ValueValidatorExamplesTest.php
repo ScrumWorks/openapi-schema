@@ -43,9 +43,9 @@ class ValueValidatorExamplesTest extends TestCase
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'array' expected.", ''],
-                    [1005, 'Minimal count 1 expected.', ''],
-                    [1006, 'Maximal count 4 expected.', ''],
-                    [1007, 'It has to be unique.', ''],
+                    [1005, 'Items count has to be at least 1.', ''],
+                    [1006, 'Items count has to be at most 4.', ''],
+                    [1007, 'Items have to be unique.', ''],
                     [1001, 'Unexpected NULL value.', '[0]'],
                     [1002, "Type 'integer' expected.", '[0]'],
                 ],
@@ -59,7 +59,7 @@ class ValueValidatorExamplesTest extends TestCase
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'string' expected.", ''],
-                    [1008, "It has to be one of 'a|b'.", ''],
+                    [1008, "Value has to be one of ['a', 'b'].", ''],
                 ],
             ],
             'float' => [
@@ -67,9 +67,9 @@ class ValueValidatorExamplesTest extends TestCase
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'number' expected.", ''],
-                    [1010, 'It has to be bigger then 0.', ''],
-                    [1011, 'It has to be less or equal then 100.', ''],
-                    [1013, 'It has to be divisible by 2.', ''],
+                    [1010, 'Value has to be bigger then 0.', ''],
+                    [1011, 'Value has to be less or equal then 100.', ''],
+                    [1013, 'Value has to be divisible by 2.', ''],
                 ],
             ],
             'int' => [
@@ -77,9 +77,9 @@ class ValueValidatorExamplesTest extends TestCase
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'integer' expected.", ''],
-                    [1009, 'It has to be bigger or equal then 1.', ''],
-                    [1012, 'It has to be less then 100.', ''],
-                    [1013, 'It has to be divisible by 20.', ''],
+                    [1009, 'Value has to be bigger or equal then 1.', ''],
+                    [1012, 'Value has to be less then 100.', ''],
+                    [1013, 'Value has to be divisible by 20.', ''],
                 ],
             ],
             'object' => [
@@ -90,8 +90,8 @@ class ValueValidatorExamplesTest extends TestCase
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'object' expected.", ''],
-                    [1004, 'It is unexpected.', '-unknown-property-'],
-                    [1003, 'It is required.', 'a'],
+                    [1004, 'Unexpected.', '-unknown-property-'],
+                    [1003, 'Required.', 'a'],
                     [1002, "Type 'boolean' expected.", 'a'],
                     [1001, 'Unexpected NULL value.', 'b'],
                     [1002, "Type 'integer' expected.", 'b'],
@@ -102,7 +102,7 @@ class ValueValidatorExamplesTest extends TestCase
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'object' expected.", ''],
-                    [1003, 'It is required.', 'req'],
+                    [1003, 'Required.', 'req'],
                     [1001, 'Unexpected NULL value.', '-key-'],
                     [1002, "Type 'integer' expected.", '-key-'],
                 ],
@@ -112,10 +112,10 @@ class ValueValidatorExamplesTest extends TestCase
                 [
                     [1001, 'Unexpected NULL value.', ''],
                     [1002, "Type 'string' expected.", ''],
-                    [1014, 'Minimal length has to be 1.', ''],
-                    [1015, 'Maximal length has to be 10.', ''],
-                    [1017, "It has to match pattern '[0-9]+'.", ''],
-                    [1016, "It has to match format 'date'.", ''],
+                    [1014, 'Characters count has to be at least 1.', ''],
+                    [1015, 'Characters count has to be at most 10.', ''],
+                    [1017, "Value doesn't match pattern '[0-9]+'.", ''],
+                    [1016, "Value doesn't have format 'date'.", ''],
                 ],
             ],
             'mixed' => [new MixedSchema(), [[1001, 'Unexpected NULL value.', '']]],

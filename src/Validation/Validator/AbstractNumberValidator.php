@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
-use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPath;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;
+use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
 
 abstract class AbstractNumberValidator extends AbstractValidator
 {
     protected function validateNumberConstrains(
-        ValidationResultBuilderInterface $resultBuilder,
+        ValidationResultBuilder $resultBuilder,
         ?float $data,
         ?float $min,
         ?float $max,
         ?bool $exclusiveMin,
         ?bool $exclusiveMax,
         ?float $multipleOf,
-        BreadCrumbPath $breadCrumbPath
+        BreadCrumbPathInterface $breadCrumbPath
     ): void {
         $exclusiveMin ??= false;
         $exclusiveMax ??= false;
@@ -42,13 +42,13 @@ abstract class AbstractNumberValidator extends AbstractValidator
     }
 
     protected function collectNumberViolationExamples(
-        ValidationResultBuilderInterface $resultBuilder,
+        ValidationResultBuilder $resultBuilder,
         ?float $min,
         ?float $max,
         ?bool $exclusiveMin,
         ?bool $exclusiveMax,
         ?float $multipleOf,
-        BreadCrumbPath $breadCrumbPath
+        BreadCrumbPathInterface $breadCrumbPath
     ): void {
         $exclusiveMin ??= false;
         $exclusiveMax ??= false;
