@@ -69,13 +69,15 @@ class IntegrationTest extends TestCase
         $this->assertFalse($validationResult->isValid());
         $this->assertCount(3, $violations = $validationResult->getViolations());
 
-        $this->assertSame('Unexpected NULL value.', $violations[0]->getMessage());
+        $this->assertSame('Unexpected NULL value.', $violations[0]->getMessageTemplate());
         $this->assertSame('objekt.flag', (string) $violations[0]->getBreadCrumbPath());
 
-        $this->assertSame("Type 'number' expected.", $violations[1]->getMessage());
+        $this->assertSame("Type '%s' expected.", $violations[1]->getMessageTemplate());
+        $this->assertSame(['number'], $violations[1]->getParameters());
         $this->assertSame('objekt.pole[1]', (string) $violations[1]->getBreadCrumbPath());
 
-        $this->assertSame("Type 'string' expected.", $violations[2]->getMessage());
+        $this->assertSame("Type '%s' expected.", $violations[2]->getMessageTemplate());
+        $this->assertSame(['string'], $violations[2]->getParameters());
         $this->assertSame('objekt.hash.5', (string) $violations[2]->getBreadCrumbPath());
     }
 
