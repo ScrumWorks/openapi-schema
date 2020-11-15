@@ -4,33 +4,35 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
-use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPath;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;
-use ScrumWorks\OpenApiSchema\Validation\ValueValidator;
+use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
+use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
+use ScrumWorks\OpenApiSchema\Validation\ValueSchemaValidatorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 
 final class ArrayValidator extends AbstractValidator
 {
     private ArraySchema $schema;
 
-    private ValueValidator $valueValidator;
+    private ValueSchemaValidatorInterface $valueValidator;
 
     public function __construct(
-        ValidationResultBuilderFactoryInterface $validationResultBuilderFactory,
+        BreadCrumbPathFactoryInterface $breadCrumbPathFactory,
+        ValidationResultBuilderFactory $validationResultBuilderFactory,
         ArraySchema $schema,
-        ValueValidator $valueValidator
+        ValueSchemaValidatorInterface $valueValidator
     ) {
-        parent::__construct($validationResultBuilderFactory, $schema);
+        parent::__construct($breadCrumbPathFactory, $validationResultBuilderFactory, $schema);
 
         $this->schema = $schema;
         $this->valueValidator = $valueValidator;
     }
 
     protected function doValidation(
-        ValidationResultBuilderInterface $resultBuilder,
+        ValidationResultBuilder $resultBuilder,
         $data,
-        BreadCrumbPath $breadCrumbPath
+        BreadCrumbPathInterface $breadCrumbPath
     ): void {
         if (! $this->validateNullable($resultBuilder, $data, $breadCrumbPath)) {
             return;
@@ -43,10 +45,10 @@ final class ArrayValidator extends AbstractValidator
 
         $count = \count($data);
         if (($min = $this->schema->getMinItems()) !== null && $min > $count) {
-            $resultBuilder->addMinCountViolation($min, $breadCrumbPath);
+            $resultBuilder->addMinItemsViolation($min, $breadCrumbPath);
         }
         if (($max = $this->schema->getMaxItems()) !== null && $max < $count) {
-            $resultBuilder->addMaxCountViolation($max, $breadCrumbPath);
+            $resultBuilder->addMaxItemsViolation($max, $breadCrumbPath);
         }
         if (($this->schema->getUniqueItems() ?? false) && $count !== \count(\array_unique($data))) {
             $resultBuilder->addUniqueViolation($breadCrumbPath);
@@ -64,18 +66,18 @@ final class ArrayValidator extends AbstractValidator
     }
 
     protected function collectPossibleViolationExamples(
-        ValidationResultBuilderInterface $resultBuilder,
-        BreadCrumbPath $breadCrumbPath
+        ValidationResultBuilder $resultBuilder,
+        BreadCrumbPathInterface $breadCrumbPath
     ): void {
         parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
 
         $resultBuilder->addTypeViolation('array', $breadCrumbPath);
 
         if (($min = $this->schema->getMinItems()) !== null) {
-            $resultBuilder->addMinCountViolation($min, $breadCrumbPath);
+            $resultBuilder->addMinItemsViolation($min, $breadCrumbPath);
         }
         if (($max = $this->schema->getMaxItems()) !== null) {
-            $resultBuilder->addMaxCountViolation($max, $breadCrumbPath);
+            $resultBuilder->addMaxItemsViolation($max, $breadCrumbPath);
         }
         if ($this->schema->getUniqueItems() ?? false) {
             $resultBuilder->addUniqueViolation($breadCrumbPath);

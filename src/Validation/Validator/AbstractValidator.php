@@ -4,23 +4,28 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
-use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPath;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResult;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidityViolation;
+use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
+use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
+use ScrumWorks\OpenApiSchema\Validation\ValidationResultInterface;
+use ScrumWorks\OpenApiSchema\Validation\ValidityViolationInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\AbstractValueSchema;
 
 abstract class AbstractValidator
 {
-    private ValidationResultBuilderFactoryInterface $validationResultBuilderFactory;
+    private BreadCrumbPathFactoryInterface $breadCrumbPathFactory;
+
+    private ValidationResultBuilderFactory $validationResultBuilderFactory;
 
     private AbstractValueSchema $schema;
 
     public function __construct(
-        ValidationResultBuilderFactoryInterface $validationResultBuilderFactory,
+        BreadCrumbPathFactoryInterface $breadCrumbPathFactory,
+        ValidationResultBuilderFactory $validationResultBuilderFactory,
         AbstractValueSchema $schema
     ) {
+        $this->breadCrumbPathFactory = $breadCrumbPathFactory;
         $this->validationResultBuilderFactory = $validationResultBuilderFactory;
         $this->schema = $schema;
     }
@@ -28,9 +33,9 @@ abstract class AbstractValidator
     /**
      * @param mixed $data
      */
-    public function validate($data, ?BreadCrumbPath $breadCrumbPath = null): ValidationResult
+    public function validate($data, ?BreadCrumbPathInterface $breadCrumbPath = null): ValidationResultInterface
     {
-        $breadCrumbPath ??= new BreadCrumbPath();
+        $breadCrumbPath ??= $this->breadCrumbPathFactory->create();
         $resultBuilder = $this->validationResultBuilderFactory->create();
 
         $this->doValidation($resultBuilder, $data, $breadCrumbPath);
@@ -39,11 +44,11 @@ abstract class AbstractValidator
     }
 
     /**
-     * @return ValidityViolation[]
+     * @return ValidityViolationInterface[]
      */
-    public function getPossibleViolationExamples(?BreadCrumbPath $breadCrumbPath = null): array
+    public function getPossibleViolationExamples(?BreadCrumbPathInterface $breadCrumbPath = null): array
     {
-        $breadCrumbPath ??= new BreadCrumbPath();
+        $breadCrumbPath ??= $this->breadCrumbPathFactory->create();
         $resultBuilder = $this->validationResultBuilderFactory->create();
 
         $this->collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
@@ -56,13 +61,13 @@ abstract class AbstractValidator
      * @param mixed $data
      */
     protected function validateNullable(
-        ValidationResultBuilderInterface $resultBuilder,
+        ValidationResultBuilder $resultBuilder,
         $data,
-        BreadCrumbPath $breadCrumbPath
+        BreadCrumbPathInterface $breadCrumbPath
     ): bool {
         if ($data === null) {
             if (! $this->schema->isNullable()) {
-                $resultBuilder->addNullViolation($breadCrumbPath);
+                $resultBuilder->addNullableViolation($breadCrumbPath);
             }
 
             return false;
@@ -72,11 +77,11 @@ abstract class AbstractValidator
     }
 
     protected function collectPossibleViolationExamples(
-        ValidationResultBuilderInterface $resultBuilder,
-        BreadCrumbPath $breadCrumbPath
+        ValidationResultBuilder $resultBuilder,
+        BreadCrumbPathInterface $breadCrumbPath
     ): void {
         if (! $this->schema->isNullable()) {
-            $resultBuilder->addNullViolation($breadCrumbPath);
+            $resultBuilder->addNullableViolation($breadCrumbPath);
         }
     }
 
@@ -84,8 +89,8 @@ abstract class AbstractValidator
      * @param mixed $data
      */
     abstract protected function doValidation(
-        ValidationResultBuilderInterface $resultBuilder,
+        ValidationResultBuilder $resultBuilder,
         $data,
-        BreadCrumbPath $breadCrumbPath
+        BreadCrumbPathInterface $breadCrumbPath
     ): void;
 }

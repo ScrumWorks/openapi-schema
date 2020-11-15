@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\Validation\_Support;
 
-use ScrumWorks\OpenApiSchema\Tests\Validation\TestValidationResultBuilder;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactoryInterface;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderInterface;
-use ScrumWorks\OpenApiSchema\Validation\ValueValidator;
+use ScrumWorks\OpenApiSchema\Validation\Result\BreadCrumbPathFactory;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidityViolationFactory;
+use ScrumWorks\OpenApiSchema\Validation\Validator\ValidatorFactory;
+use ScrumWorks\OpenApiSchema\Validation\Validator\ValueSchemaValidator;
+use ScrumWorks\OpenApiSchema\Validation\ValueSchemaValidatorInterface;
 
 trait CreateValidatorTrait
 {
-    public function createValueValidator(): ValueValidator
+    public function createValueValidator(): ValueSchemaValidatorInterface
     {
-        $resultBuilderFactory = new class() implements ValidationResultBuilderFactoryInterface {
-            public function create(): ValidationResultBuilderInterface
-            {
-                return new TestValidationResultBuilder();
-            }
-        };
-
-        return new ValueValidator($resultBuilderFactory);
+        return new ValueSchemaValidator(
+            new ValidatorFactory(
+                new BreadCrumbPathFactory(),
+                new ValidationResultBuilderFactory(new ValidityViolationFactory())
+            )
+        );
     }
 }
