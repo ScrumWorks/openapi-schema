@@ -34,7 +34,7 @@ class ArraySchemaBuilderTest extends TestCase
     public function testMissingData(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("Property 'itemsSchema' isn't filled");
+        $this->expectExceptionMessage("One of `itemsSchema` or 'itemsSchemaBuilder' has to be set.");
         $builder = new ArraySchemaBuilder();
         $builder->build();
     }

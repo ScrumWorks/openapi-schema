@@ -30,7 +30,7 @@ class EnumSchemaBuilderTest extends TestCase
     public function testMissingData(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("Property 'enum' isn't filled");
+        $this->expectExceptionMessage('Enum has to be set.');
         $builder = new EnumSchemaBuilder();
         $builder->build();
     }

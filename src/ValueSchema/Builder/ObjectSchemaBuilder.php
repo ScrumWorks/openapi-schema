@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
-/**
- * @method ObjectSchema build()
- */
 final class ObjectSchemaBuilder extends AbstractSchemaBuilder
 {
     /**
      * @var array<string, ValueSchemaInterface>
      */
     protected array $propertiesSchemas = [];
+
+    /**
+     * @var array<string, AbstractSchemaBuilder>
+     */
+    protected array $propertiesSchemaBuilders = [];
 
     /**
      * @var string[]
@@ -33,6 +36,16 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
     }
 
     /**
+     * @param array<string, AbstractSchemaBuilder> $propertiesSchemaBuilders
+     * @return static
+     */
+    public function withPropertiesSchemaBuilders(array $propertiesSchemaBuilders)
+    {
+        $this->propertiesSchemaBuilders = $propertiesSchemaBuilders;
+        return $this;
+    }
+
+    /**
      * @param string[] $requiredProperties
      * @return static
      */
@@ -43,11 +56,19 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
     }
 
     /**
-     * @return ValueSchemaInterface[]
+     * @return array<string, ValueSchemaInterface>
      */
     public function getPropertiesSchemas(): array
     {
         return $this->propertiesSchemas;
+    }
+
+    /**
+     * @return array<string, AbstractSchemaBuilder>
+     */
+    public function getPropertiesSchemaBuilders(): array
+    {
+        return $this->propertiesSchemaBuilders;
     }
 
     /**
@@ -58,13 +79,19 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
         return $this->requiredProperties;
     }
 
-    protected function createInstance(): ObjectSchema
+    public function build(): ObjectSchema
     {
-        return new ObjectSchema(
-            $this->propertiesSchemas,
-            $this->requiredProperties,
-            $this->nullable,
-            $this->description
-        );
+        $propertySchemas = $this->propertiesSchemas;
+        foreach ($this->propertiesSchemaBuilders as $propertyName => $propertiesSchemaBuilder) {
+            if (isset($propertySchemas[$propertyName])) {
+                throw new LogicException(
+                    "There are both schema and schemaBuilder defined for property '${propertyName}'."
+                );
+            }
+
+            $propertySchemas[$propertyName] = $propertiesSchemaBuilder->build();
+        }
+
+        return new ObjectSchema($propertySchemas, $this->requiredProperties, $this->nullable, $this->description);
     }
 }
