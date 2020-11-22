@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
-/**
- * @method HashmapSchema build()
- */
 final class HashmapSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected ValueSchemaInterface $itemsSchema;
+    protected ?AbstractSchemaBuilder $itemsSchemaBuilder = null;
+
+    protected ?ValueSchemaInterface $itemsSchema = null;
 
     /**
      * @var string[]
@@ -22,9 +22,18 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
     /**
      * @return static
      */
-    public function withItemsSchema(ValueSchemaInterface $itemsSchema)
+    public function withItemsSchema(?ValueSchemaInterface $itemsSchema)
     {
         $this->itemsSchema = $itemsSchema;
+        return $this;
+    }
+
+    /**
+     * @return static
+     */
+    public function withItemsSchemaBuilder(?AbstractSchemaBuilder $itemsSchemaBuilder)
+    {
+        $this->itemsSchemaBuilder = $itemsSchemaBuilder;
         return $this;
     }
 
@@ -37,9 +46,14 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
-    public function getItemsSchema(): ValueSchemaInterface
+    public function getItemsSchema(): ?ValueSchemaInterface
     {
         return $this->itemsSchema;
+    }
+
+    public function getItemsSchemaBuilder(): ?AbstractSchemaBuilder
+    {
+        return $this->itemsSchemaBuilder;
     }
 
     /**
@@ -50,17 +64,18 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
         return $this->requiredProperties;
     }
 
-    protected function validate(): void
+    public function build(): HashmapSchema
     {
-        parent::validate();
+        if ($this->itemsSchema === null && $this->itemsSchemaBuilder === null) {
+            throw new LogicException("One of `itemsSchema` or 'itemsSchemaBuilder' has to be set.");
+        }
 
-        $this->assertRequiredProperty('itemsSchema');
-    }
+        if ($this->itemsSchema !== null && $this->itemsSchemaBuilder !== null) {
+            throw new LogicException("Only one of `itemsSchema` or 'itemsSchemaBuilder' has to be set.");
+        }
 
-    protected function createInstance(): HashmapSchema
-    {
         return new HashmapSchema(
-            $this->itemsSchema,
+            $this->itemsSchema ?? $this->itemsSchemaBuilder->build(),
             $this->requiredProperties,
             $this->nullable,
             $this->description

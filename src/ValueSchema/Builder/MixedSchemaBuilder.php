@@ -6,12 +6,9 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 
-/**
- * @method MixedSchema build()
- */
 final class MixedSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected function createInstance(): MixedSchema
+    public function build(): MixedSchema
     {
         return new MixedSchema($this->nullable, $this->description);
     }

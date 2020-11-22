@@ -6,12 +6,9 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
 
-/**
- * @method BooleanSchema build()
- */
 final class BooleanSchemaBuilder extends AbstractSchemaBuilder
 {
-    protected function createInstance(): BooleanSchema
+    public function build(): BooleanSchema
     {
         return new BooleanSchema($this->nullable, $this->description);
     }
