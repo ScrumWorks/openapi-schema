@@ -35,7 +35,7 @@ $schemaParser = new \ScrumWorks\OpenApiSchema\SchemaParser(
     new \ScrumWorks\PropertyReader\PropertyTypeReader(
         new \ScrumWorks\PropertyReader\VariableTypeUnifyService()
     ),
-    new \ScrumWorks\OpenApiSchema\PropertySchemaDecorator\AnnotationPropertySchemaDecorator(
+    new \ScrumWorks\OpenApiSchema\SchemaBuilder\PropertyDecorator\AnnotationPropertySchemaDecorator(
         new \Doctrine\Common\Annotations\AnnotationReader()
     )
 );
