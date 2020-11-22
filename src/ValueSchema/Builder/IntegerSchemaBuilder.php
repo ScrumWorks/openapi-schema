@@ -6,9 +6,6 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 
-/**
- * @method IntegerSchema build()
- */
 final class IntegerSchemaBuilder extends AbstractSchemaBuilder
 {
     protected ?int $minimum = null;
@@ -91,7 +88,7 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
         return $this->multipleOf;
     }
 
-    protected function createInstance(): IntegerSchema
+    public function build(): IntegerSchema
     {
         return new IntegerSchema(
             $this->minimum,

@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 
-/**
- * @method EnumSchema build()
- */
 final class EnumSchemaBuilder extends AbstractSchemaBuilder
 {
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    protected array $enum;
+    protected ?array $enum = null;
 
     /**
      * @param string[] $enum
@@ -27,22 +25,19 @@ final class EnumSchemaBuilder extends AbstractSchemaBuilder
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getEnum(): array
+    public function getEnum(): ?array
     {
         return $this->enum;
     }
 
-    protected function validate(): void
+    public function build(): EnumSchema
     {
-        parent::validate();
+        if ($this->enum === null) {
+            throw new LogicException('Enum has to be set.');
+        }
 
-        $this->assertRequiredProperty('enum');
-    }
-
-    protected function createInstance(): EnumSchema
-    {
         return new EnumSchema($this->enum, $this->nullable, $this->description);
     }
 }

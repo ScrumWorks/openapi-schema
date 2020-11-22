@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
-use Error;
-use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 abstract class AbstractSchemaBuilder
@@ -42,25 +40,5 @@ abstract class AbstractSchemaBuilder
         return $this->description;
     }
 
-    public function build(): ValueSchemaInterface
-    {
-        $this->validate();
-        return $this->createInstance();
-    }
-
-    protected function assertRequiredProperty(string $property): void
-    {
-        try {
-            // @phpstan-ignore-next-line
-            $this->{$property};
-        } catch (Error $e) {
-            throw new LogicException(\sprintf("Property '%s' isn't filled", $property));
-        }
-    }
-
-    protected function validate(): void
-    {
-    }
-
-    abstract protected function createInstance(): ValueSchemaInterface;
+    abstract public function build(): ValueSchemaInterface;
 }
