@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
 use PHPUnit\Framework\TestCase;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
@@ -85,6 +87,6 @@ class IntegrationTest extends TestCase
     {
         $variableTypeUnifyService = new VariableTypeUnifyService();
         $propertyReader = new PropertyTypeReader($variableTypeUnifyService);
-        return new SchemaParser($propertyReader);
+        return new SchemaParser(new SchemaBuilderFactory($propertyReader, new SchemaBuilderDecorator([], [])));
     }
 }

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace ScrumWorks\OpenApiSchema\PropertySchemaDecorator;
+namespace ScrumWorks\OpenApiSchema\SchemaBuilder\PropertyDecorator;
 
-use ReflectionClass;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
@@ -17,83 +16,79 @@ use ScrumWorks\OpenApiSchema\ValueSchema\Builder\MixedSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 
-class SimplePropertySchemaDecorator implements PropertySchemaDecoratorInterface
+trait PropertySchemaDecoratorDefaultTrait
 {
+    /**
+     * General decoration method which run over every ValueScheme.
+     * Useful for solving f.e. descriptions etc.
+     */
     public function decorateValueSchemaBuilder(
         AbstractSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateMixedSchemaBuilder(
         MixedSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateIntegerSchemaBuilder(
         IntegerSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateFloatSchemaBuilder(
         FloatSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateBooleanSchemaBuilder(
         BooleanSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateStringSchemaBuilder(
         StringSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateEnumSchemaBuilder(
         EnumSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateArraySchemaBuilder(
         ArraySchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateHashmapSchemaBuilder(
         HashmapSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateObjectSchemaBuilder(
         ObjectSchemaBuilder $builder,
-        ReflectionClass $classReflexion,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
-        $objectDefaultValues = $classReflexion->getDefaultProperties();
-        $requiredProperties = [];
-        foreach (\array_keys($builder->getPropertiesSchemas()) as $propertyName) {
-            if (! \array_key_exists($propertyName, $objectDefaultValues)) {
-                $requiredProperties[] = $propertyName;
-            }
-        }
-        return $builder->withRequiredProperties($requiredProperties);
+        return $builder;
     }
 }
