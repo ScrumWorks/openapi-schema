@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ScrumWorks\OpenApiSchema\PropertySchemaDecorator;
+namespace ScrumWorks\OpenApiSchema\SchemaBuilder\PropertyDecorator;
 
 use Doctrine\Common\Annotations\Reader;
-use ReflectionClass;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\PropertySchemaDecoratorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
@@ -17,11 +17,12 @@ use ScrumWorks\OpenApiSchema\ValueSchema\Builder\FloatSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\HashmapSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\IntegerSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\MixedSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 
 class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterface
 {
+    use PropertySchemaDecoratorDefaultTrait;
+
     private Reader $annotationReader;
 
     public function __construct(Reader $annotationReader)
@@ -31,7 +32,7 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
 
     public function decorateValueSchemaBuilder(
         AbstractSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
 
@@ -51,14 +52,14 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
 
     public function decorateMixedSchemaBuilder(
         MixedSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateIntegerSchemaBuilder(
         IntegerSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
 
@@ -86,7 +87,7 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
 
     public function decorateFloatSchemaBuilder(
         FloatSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
 
@@ -114,19 +115,20 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
 
     public function decorateBooleanSchemaBuilder(
         BooleanSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         return $builder;
     }
 
     public function decorateStringSchemaBuilder(
         StringSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
 
         if ($this->findAnnotation($annotations, OA\EnumValue::class, false)) {
-            $builder = new EnumSchemaBuilder();
+            $builder = (new EnumSchemaBuilder())
+                ->withNullable($builder->isNullable());
             return $this->decorateEnumSchemaBuilder($builder, $propertyReflection);
         }
 
@@ -151,7 +153,7 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
 
     public function decorateEnumSchemaBuilder(
         EnumSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
 
@@ -167,7 +169,7 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
 
     public function decorateArraySchemaBuilder(
         ArraySchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
 
@@ -189,7 +191,7 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
 
     public function decorateHashmapSchemaBuilder(
         HashmapSchemaBuilder $builder,
-        ?ReflectionProperty $propertyReflection
+        ReflectionProperty $propertyReflection
     ): AbstractSchemaBuilder {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
 
@@ -203,39 +205,9 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
         return $builder;
     }
 
-    public function decorateObjectSchemaBuilder(
-        ObjectSchemaBuilder $builder,
-        ReflectionClass $classReflexion,
-        ?ReflectionProperty $propertyReflection
-    ): AbstractSchemaBuilder {
-        $objectDefaultValues = $classReflexion->getDefaultProperties();
-        $requiredProperties = [];
-        foreach (\array_keys($builder->getPropertiesSchemas()) as $propertyName) {
-            $propertyReflection = $classReflexion->getProperty($propertyName);
-            if ($this->isPropertyRequired($propertyReflection, $objectDefaultValues)) {
-                $requiredProperties[] = $propertyName;
-            }
-        }
-        return $builder->withRequiredProperties($requiredProperties);
-    }
-
-    private function isPropertyRequired(?ReflectionProperty $propertyReflection, array $objectDefaultValues): bool
+    private function getPropertyAnnotations(ReflectionProperty $propertyReflection): array
     {
-        $annotations = $this->getPropertyAnnotations($propertyReflection);
-        /** @var ?OA\Property $annotation */
-        $annotation = $this->findAnnotation($annotations, OA\Property::class, false);
-        if ($annotation && $annotation->required !== null) {
-            return $annotation->required;
-        }
-        return ! \array_key_exists($propertyReflection->getName(), $objectDefaultValues);
-    }
-
-    private function getPropertyAnnotations(?ReflectionProperty $propertyReflection): array
-    {
-        if ($propertyReflection === null) {
-            return [];
-        }
-        return (array) $this->annotationReader->getPropertyAnnotations($propertyReflection);
+        return $this->annotationReader->getPropertyAnnotations($propertyReflection);
     }
 
     private function findAnnotation(

@@ -4,56 +4,73 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
-use ArrayAccess;
-use DateTime;
-use DateTimeInterface;
+use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionProperty;
+use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
-use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\SimplePropertySchemaDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\ClassDecorator\AnnotationClassSchemaDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\PropertyDecorator\AnnotationPropertySchemaDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\Builder\EnumSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\PropertyReader\PropertyTypeReader;
-use ScrumWorks\PropertyReader\VariableType\ArrayVariableType;
-use ScrumWorks\PropertyReader\VariableType\ClassVariableType;
-use ScrumWorks\PropertyReader\VariableType\MixedVariableType;
-use ScrumWorks\PropertyReader\VariableType\ScalarVariableType;
-use ScrumWorks\PropertyReader\VariableType\VariableTypeInterface;
 use ScrumWorks\PropertyReader\VariableTypeUnifyService;
 
-class EnumTestClass
+class TestSubEntity
 {
-    public string $enum;
+    /**
+     * @OA\IntegerValue(minimum=25)
+     * @OA\Property(description="sub...")
+     */
+    public int $subInteger;
 }
 
-class UnknownVariableType implements VariableTypeInterface
+class TestEntity
 {
-    public function isNullable(): bool
-    {
-        return true;
-    }
+    /**
+     * @OA\IntegerValue(minimum=1, maximum=5, exclusiveMaximum=true)
+     * @OA\Property(required=false, description="Important integer")
+     */
+    public int $integer;
 
-    public function getTypeName(): string
-    {
-        return 'TESTING-CLASS';
-    }
+    /**
+     * @OA\FloatValue(minimum=10.3, maximum=50.5, exclusiveMinimum=true, exclusiveMaximum=false)
+     * @OA\Property(required=true, description="Important float")
+     */
+    public float $float = 13.3;
 
-    public function equals(VariableTypeInterface $object): bool
-    {
-        return false;
-    }
+    /**
+     * @OA\EnumValue(enum={"a","b"})
+     */
+    public ?string $enum = null;
+
+    /**
+     * @OA\StringValue(minLength=10, maxLength=100, format="date", pattern="[0-9]+")
+     */
+    public ?string $string;
+
+    /**
+     * @var int[]
+     * @OA\ArrayValue(minItems=3, maxItems=7, uniqueItems=true)
+     * @OA\Property(required=true)
+     */
+    public array $array;
+
+    /**
+     * @var array<string,int[]>
+     *
+     * @OA\HashmapValue(requiredProperties={"reqKey"})
+     */
+    public array $hashmap = [];
+
+    public TestSubEntity $class;
 }
 
 class SchemaParserTest extends TestCase
@@ -62,158 +79,103 @@ class SchemaParserTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->schemaParser = new SchemaParser(new PropertyTypeReader(new VariableTypeUnifyService(), ));
+        $annotationReader = new AnnotationReader();
+        $this->schemaParser = new SchemaParser(
+            new SchemaBuilderFactory(
+                new PropertyTypeReader(new VariableTypeUnifyService()),
+                new SchemaBuilderDecorator(
+                    [new AnnotationPropertySchemaDecorator($annotationReader)],
+                    [new AnnotationClassSchemaDecorator($annotationReader)]
+                )
+            )
+        );
     }
 
-    public function testGetEntitySchemaOnNonExistingClass(): void
+    public function testNonExistingEntity(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("Class or interface 'abc-not-existing' doesn't exists");
+        $this->expectExceptionMessage("Class or interface 'abc-not-existing' does not exist");
         $this->schemaParser->getEntitySchema('abc-not-existing');
     }
 
-    public function testGetEntitySchemaOnInterface(): void
+    public function testEntity(): void
     {
-        // DateTimeInterface is only working interface
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("Unprocessable interface 'ArrayAccess' for creating schema");
-        $this->schemaParser->getEntitySchema(ArrayAccess::class);
-    }
+        /** @var ObjectSchema $entitySchema */
+        $entitySchema = $this->schemaParser->getEntitySchema(TestEntity::class);
+        $this->assertInstanceOf(ObjectSchema::class, $entitySchema);
+        $this->assertFalse($entitySchema->isNullable());
+        $this->assertNull($entitySchema->getDescription());
+        $this->assertSame(['float', 'string', 'array', 'class'], $entitySchema->getRequiredProperties());
 
-    public function testNullVariableType(): void
-    {
-        $schema = $this->schemaParser->getVariableTypeSchema(null);
-        $this->assertInstanceOf(MixedSchema::class, $schema);
-        $this->assertTrue($schema->isNullable());
-    }
+        /** @var IntegerSchema $integerSchema */
+        $integerSchema = $entitySchema->getPropertySchema('integer');
+        $this->assertInstanceOf(IntegerSchema::class, $integerSchema);
+        $this->assertFalse($integerSchema->isNullable());
+        $this->assertSame('Important integer', $integerSchema->getDescription());
+        $this->assertSame(1, $integerSchema->getMinimum());
+        $this->assertSame(5, $integerSchema->getMaximum());
+        $this->assertNull($integerSchema->getExclusiveMinimum());
+        $this->assertTrue($integerSchema->getExclusiveMaximum());
+        $this->assertNull($integerSchema->getMultipleOf());
 
-    public function testMixedVariableType(): void
-    {
-        $variableType = new MixedVariableType();
-        $schema = $this->schemaParser->getVariableTypeSchema($variableType);
-        $this->assertInstanceOf(MixedSchema::class, $schema);
-        $this->assertTrue($schema->isNullable());
-    }
+        /** @var FloatSchema $floatSchema */
+        $floatSchema = $entitySchema->getPropertySchema('float');
+        $this->assertInstanceOf(FloatSchema::class, $floatSchema);
+        $this->assertFalse($floatSchema->isNullable());
+        $this->assertSame('Important float', $floatSchema->getDescription());
+        $this->assertSame(10.3, $floatSchema->getMinimum());
+        $this->assertSame(50.5, $floatSchema->getMaximum());
+        $this->assertTrue($floatSchema->getExclusiveMinimum());
+        $this->assertFalse($floatSchema->getExclusiveMaximum());
+        $this->assertNull($integerSchema->getMultipleOf());
 
-    public function testIntegerVariableType(): void
-    {
-        $variableType = new ScalarVariableType(ScalarVariableType::TYPE_INTEGER, false);
-        $this->assertInstanceOf(IntegerSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
-    }
+        /** @var EnumSchema $enumSchema */
+        $enumSchema = $entitySchema->getPropertySchema('enum');
+        $this->assertInstanceOf(EnumSchema::class, $enumSchema);
+        $this->assertTrue($enumSchema->isNullable());
+        $this->assertNull($enumSchema->getDescription());
+        $this->assertSame(['a', 'b'], $enumSchema->getEnum());
 
-    public function testFloatVariableType(): void
-    {
-        $variableType = new ScalarVariableType(ScalarVariableType::TYPE_FLOAT, false);
-        $this->assertInstanceOf(FloatSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
-    }
+        /** @var StringSchema $stringSchema */
+        $stringSchema = $entitySchema->getPropertySchema('string');
+        $this->assertInstanceOf(StringSchema::class, $stringSchema);
+        $this->assertTrue($stringSchema->isNullable());
+        $this->assertNull($stringSchema->getDescription());
+        $this->assertSame(10, $stringSchema->getMinLength());
+        $this->assertSame(100, $stringSchema->getMaxLength());
+        $this->assertSame('date', $stringSchema->getFormat());
+        $this->assertSame('[0-9]+', $stringSchema->getPattern());
 
-    public function testBooleanVariableType(): void
-    {
-        $variableType = new ScalarVariableType(ScalarVariableType::TYPE_BOOLEAN, false);
-        $this->assertInstanceOf(BooleanSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
-    }
+        /** @var ArraySchema $arraySchema */
+        $arraySchema = $entitySchema->getPropertySchema('array');
+        $this->assertInstanceOf(ArraySchema::class, $arraySchema);
+        $this->assertFalse($arraySchema->isNullable());
+        $this->assertNull($arraySchema->getDescription());
+        $this->assertSame(3, $arraySchema->getMinItems());
+        $this->assertSame(7, $arraySchema->getMaxItems());
+        $this->assertTrue($arraySchema->getUniqueItems());
+        $this->assertInstanceOf(IntegerSchema::class, $arraySchema->getItemsSchema());
 
-    public function testStringVariableType(): void
-    {
-        $variableType = new ScalarVariableType(ScalarVariableType::TYPE_STRING, false);
-        $this->assertInstanceOf(StringSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
-    }
+        /** @var HashmapSchema $hashmapSchema */
+        $hashmapSchema = $entitySchema->getPropertySchema('hashmap');
+        $this->assertInstanceOf(HashmapSchema::class, $hashmapSchema);
+        $this->assertFalse($hashmapSchema->isNullable());
+        $this->assertSame(['reqKey'], $hashmapSchema->getRequiredProperties());
+        /** @var ArraySchema $arrayItemSchema */
+        $arrayItemSchema = $hashmapSchema->getItemsSchema();
+        $this->assertInstanceOf(ArraySchema::class, $arrayItemSchema);
+        $this->assertInstanceOf(IntegerSchema::class, $arrayItemSchema->getItemsSchema());
 
-    public function testArrayVariableType(): void
-    {
-        $variableType = new ArrayVariableType(
-            null,
-            new ScalarVariableType(ScalarVariableType::TYPE_STRING, false),
-            false
-        );
-        $this->assertInstanceOf(ArraySchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
-
-        $variableType = new ArrayVariableType(
-            new ScalarVariableType(ScalarVariableType::TYPE_STRING, false),
-            new ScalarVariableType(ScalarVariableType::TYPE_STRING, false),
-            false
-        );
-        $this->assertInstanceOf(HashmapSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
-    }
-
-    public function testClassVariableType(): void
-    {
-        $variableType = new ClassVariableType(self::class, false);
-        $this->assertInstanceOf(ObjectSchema::class, $this->schemaParser->getVariableTypeSchema($variableType));
-    }
-
-    public function testDateTime(): void
-    {
-        $variableType = new ClassVariableType(DateTime::class, false);
-        $this->assertEquals(
-            new StringSchema(null, null, 'date-time'),
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
-
-        $variableType = new ClassVariableType(DateTimeInterface::class, false);
-        $this->assertEquals(
-            new StringSchema(null, null, 'date-time'),
-            $this->schemaParser->getVariableTypeSchema($variableType)
-        );
-    }
-
-    public function testEnum(): void
-    {
-        $schemaParser = new SchemaParser(
-            new PropertyTypeReader(new VariableTypeUnifyService(), ),
-            new class() extends SimplePropertySchemaDecorator {
-                public function isEnum(ReflectionProperty $propertyReflection): bool
-                {
-                    return true;
-                }
-
-                public function decorateStringSchemaBuilder(
-                    StringSchemaBuilder $builder,
-                    ?ReflectionProperty $propertyReflection
-                ): EnumSchemaBuilder {
-                    $builder = new EnumSchemaBuilder();
-                    return $builder->withEnum(['a', 'b']);
-                }
-            }
-        );
-
-        $classReflexion = new ReflectionClass(EnumTestClass::class);
-
-        $this->assertInstanceOf(
-            EnumSchema::class,
-            $schemaParser->getPropertySchema($classReflexion->getProperty('enum'))
-        );
-    }
-
-    public function testUnknownVariableType(): void
-    {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage(
-            "Unprocessable VariableTypeInterface 'TESTING-CLASS' (class ScrumWorks\OpenApiSchema\Tests\UnknownVariableType)"
-        );
-        $variableType = new UnknownVariableType();
-        $this->schemaParser->getVariableTypeSchema($variableType);
-    }
-
-    public function testDecorateValueSchema(): void
-    {
-        $schemaParser = new SchemaParser(
-            new PropertyTypeReader(new VariableTypeUnifyService(), ),
-            new class() extends SimplePropertySchemaDecorator {
-                public function decorateValueSchemaBuilder(
-                    AbstractSchemaBuilder $builder,
-                    ?ReflectionProperty $propertyReflection
-                ): AbstractSchemaBuilder {
-                    return $builder->withDescription('SOME DESCRIPTION');
-                }
-            }
-        );
-
-        $classReflexion = new ReflectionClass(EnumTestClass::class);
-
-        $this->assertSame(
-            'SOME DESCRIPTION',
-            $schemaParser->getPropertySchema($classReflexion->getProperty('enum'))->getDescription()
-        );
+        /** @var ObjectSchema $objectSchema */
+        $objectSchema = $entitySchema->getPropertySchema('class');
+        $this->assertInstanceOf(ObjectSchema::class, $objectSchema);
+        $this->assertFalse($objectSchema->isNullable());
+        $this->assertNull($objectSchema->getDescription());
+        /** @var IntegerSchema $subIntSchema */
+        $subIntSchema = $objectSchema->getPropertySchema('subInteger');
+        $this->assertInstanceOf(IntegerSchema::class, $subIntSchema);
+        $this->assertFalse($subIntSchema->isNullable());
+        $this->assertSame('sub...', $subIntSchema->getDescription());
+        $this->assertSame(25, $subIntSchema->getMinimum());
     }
 }
