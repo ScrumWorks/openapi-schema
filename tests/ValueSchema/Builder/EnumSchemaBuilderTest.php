@@ -24,7 +24,8 @@ class EnumSchemaBuilderTest extends TestCase
         $builder = $builder->withEnum(['a', 'b']);
         $builder = $builder->withDescription('enum');
         $builder = $builder->withNullable(true);
-        $this->assertEquals(new EnumSchema(['a', 'b'], true, 'enum'), $builder->build());
+        $builder = $builder->withExample('a');
+        $this->assertEquals(new EnumSchema(['a', 'b'], true, 'enum', 'a'), $builder->build());
     }
 
     public function testMissingData(): void

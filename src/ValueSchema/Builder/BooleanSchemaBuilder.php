@@ -13,6 +13,6 @@ final class BooleanSchemaBuilder extends AbstractSchemaBuilder
 {
     protected function createInstance(): BooleanSchema
     {
-        return new BooleanSchema($this->nullable, $this->description);
+        return new BooleanSchema($this->nullable, $this->description, $this->example);
     }
 }

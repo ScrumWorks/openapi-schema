@@ -26,6 +26,14 @@ class ObjectValueTestClass
     public int $d = 10;
 }
 
+class ObjectValuePropertyTestClass
+{
+    /**
+     * @OA\Property(example="{""a"": 1, ""c"": 2, ""d"": 12}")
+     */
+    public ObjectValueTestClass $class;
+}
+
 class ObjectValueTest extends AbstractAnnotationTest
 {
     public function testRequiredProperties(): void
@@ -39,6 +47,20 @@ class ObjectValueTest extends AbstractAnnotationTest
         //    also testing that required reading from @Property work
         //    with another annotation
         $this->assertEquals(['a', 'd'], $schema->getRequiredProperties());
+    }
+
+    public function testPropertyExample(): void
+    {
+        /** @var ObjectSchema $schema */
+        $schema = $this->schemaParser->getEntitySchema(ObjectValuePropertyTestClass::class);
+        $this->assertEquals(
+            (object) [
+                'a' => 1,
+                'c' => 2,
+                'd' => 12,
+            ],
+            $schema->getPropertySchema('class')->getExample()
+        );
     }
 
     protected function createReflectionClass(): ReflectionClass

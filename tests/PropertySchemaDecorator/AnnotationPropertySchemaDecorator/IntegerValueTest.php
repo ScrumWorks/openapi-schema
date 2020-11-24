@@ -13,6 +13,7 @@ class IntegerValueTestClass
 {
     /**
      * @OA\IntegerValue(minimum=10, maximum=100, multipleOf=10, exclusiveMinimum=true, exclusiveMaximum=false)
+     * @OA\Property(example="30")
      */
     public int $integer;
 
@@ -27,7 +28,7 @@ class IntegerValueTest extends AbstractAnnotationTest
     public function testIntegerAnnotation(): void
     {
         $schema = $this->getPropertySchema('integer');
-        $expectedSchema = new IntegerSchema(10, 100, true, false, 10);
+        $expectedSchema = new IntegerSchema(10, 100, true, false, 10, false, null, 30);
         $this->assertEquals($expectedSchema, $schema);
     }
 

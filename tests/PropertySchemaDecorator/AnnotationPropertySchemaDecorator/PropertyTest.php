@@ -6,6 +6,8 @@ namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPrope
 
 use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Exception\ExampleValidationException;
+use ScrumWorks\OpenApiSchema\Validation\ValidationResultInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 
 class PropertyTestClass
@@ -14,6 +16,21 @@ class PropertyTestClass
      * @OA\Property(description="my description...")
      */
     public string $description;
+
+    /**
+     * @OA\Property(example="""test""")
+     */
+    public string $example;
+
+    /**
+     * @OA\Property(example="123")
+     */
+    public string $badTypesExample;
+
+    /**
+     * @OA\Property(example="{""test""")
+     */
+    public string $malformedExample;
 
     /**
      * @OA\Property()
@@ -44,6 +61,30 @@ class PropertyTest extends AbstractAnnotationTest
     {
         $schema = $this->getPropertySchema('descriptionNullable');
         $this->assertEquals(null, $schema->getDescription());
+    }
+
+    public function testPropertyExample(): void
+    {
+        $schema = $this->getPropertySchema('example');
+        $this->assertEquals('test', $schema->getExample());
+    }
+
+    public function testPropertyBadExample(): void
+    {
+        $this->expectException(ExampleValidationException::class);
+        $this->expectExceptionMessage('Example schema validation error');
+        $this->getPropertySchema('badTypesExample');
+        /** @var ExampleValidationException $exception */
+        $exception = $this->getExpectedException();
+        $this->assertInstanceOf(ValidationResultInterface::class, $exception->getValidationResult());
+        $this->assertCount(1, $exception->getValidationResult()->getViolations());
+    }
+
+    public function testPropertyMalformedExample(): void
+    {
+        $this->expectException(ExampleValidationException::class);
+        $this->expectExceptionMessage('Malformed JSON syntax for example {"test"');
+        $this->getPropertySchema('malformedExample');
     }
 
     public function testPropertyCanBeUserWithOtherAnnotations(): void

@@ -195,8 +195,11 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         if ($schema->isNullable()) {
             $definition['nullable'] = true;
         }
-        if ($schema->getDescription()) {
+        if ($schema->getDescription() !== null) {
             $definition['description'] = $schema->getDescription();
+        }
+        if ($schema->getExample() !== null) {
+            $definition['example'] = $schema->getExample();
         }
         return $definition;
     }

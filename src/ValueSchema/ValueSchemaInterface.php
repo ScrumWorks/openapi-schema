@@ -9,4 +9,9 @@ interface ValueSchemaInterface
     public function isNullable(): bool;
 
     public function getDescription(): ?string;
+
+    /**
+     * @return ?mixed
+     */
+    public function getExample();
 }

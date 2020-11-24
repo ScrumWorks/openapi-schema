@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\PropertySchemaDecorator;
 
 use Doctrine\Common\Annotations\Reader;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use ReflectionClass;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Exception\ExampleValidationException;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
+use ScrumWorks\OpenApiSchema\Validation\Validator\ValueSchemaValidator;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
@@ -24,9 +28,12 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
 {
     private Reader $annotationReader;
 
-    public function __construct(Reader $annotationReader)
+    private ValueSchemaValidator $validator;
+
+    public function __construct(Reader $annotationReader, ValueSchemaValidator $validator)
     {
         $this->annotationReader = $annotationReader;
+        $this->validator = $validator;
     }
 
     public function decorateValueSchemaBuilder(
@@ -39,6 +46,34 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
             /** @var OA\Property $annotation */
             if ($annotation->description !== null) {
                 $builder = $builder->withDescription($annotation->description);
+            }
+
+            if ($annotation->example !== null) {
+                // we suppose that decorateValueSchemaBuilder is last decoration function
+                // @TODO: maybe we can move this functionality to builders build() fn?
+                $testingSchema = $builder->build();
+
+                try {
+                    $data = Json::decode($annotation->example, 0);
+                } catch (JsonException $e) {
+                    throw new ExampleValidationException(
+                        \sprintf('Malformed JSON syntax for example %s', $annotation->example),
+                        0,
+                        $e
+                    );
+                }
+
+                $validationResult = $this->validator->validate($testingSchema, $data);
+                if (! $validationResult->isValid()) {
+                    throw new ExampleValidationException(
+                        'Example schema validation error',
+                        0,
+                        null,
+                        $validationResult
+                    );
+                }
+
+                $builder = $builder->withExample($data);
             }
         }
 

@@ -26,6 +26,7 @@ class FloatSchemaBuilderTest extends TestCase
         $builder = $builder->withMultipleOf(0.1);
         $builder = $builder->withDescription('float');
         $builder = $builder->withNullable(true);
-        $this->assertEquals(new FloatSchema(1.1, 2.2, true, false, 0.1, true, 'float'), $builder->build());
+        $builder = $builder->withExample(1.2);
+        $this->assertEquals(new FloatSchema(1.1, 2.2, true, false, 0.1, true, 'float', 1.2), $builder->build());
     }
 }

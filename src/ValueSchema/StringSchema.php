@@ -22,14 +22,15 @@ final class StringSchema extends AbstractValueSchema
         ?string $format = null,
         ?string $pattern = null,
         bool $nullable = false,
-        ?string $description = null
+        ?string $description = null,
+        $example = null
     ) {
         $this->minLength = $minLength;
         $this->maxLength = $maxLength;
         $this->format = $format;
         $this->pattern = $pattern;
 
-        parent::__construct($nullable, $description);
+        parent::__construct($nullable, $description, $example);
     }
 
     public function getMinLength(): ?int

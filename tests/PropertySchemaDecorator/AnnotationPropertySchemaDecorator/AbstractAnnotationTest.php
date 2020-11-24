@@ -11,6 +11,11 @@ use ReflectionException;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\PropertySchemaDecorator\AnnotationPropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaParser;
+use ScrumWorks\OpenApiSchema\Validation\Result\BreadCrumbPathFactory;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
+use ScrumWorks\OpenApiSchema\Validation\Result\ValidityViolationFactory;
+use ScrumWorks\OpenApiSchema\Validation\Validator\ValidatorFactory;
+use ScrumWorks\OpenApiSchema\Validation\Validator\ValueSchemaValidator;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 use ScrumWorks\PropertyReader\PropertyTypeReader;
 use ScrumWorks\PropertyReader\VariableTypeUnifyService;
@@ -23,9 +28,15 @@ abstract class AbstractAnnotationTest extends TestCase
 
     protected function setUp(): void
     {
+        $valueSchemaValidator = new ValueSchemaValidator(
+            new ValidatorFactory(
+                new BreadCrumbPathFactory(),
+                new ValidationResultBuilderFactory(new ValidityViolationFactory())
+            )
+        );
         $this->schemaParser = new SchemaParser(
-            new PropertyTypeReader(new VariableTypeUnifyService(), ),
-            new AnnotationPropertySchemaDecorator(new AnnotationReader())
+            new PropertyTypeReader(new VariableTypeUnifyService()),
+            new AnnotationPropertySchemaDecorator(new AnnotationReader(), $valueSchemaValidator)
         );
         $this->reflection = $this->createReflectionClass();
     }

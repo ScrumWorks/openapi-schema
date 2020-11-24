@@ -21,4 +21,9 @@ final class Property
      * @var bool
      */
     public ?bool $required = null;
+
+    /**
+     * @var string JSON formatted example
+     */
+    public ?string $example = null;
 }

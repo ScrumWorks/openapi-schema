@@ -64,7 +64,8 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
             $this->propertiesSchemas,
             $this->requiredProperties,
             $this->nullable,
-            $this->description
+            $this->description,
+            $this->example
         );
     }
 }

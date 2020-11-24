@@ -13,6 +13,6 @@ final class MixedSchemaBuilder extends AbstractSchemaBuilder
 {
     protected function createInstance(): MixedSchema
     {
-        return new MixedSchema($this->nullable, $this->description);
+        return new MixedSchema($this->nullable, $this->description, $this->example);
     }
 }

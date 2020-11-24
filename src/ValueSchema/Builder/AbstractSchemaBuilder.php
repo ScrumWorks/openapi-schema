@@ -15,6 +15,11 @@ abstract class AbstractSchemaBuilder
     protected ?string $description = null;
 
     /**
+     * @var ?mixed
+     */
+    protected $example = null;
+
+    /**
      * @return static
      */
     final public function withNullable(bool $nullable)
@@ -32,6 +37,16 @@ abstract class AbstractSchemaBuilder
         return $this;
     }
 
+    /**
+     * @param ?mixed $example
+     * @return static
+     */
+    final public function withExample($example)
+    {
+        $this->example = $example;
+        return $this;
+    }
+
     public function isNullable(): bool
     {
         return $this->nullable;
@@ -40,6 +55,11 @@ abstract class AbstractSchemaBuilder
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getExample()
+    {
+        return $this->example;
     }
 
     public function build(): ValueSchemaInterface
