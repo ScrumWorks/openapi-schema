@@ -15,6 +15,7 @@ class HashmapValueTestClass
     /**
      * @var array<string, string>
      * @OA\HashmapValue(requiredProperties={"a", "b"})
+     * @OA\Property(example="{""a"": ""test"", ""b"": ""test2"", ""c"": ""test3""}")
      */
     public array $hashmap;
 
@@ -29,7 +30,17 @@ class HashmapValueTest extends AbstractAnnotationTest
     public function testHashmapAnnotation(): void
     {
         $schema = $this->getPropertySchema('hashmap');
-        $expectedSchema = new HashmapSchema(new StringSchema(), ['a', 'b']);
+        $expectedSchema = new HashmapSchema(
+            new StringSchema(),
+            ['a', 'b'],
+            false,
+            null,
+            (object) [
+                'a' => 'test',
+                'b' => 'test2',
+                'c' => 'test3',
+            ]
+        );
         $this->assertEquals($expectedSchema, $schema);
     }
 

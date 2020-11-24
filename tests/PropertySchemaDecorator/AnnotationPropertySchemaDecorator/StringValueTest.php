@@ -17,6 +17,12 @@ class StringValueTestClass
     public string $string;
 
     /**
+     * @OA\StringValue(minLength=4, maxLength=6, pattern="[a-z0-9]+")
+     * @OA\Property(example="""test1""")
+     */
+    public string $stringExample;
+
+    /**
      * @OA\IntegerValue()
      */
     public string $incompatibleTypes;
@@ -28,6 +34,13 @@ class StringValueTest extends AbstractAnnotationTest
     {
         $schema = $this->getPropertySchema('string');
         $expectedSchema = new StringSchema(2, 10, 'email', '[a-z]+');
+        $this->assertEquals($expectedSchema, $schema);
+    }
+
+    public function testStringExampleAnnotation(): void
+    {
+        $schema = $this->getPropertySchema('stringExample');
+        $expectedSchema = new StringSchema(4, 6, null, '[a-z0-9]+', false, null, 'test1');
         $this->assertEquals($expectedSchema, $schema);
     }
 

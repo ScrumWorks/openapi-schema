@@ -43,6 +43,6 @@ final class EnumSchemaBuilder extends AbstractSchemaBuilder
 
     protected function createInstance(): EnumSchema
     {
-        return new EnumSchema($this->enum, $this->nullable, $this->description);
+        return new EnumSchema($this->enum, $this->nullable, $this->description, $this->example);
     }
 }

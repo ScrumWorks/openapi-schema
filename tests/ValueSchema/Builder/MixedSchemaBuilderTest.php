@@ -21,6 +21,7 @@ class MixedSchemaBuilderTest extends TestCase
         $builder = new MixedSchemaBuilder();
         $builder = $builder->withDescription('boolean');
         $builder = $builder->withNullable(true);
-        $this->assertEquals(new MixedSchema(true, 'boolean'), $builder->build());
+        $builder = $builder->withExample(true);
+        $this->assertEquals(new MixedSchema(true, 'boolean', true), $builder->build());
     }
 }

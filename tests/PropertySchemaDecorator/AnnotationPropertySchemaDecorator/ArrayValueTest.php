@@ -15,7 +15,8 @@ use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 class ArrayValueTestClass
 {
     /**
-     * @OA\ArrayValue(minItems=10, maxItems=20, uniqueItems=true)
+     * @OA\ArrayValue(minItems=3, maxItems=20, uniqueItems=true)
+     * @OA\Property(example="[1, 2, 3, 4]")
      */
     public array $array;
 
@@ -42,7 +43,7 @@ class ArrayValueTest extends AbstractAnnotationTest
     public function testArrayAnnotation(): void
     {
         $schema = $this->getPropertySchema('array');
-        $expectedSchema = new ArraySchema(new MixedSchema(true), 10, 20, true);
+        $expectedSchema = new ArraySchema(new MixedSchema(true), 3, 20, true, false, null, [1, 2, 3, 4]);
         $this->assertEquals($expectedSchema, $schema);
     }
 

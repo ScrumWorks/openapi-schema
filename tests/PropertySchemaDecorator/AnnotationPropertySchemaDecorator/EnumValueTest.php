@@ -13,6 +13,7 @@ class EnumValueTestClass
 {
     /**
      * @OA\EnumValue(enum={"value1", "value2"})
+     * @OA\Property(example="""value1""")
      */
     public string $enum;
 
@@ -33,7 +34,7 @@ class EnumValueTest extends AbstractAnnotationTest
     public function testEnumAnnotation(): void
     {
         $schema = $this->getPropertySchema('enum');
-        $expectedSchema = new EnumSchema(['value1', 'value2']);
+        $expectedSchema = new EnumSchema(['value1', 'value2'], false, null, 'value1');
         $this->assertEquals($expectedSchema, $schema);
     }
 

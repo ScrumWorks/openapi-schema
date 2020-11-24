@@ -26,8 +26,15 @@ class HashmapSchemaBuilderTest extends TestCase
         $builder = $builder->withRequiredProperties(['property']);
         $builder = $builder->withDescription('hashmap');
         $builder = $builder->withNullable(true);
+        $builder = $builder->withExample((object) [
+            'property' => 'x',
+            'a' => 'b',
+        ]);
         $this->assertEquals(
-            new HashmapSchema(new StringSchema(), ['property'], true, 'hashmap'),
+            new HashmapSchema(new StringSchema(), ['property'], true, 'hashmap', (object) [
+                'property' => 'x',
+                'a' => 'b',
+            ]),
             $builder->build()
         );
     }

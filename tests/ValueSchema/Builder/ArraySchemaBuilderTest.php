@@ -28,7 +28,8 @@ class ArraySchemaBuilderTest extends TestCase
         $builder = $builder->withUniqueItems(true);
         $builder = $builder->withDescription('array');
         $builder = $builder->withNullable(true);
-        $this->assertEquals(new ArraySchema(new StringSchema(), 2, 3, true, true, 'array'), $builder->build());
+        $builder = $builder->withExample([2, 3]);
+        $this->assertEquals(new ArraySchema(new StringSchema(), 2, 3, true, true, 'array', [2, 3]), $builder->build());
     }
 
     public function testMissingData(): void

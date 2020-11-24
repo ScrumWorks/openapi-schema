@@ -13,6 +13,7 @@ class FloatValueTestClass
 {
     /**
      * @OA\FloatValue(minimum=10.2, maximum=100.0, multipleOf=10.1, exclusiveMinimum=true, exclusiveMaximum=false)
+     * @OA\Property(example="30.3")
      */
     public float $float;
 
@@ -27,7 +28,7 @@ class FloatValueTest extends AbstractAnnotationTest
     public function testFloatAnnotation(): void
     {
         $schema = $this->getPropertySchema('float');
-        $expectedSchema = new FloatSchema(10.2, 100.0, true, false, 10.1);
+        $expectedSchema = new FloatSchema(10.2, 100.0, true, false, 10.1, false, null, 30.3);
         $this->assertEquals($expectedSchema, $schema);
     }
 

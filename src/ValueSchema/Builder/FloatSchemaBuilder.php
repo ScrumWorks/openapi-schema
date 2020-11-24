@@ -100,7 +100,8 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
             $this->exclusiveMaximum,
             $this->multipleOf,
             $this->nullable,
-            $this->description
+            $this->description,
+            $this->example
         );
     }
 }

@@ -83,7 +83,8 @@ final class StringSchemaBuilder extends AbstractSchemaBuilder
             $this->format,
             $this->pattern,
             $this->nullable,
-            $this->description
+            $this->description,
+            $this->example
         );
     }
 }
