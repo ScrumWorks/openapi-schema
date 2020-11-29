@@ -42,10 +42,10 @@ final class StringValidator extends AbstractValidator
 
         $strlen = $this->schema->getFormat() === 'binary' ? \strlen($data) : \mb_strlen($data);
 
-        if (($minLength = $this->schema->getMinLength()) !== null && $minLength >= $strlen) {
+        if (($minLength = $this->schema->getMinLength()) !== null && $minLength > $strlen) {
             $resultBuilder->addMinLengthViolation($minLength, $breadCrumbPath);
         }
-        if (($maxLength = $this->schema->getMaxLength()) !== null && $maxLength <= $strlen) {
+        if (($maxLength = $this->schema->getMaxLength()) !== null && $maxLength < $strlen) {
             $resultBuilder->addMaxLengthViolation($maxLength, $breadCrumbPath);
         }
         if (($pattern = $this->schema->getPattern()) !== null) {
