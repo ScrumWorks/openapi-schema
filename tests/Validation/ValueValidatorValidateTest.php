@@ -270,7 +270,9 @@ class ValueValidatorValidateTest extends TestCase
             // string
             'string:valid' => [new StringSchema(), 'hello', []],
             'string:valid-null' => [new StringSchema(null, null, null, null, true), null, []],
+            'string:valid-minLength-equal' => [new StringSchema(1), 'a', []],
             'string:valid-minLength' => [new StringSchema(1), 'aa', []],
+            'string:valid-maxLength-equal' => [new StringSchema(null, 3), 'aaa', []],
             'string:valid-maxLength' => [new StringSchema(null, 3), 'aa', []],
             'string:valid-format' => [
                 new StringSchema(null, null, 'date-time'),
