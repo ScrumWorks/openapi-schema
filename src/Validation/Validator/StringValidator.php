@@ -88,8 +88,8 @@ final class StringValidator extends AbstractValidator
         switch ($format) {
             case 'password':
             case 'binary': return '~.*~';
-            case 'date': return '~[0-9]{4}-[0-9]{2}-[0-9]{2}~';
-            case 'date-time': return '~[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+(Z|([+-][0-9]{2}:[0-9]{2})))?~';
+            case 'date': return '~^[0-9]{4}-[0-9]{2}-[0-9]{2}$~';
+            case 'date-time': return '~^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+(Z|([+-][0-9]{2}:[0-9]{2})))?$~';
 
             case 'byte':
                 throw new RuntimeException("Not implemented format '${format}'.");

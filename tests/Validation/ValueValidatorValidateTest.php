@@ -295,6 +295,11 @@ class ValueValidatorValidateTest extends TestCase
                 '2020-12-30',
                 [[1016, "Value doesn't have format '%s'.", ['date-time'], '']],
             ],
+            'string:format-regression-missing-plus' => [
+                new StringSchema(null, null, 'date-time'),
+                '2020-12-30T23:22:21 01:00',
+                [[1016, "Value doesn't have format '%s'.", ['date-time'], '']],
+            ],
             'string:pattern' => [
                 new StringSchema(null, null, null, '-[0-9]{3}'),
                 '2020-12-30',
