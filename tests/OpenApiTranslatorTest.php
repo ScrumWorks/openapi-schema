@@ -168,7 +168,7 @@ class OpenApiTranslatorTest extends TestCase
                     'enum' => ['value', null],
                     'nullable' => true,
                 ],
-           ],
+            ],
             'enum:full' => [
                 new EnumSchema(['value', 'value2'], false, 'enum'),
                 [
