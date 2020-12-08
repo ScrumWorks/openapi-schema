@@ -5,25 +5,32 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
 use Nette\Utils\Strings;
-use ScrumWorks\OpenApiSchema\Exception\RuntimeException;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
+use ScrumWorks\OpenApiSchema\Validation\Validator\Format\FormatValidatorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
 final class StringValidator extends AbstractValidator
 {
     private StringSchema $schema;
 
+    /**
+     * @var array<string,FormatValidatorInterface> format => validator
+     */
+    private array $formatValidators;
+
     public function __construct(
         BreadCrumbPathFactoryInterface $breadCrumbPathFactory,
         ValidationResultBuilderFactory $validationResultBuilderFactory,
-        StringSchema $schema
+        StringSchema $schema,
+        array $formatValidators
     ) {
         parent::__construct($breadCrumbPathFactory, $validationResultBuilderFactory, $schema);
 
         $this->schema = $schema;
+        $this->formatValidators = $formatValidators;
     }
 
     protected function doValidation(
@@ -56,7 +63,7 @@ final class StringValidator extends AbstractValidator
         }
         if (
             ($format = $this->schema->getFormat()) !== null
-            && ! Strings::match($data, $this->formatToPattern($format))
+            && ! $this->hasValidFormat($format, $data)
         ) {
             $resultBuilder->addFormatViolation($format, $breadCrumbPath);
         }
@@ -83,19 +90,14 @@ final class StringValidator extends AbstractValidator
         }
     }
 
-    private function formatToPattern(string $format): string
+    private function hasValidFormat(string $format, string $data): bool
     {
-        switch ($format) {
-            case 'password':
-            case 'binary': return '~.*~';
-            case 'date': return '~^[0-9]{4}-[0-9]{2}-[0-9]{2}$~';
-            case 'date-time': return '~^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+(Z|([+-][0-9]{2}:[0-9]{2})))?$~';
-
-            case 'byte':
-                throw new RuntimeException("Not implemented format '${format}'.");
-
-            default:
-                throw new RuntimeException("Not supported format '${format}'.");
+        $validator = $this->formatValidators[$format] ?? null;
+        if (! $validator) {
+            // openapi says that unknown formats should be ignored
+            return true;
         }
+
+        return $validator->hasValidFormat($data);
     }
 }

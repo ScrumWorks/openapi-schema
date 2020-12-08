@@ -7,6 +7,9 @@ namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 use LogicException;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
+use ScrumWorks\OpenApiSchema\Validation\Validator\Format\DateTimeValidator;
+use ScrumWorks\OpenApiSchema\Validation\Validator\Format\DateValidator;
+use ScrumWorks\OpenApiSchema\Validation\Validator\Format\FormatValidatorInterface;
 use ScrumWorks\OpenApiSchema\Validation\ValueSchemaValidatorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
@@ -83,6 +86,7 @@ class ValidatorFactory
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
+                $this->createFormatValidators(),
             );
         } elseif ($schema instanceof MixedSchema) {
             return new MixedValidator(
@@ -93,5 +97,16 @@ class ValidatorFactory
         }
 
         throw new LogicException('Unexpected value schema type: ' . \get_class($schema));
+    }
+
+    /**
+     * @return array<string,FormatValidatorInterface>
+     */
+    protected function createFormatValidators(): array
+    {
+        return [
+            'date' => new DateValidator(),
+            'date-time' => new DateTimeValidator(),
+        ];
     }
 }
