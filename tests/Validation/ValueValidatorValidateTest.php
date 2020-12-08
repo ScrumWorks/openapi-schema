@@ -279,6 +279,7 @@ class ValueValidatorValidateTest extends TestCase
                 '2020-01-02T12:30:44.09+00:30',
                 [],
             ],
+            'string:valid-format-not-supported' => [new StringSchema(null, null, 'unknown-format'), 'string', []],
             'string:valid-pattern' => [new StringSchema(null, null, null, '[0-9]+'), '2020', []],
             'string:null' => [new StringSchema(), null, [[1001, 'Unexpected NULL value.', [], '']]],
             'string:type' => [new StringSchema(), 1.0, [[1002, "Type '%s' expected.", ['string'], '']]],
