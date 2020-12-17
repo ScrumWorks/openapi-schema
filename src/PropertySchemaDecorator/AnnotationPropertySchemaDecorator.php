@@ -40,6 +40,10 @@ class AnnotationPropertySchemaDecorator implements PropertySchemaDecoratorInterf
             if ($annotation->description !== null) {
                 $builder = $builder->withDescription($annotation->description);
             }
+
+            if ($annotation->nullable !== null) {
+                $builder = $builder->withNullable($annotation->nullable);
+            }
         }
 
         return $builder;
