@@ -6,7 +6,9 @@ namespace ScrumWorks\OpenApiSchema\Tests\PropertySchemaDecorator\AnnotationPrope
 
 use ReflectionClass;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
 class PropertyTestClass
 {
@@ -18,7 +20,7 @@ class PropertyTestClass
     /**
      * @OA\Property()
      */
-    public string $descriptionNullable;
+    public string $descriptionIsNullable;
 
     /**
      * @OA\Property(description="other description")
@@ -30,6 +32,16 @@ class PropertyTestClass
      * @OA\StringValue()
      */
     public $mixed;
+
+    /**
+     * @OA\Property(nullable=true)
+     */
+    public string $string;
+
+    /**
+     * @OA\Property(nullable=false)
+     */
+    public ?int $nullableInt;
 }
 
 class PropertyTest extends AbstractAnnotationTest
@@ -42,7 +54,7 @@ class PropertyTest extends AbstractAnnotationTest
 
     public function testPropertyDescriptionIsNullable(): void
     {
-        $schema = $this->getPropertySchema('descriptionNullable');
+        $schema = $this->getPropertySchema('descriptionIsNullable');
         $this->assertEquals(null, $schema->getDescription());
     }
 
@@ -56,6 +68,16 @@ class PropertyTest extends AbstractAnnotationTest
     {
         $schema = $this->getPropertySchema('mixed');
         $this->assertEquals(new MixedSchema(true), $schema);
+    }
+
+    public function testRewriteNullabilityOfProperty(): void
+    {
+        // we flip nullability of properties by annotation
+        $schema = $this->getPropertySchema('string');
+        $this->assertEquals(new StringSchema(null, null, null, null, true, null), $schema);
+
+        $schema = $this->getPropertySchema('nullableInt');
+        $this->assertEquals(new IntegerSchema(null, null, null, null, null, false, null), $schema);
     }
 
     protected function createReflectionClass(): ReflectionClass

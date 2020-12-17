@@ -21,4 +21,9 @@ final class Property
      * @var bool
      */
     public ?bool $required = null;
+
+    /**
+     * @var bool
+     */
+    public ?bool $nullable = null;
 }
