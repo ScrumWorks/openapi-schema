@@ -32,11 +32,14 @@ class Test
 }
 
 $schemaParser = new \ScrumWorks\OpenApiSchema\SchemaParser(
-    new \ScrumWorks\PropertyReader\PropertyTypeReader(
-        new \ScrumWorks\PropertyReader\VariableTypeUnifyService()
-    ),
-    new \ScrumWorks\OpenApiSchema\SchemaBuilder\PropertyDecorator\AnnotationPropertySchemaDecorator(
-        new \Doctrine\Common\Annotations\AnnotationReader()
+    new \ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory(
+        new \ScrumWorks\PropertyReader\PropertyTypeReader(
+            new \ScrumWorks\PropertyReader\VariableTypeUnifyService()
+        ),
+        new \ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator(
+            [new \ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertyDecorator\AnnotationPropertySchemaDecorator()],
+            [new \ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator\AnnotationClassSchemaDecorator()]
+        )
     )
 );
 $schema = $schemaParser->getEntitySchema('Test');
