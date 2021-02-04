@@ -6,28 +6,16 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 final class ArraySchemaBuilder extends AbstractSchemaBuilder
 {
     protected ?AbstractSchemaBuilder $itemsSchemaBuilder = null;
-
-    protected ?ValueSchemaInterface $itemsSchema = null;
 
     protected ?int $minItems = null;
 
     protected ?int $maxItems = null;
 
     protected ?bool $uniqueItems = null;
-
-    /**
-     * @return static
-     */
-    public function withItemsSchema(?ValueSchemaInterface $itemsSchema)
-    {
-        $this->itemsSchema = $itemsSchema;
-        return $this;
-    }
 
     /**
      * @return static
@@ -65,11 +53,6 @@ final class ArraySchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
-    public function getItemsSchema(): ?ValueSchemaInterface
-    {
-        return $this->itemsSchema;
-    }
-
     public function getItemsSchemaBuilder(): ?AbstractSchemaBuilder
     {
         return $this->itemsSchemaBuilder;
@@ -92,16 +75,12 @@ final class ArraySchemaBuilder extends AbstractSchemaBuilder
 
     public function build(): ArraySchema
     {
-        if ($this->itemsSchema === null && $this->itemsSchemaBuilder === null) {
-            throw new LogicException("One of `itemsSchema` or 'itemsSchemaBuilder' has to be set.");
-        }
-
-        if ($this->itemsSchema !== null && $this->itemsSchemaBuilder !== null) {
-            throw new LogicException("Only one of `itemsSchema` or 'itemsSchemaBuilder' has to be set.");
+        if ($this->itemsSchemaBuilder === null) {
+            throw new LogicException("'itemsSchemaBuilder' has to be set.");
         }
 
         return new ArraySchema(
-            $this->itemsSchema ?? $this->itemsSchemaBuilder->build(),
+            $this->itemsSchemaBuilder->build(),
             $this->minItems,
             $this->maxItems,
             $this->uniqueItems,
