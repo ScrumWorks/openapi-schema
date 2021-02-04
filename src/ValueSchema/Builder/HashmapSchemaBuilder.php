@@ -6,27 +6,15 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 final class HashmapSchemaBuilder extends AbstractSchemaBuilder
 {
     protected ?AbstractSchemaBuilder $itemsSchemaBuilder = null;
 
-    protected ?ValueSchemaInterface $itemsSchema = null;
-
     /**
      * @var string[]
      */
     protected array $requiredProperties = [];
-
-    /**
-     * @return static
-     */
-    public function withItemsSchema(?ValueSchemaInterface $itemsSchema)
-    {
-        $this->itemsSchema = $itemsSchema;
-        return $this;
-    }
 
     /**
      * @return static
@@ -46,11 +34,6 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
-    public function getItemsSchema(): ?ValueSchemaInterface
-    {
-        return $this->itemsSchema;
-    }
-
     public function getItemsSchemaBuilder(): ?AbstractSchemaBuilder
     {
         return $this->itemsSchemaBuilder;
@@ -66,16 +49,12 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
 
     public function build(): HashmapSchema
     {
-        if ($this->itemsSchema === null && $this->itemsSchemaBuilder === null) {
-            throw new LogicException("One of `itemsSchema` or 'itemsSchemaBuilder' has to be set.");
-        }
-
-        if ($this->itemsSchema !== null && $this->itemsSchemaBuilder !== null) {
-            throw new LogicException("Only one of `itemsSchema` or 'itemsSchemaBuilder' has to be set.");
+        if ($this->itemsSchemaBuilder === null) {
+            throw new LogicException("'itemsSchemaBuilder' has to be set.");
         }
 
         return new HashmapSchema(
-            $this->itemsSchema ?? $this->itemsSchemaBuilder->build(),
+            $this->itemsSchemaBuilder->build(),
             $this->requiredProperties,
             $this->nullable,
             $this->description

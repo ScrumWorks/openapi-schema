@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
@@ -20,8 +21,8 @@ class ObjectSchemaBuilderTest extends TestCase
     public function testFullBuild(): void
     {
         $builder = new ObjectSchemaBuilder();
-        $builder = $builder->withPropertiesSchemas([
-            'property' => new StringSchema(),
+        $builder = $builder->withPropertiesSchemaBuilders([
+            'property' => new StringSchemaBuilder(),
         ]);
         $builder = $builder->withRequiredProperties(['property']);
         $builder = $builder->withDescription('object');
