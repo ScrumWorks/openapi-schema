@@ -58,15 +58,17 @@ class TestEntity
 
     /**
      * @var int[]
-     * @OA\ArrayValue(minItems=3, maxItems=7, uniqueItems=true)
+     * @OA\ArrayValue(minItems=3, maxItems=7, uniqueItems=true, itemsSchema=@OA\IntegerValue(minimum=3))
      * @OA\Property(required=true)
      */
     public array $array;
 
     /**
      * @var array<string,int[]>
-     *
-     * @OA\HashmapValue(requiredProperties={"reqKey"})
+     * @OA\HashmapValue(
+     *     requiredProperties={"reqKey"},
+     *     itemsSchema=@OA\ArrayValue(maxItems=10, itemsSchema=@OA\IntegerValue(multipleOf=2))
+     * )
      */
     public array $hashmap = [];
 
@@ -154,17 +156,24 @@ class SchemaParserTest extends TestCase
         $this->assertSame(3, $arraySchema->getMinItems());
         $this->assertSame(7, $arraySchema->getMaxItems());
         $this->assertTrue($arraySchema->getUniqueItems());
-        $this->assertInstanceOf(IntegerSchema::class, $arraySchema->getItemsSchema());
+        /** @var IntegerSchema $arrayItemSchema */
+        $arrayItemSchema = $arraySchema->getItemsSchema();
+        $this->assertInstanceOf(IntegerSchema::class, $arrayItemSchema);
+        $this->assertSame(3, $arrayItemSchema->getMinimum());
 
         /** @var HashmapSchema $hashmapSchema */
         $hashmapSchema = $entitySchema->getPropertySchema('hashmap');
         $this->assertInstanceOf(HashmapSchema::class, $hashmapSchema);
         $this->assertFalse($hashmapSchema->isNullable());
         $this->assertSame(['reqKey'], $hashmapSchema->getRequiredProperties());
-        /** @var ArraySchema $arrayItemSchema */
-        $arrayItemSchema = $hashmapSchema->getItemsSchema();
-        $this->assertInstanceOf(ArraySchema::class, $arrayItemSchema);
-        $this->assertInstanceOf(IntegerSchema::class, $arrayItemSchema->getItemsSchema());
+        /** @var ArraySchema $hashmapItemSchema */
+        $hashmapItemSchema = $hashmapSchema->getItemsSchema();
+        $this->assertInstanceOf(ArraySchema::class, $hashmapItemSchema);
+        $this->assertSame(10, $hashmapItemSchema->getMaxItems());
+        /** @var IntegerSchema $arrayItemSchema */
+        $arrayItemSchema = $hashmapItemSchema->getItemsSchema();
+        $this->assertInstanceOf(IntegerSchema::class, $arrayItemSchema);
+        $this->assertSame(2, $arrayItemSchema->getMultipleOf());
 
         /** @var ObjectSchema $objectSchema */
         $objectSchema = $entitySchema->getPropertySchema('class');

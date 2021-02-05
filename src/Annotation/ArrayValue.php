@@ -6,7 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
 
 /**
  * @Annotation
- * @Target("PROPERTY")
+ * @Target({"PROPERTY", "ANNOTATION"})
  *
  * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
  */
@@ -26,4 +26,10 @@ final class ArrayValue implements ValueInterface
      * @var bool
      */
     public ?bool $uniqueItems = null;
+
+    /**
+     * @codingStandardsIgnoreLine
+     * @var \ScrumWorks\OpenApiSchema\Annotation\ValueInterface we can't FQN, because shitty doctrine annotations
+     */
+    public ?ValueInterface $itemsSchema = null;
 }

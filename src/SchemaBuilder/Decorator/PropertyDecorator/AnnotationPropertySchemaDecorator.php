@@ -178,6 +178,13 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
             if ($annotation->uniqueItems !== null) {
                 $builder = $builder->withUniqueItems($annotation->uniqueItems);
             }
+            if ($annotation->itemsSchema !== null && ($itemsBuilder = $builder->getItemsSchemaBuilder())) {
+                $itemsBuilder = $this->decoratePropertySchemaBuilderFromAnnotations(
+                    $itemsBuilder,
+                    [$annotation->itemsSchema]
+                );
+                $builder = $builder->withItemsSchemaBuilder($itemsBuilder);
+            }
         }
 
         return $builder;
@@ -191,6 +198,13 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
             /** @var OA\HashmapValue $annotation */
             if ($annotation->requiredProperties !== null) {
                 $builder = $builder->withRequiredProperties($annotation->requiredProperties);
+            }
+            if ($annotation->itemsSchema !== null && ($itemsBuilder = $builder->getItemsSchemaBuilder())) {
+                $itemsBuilder = $this->decoratePropertySchemaBuilderFromAnnotations(
+                    $itemsBuilder,
+                    [$annotation->itemsSchema]
+                );
+                $builder = $builder->withItemsSchemaBuilder($itemsBuilder);
             }
         }
 
