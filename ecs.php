@@ -64,6 +64,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME_WITHOUT_NAMESPACE => null,
         ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_PARTIAL_USE => null,
 
+        // we can't use FQN in doctrine annotations
+        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME => [
+            __DIR__ . '/src/Annotation/ArrayValue.php', __DIR__ . '/src/Annotation/HashmapValue.php',
+        ],
+        UseFromSameNamespaceSniff::class . '.' . UseFromSameNamespaceSniff::CODE_USE_FROM_SAME_NAMESPACE => [
+            __DIR__ . '/src/Annotation/ArrayValue.php', __DIR__ . '/src/Annotation/HashmapValue.php',
+        ],
+
         # resolve later with strict_types
         DeclareStrictTypesFixer::class => null,
         StrictComparisonFixer::class => null,
