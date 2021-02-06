@@ -17,6 +17,9 @@ use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
+/**
+ * @OA\ObjectValue(schemaName="subEntity")
+ */
 class TestSubEntity
 {
     /**
@@ -92,6 +95,7 @@ class SchemaParserTest extends TestCase
         $this->assertInstanceOf(ObjectSchema::class, $entitySchema);
         $this->assertFalse($entitySchema->isNullable());
         $this->assertNull($entitySchema->getDescription());
+        $this->assertNull($entitySchema->getSchemaName());
         $this->assertSame(['float', 'string', 'array', 'class'], $entitySchema->getRequiredProperties());
 
         /** @var IntegerSchema $integerSchema */
@@ -165,6 +169,7 @@ class SchemaParserTest extends TestCase
         $this->assertInstanceOf(ObjectSchema::class, $objectSchema);
         $this->assertFalse($objectSchema->isNullable());
         $this->assertNull($objectSchema->getDescription());
+        $this->assertSame('subEntity', $objectSchema->getSchemaName());
         /** @var IntegerSchema $subIntSchema */
         $subIntSchema = $objectSchema->getPropertySchema('subInteger');
         $this->assertInstanceOf(IntegerSchema::class, $subIntSchema);

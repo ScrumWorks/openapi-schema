@@ -24,6 +24,14 @@ final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecor
                 $requiredProperties[] = $propertyReflection->getName();
             }
         }
+
+        $classAnnotations = $this->getClassAnnotations($classReflection);
+        /** @var ?OA\ObjectValue $objectAnnotation */
+        $objectAnnotation = $this->findAnnotation($classAnnotations, OA\ObjectValue::class, true);
+        if ($objectAnnotation && $objectAnnotation->schemaName) {
+            $builder = $builder->withSchemaName($objectAnnotation->schemaName);
+        }
+
         return $builder->withRequiredProperties($requiredProperties);
     }
 
