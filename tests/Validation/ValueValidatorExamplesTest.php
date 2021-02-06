@@ -16,6 +16,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 class ValueValidatorExamplesTest extends TestCase
@@ -119,6 +120,27 @@ class ValueValidatorExamplesTest extends TestCase
                 ],
             ],
             'mixed' => [new MixedSchema(), [[1001, 'Unexpected NULL value.', [], '']]],
+            'union-with-discriminator' => [
+                new UnionSchema([
+                    'a' => new ObjectSchema([]),
+                    'b' => new ObjectSchema([]),
+                ], 'type'),
+                [
+                    [1001, 'Unexpected NULL value.', [], ''],
+                    [1002, "Type '%s' expected.", ['object'], ''],
+                    [1003, 'Required.', [], 'type'],
+                    [1008, 'Value has to be one of [%s].', ["'a', 'b'"], 'type'],
+                    [1004, 'Unexpected.', [], '-unknown-property-'],
+                ],
+            ],
+            'union-without-discriminator' => [
+                new UnionSchema([new ObjectSchema([]), new ObjectSchema([])]),
+                [
+                    [1001, 'Unexpected NULL value.', [], ''],
+                    [1018, "Value doesn't match any schema.", [], ''],
+                    [1019, 'Value matches more then one schema.', [], ''],
+                ],
+            ],
         ];
     }
 }

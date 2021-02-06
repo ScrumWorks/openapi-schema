@@ -81,4 +81,8 @@ interface ValidityViolationFactoryInterface
         string $pattern,
         BreadCrumbPathInterface $breadCrumbPath
     ): ValidityViolationInterface;
+
+    public function createOneOfNoMatchViolation(BreadCrumbPathInterface $breadCrumbPath): ValidityViolationInterface;
+
+    public function createOneOfAmbiguousViolation(BreadCrumbPathInterface $breadCrumbPath): ValidityViolationInterface;
 }

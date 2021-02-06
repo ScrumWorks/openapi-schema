@@ -16,6 +16,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 class ValueValidatorValidateTest extends TestCase
@@ -32,6 +33,8 @@ class ValueValidatorValidateTest extends TestCase
      * @dataProvider dpTestObject
      * @dataProvider dpTestHashmap
      * @dataProvider dpTestString
+     * @dataProvider dpTestMixed
+     * @dataProvider dpTestUnion
      * @dataProvider dpTestCombined
      *
      * @param mixed $data
@@ -316,8 +319,87 @@ class ValueValidatorValidateTest extends TestCase
             'mixed:valid-int' => [new MixedSchema(), 1, []],
             'mixed:valid-float' => [new MixedSchema(), 1.0, []],
             'mixed:valid-bool' => [new MixedSchema(), true, []],
-            'mixed:valid-null' => [new MixedSchema(), null, []],
-            'mixed:null' => [new MixedSchema(true), null, [[1001, 'Unexpected NULL value.', [], '']]],
+            'mixed:valid-null' => [new MixedSchema(true), null, []],
+            'mixed:null' => [new MixedSchema(false), null, [[1001, 'Unexpected NULL value.', [], '']]],
+        ];
+    }
+
+    public function dpTestUnion(): array
+    {
+        return [
+            'union:valid' => [new UnionSchema([new IntegerSchema(), new StringSchema()]), 'foo', []],
+            'union:valid-null' => [new UnionSchema([new IntegerSchema(), new StringSchema()], null, true), null, []],
+            'union:null' => [
+                new UnionSchema([new IntegerSchema(), new StringSchema()]),
+                null,
+                [[1001, 'Unexpected NULL value.', [], '']],
+            ],
+            'union:no-match' => [
+                new UnionSchema([new IntegerSchema(), new StringSchema()]),
+                1.0,
+                [[1018, "Value doesn't match any schema.", [], '']],
+            ],
+            'union:ambiguous' => [
+                new UnionSchema([
+                    new ObjectSchema([
+                        'a' => new IntegerSchema(),
+                        'b' => new StringSchema(),
+                    ]),
+                    new ObjectSchema([
+                        'a' => new IntegerSchema(),
+                        'c' => new BooleanSchema(),
+                    ]),
+                ]),
+                (object) [
+                    'a' => 3,
+                ],
+                [[1019, 'Value matches more then one schema.', [], '']],
+            ],
+            'union:missing-discriminator' => [
+                new UnionSchema([
+                    'aa' => new ObjectSchema([
+                        'a' => new IntegerSchema(),
+                    ]),
+                    'bb' => new ObjectSchema([
+                        'b' => new IntegerSchema(),
+                    ]),
+                ], 'type'),
+                (object) [],
+                [[1003, 'Required.', [], 'type']],
+            ],
+            'union:discriminator-invalid-value' => [
+                new UnionSchema([
+                    'aa' => new ObjectSchema([
+                        'type' => new StringSchema(),
+                        'a' => new IntegerSchema(),
+                    ]),
+                    'bb' => new ObjectSchema([
+                        'type' => new StringSchema(),
+                        'b' => new IntegerSchema(),
+                    ]),
+                ], 'type'),
+                (object) [
+                    'type' => 'wrong',
+                ],
+                [[1008, 'Value has to be one of [%s].', ["'aa', 'bb'"], 'type']],
+            ],
+            'union:invalid-data' => [
+                new UnionSchema([
+                    'aa' => new ObjectSchema([
+                        'type' => new StringSchema(),
+                        'a' => new IntegerSchema(3),
+                    ]),
+                    'bb' => new ObjectSchema([
+                        'type' => new StringSchema(),
+                        'b' => new IntegerSchema(),
+                    ]),
+                ], 'type'),
+                (object) [
+                    'type' => 'aa',
+                    'a' => 1,
+                ],
+                [[1009, 'Value has to be bigger or equal then %s.', ['3'], 'a']],
+            ],
         ];
     }
 

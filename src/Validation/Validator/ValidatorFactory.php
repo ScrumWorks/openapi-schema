@@ -20,6 +20,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 class ValidatorFactory
@@ -93,6 +94,13 @@ class ValidatorFactory
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
+            );
+        } elseif ($schema instanceof UnionSchema) {
+            return new UnionValidator(
+                $this->breadCrumbPathFactory,
+                $this->validationResultBuilderFactory,
+                $schema,
+                $valueSchemaValidator
             );
         }
 
