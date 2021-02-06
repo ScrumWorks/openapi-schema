@@ -125,4 +125,14 @@ final class ValidityViolationFactory implements ValidityViolationFactoryInterfac
     ): ValidityViolationInterface {
         return new ValidityViolation(1017, "Value doesn't match pattern '%s'.", [$pattern], $breadCrumbPath);
     }
+
+    public function createOneOfNoMatchViolation(BreadCrumbPathInterface $breadCrumbPath): ValidityViolationInterface
+    {
+        return new ValidityViolation(1018, "Value doesn't match any schema.", [], $breadCrumbPath);
+    }
+
+    public function createOneOfAmbiguousViolation(BreadCrumbPathInterface $breadCrumbPath): ValidityViolationInterface
+    {
+        return new ValidityViolation(1019, 'Value matches more then one schema.', [], $breadCrumbPath);
+    }
 }
