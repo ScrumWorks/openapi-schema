@@ -12,6 +12,8 @@ abstract class AbstractSchemaBuilder
 
     protected ?string $description = null;
 
+    protected ?string $schemaName = null;
+
     /**
      * @return static
      */
@@ -30,6 +32,15 @@ abstract class AbstractSchemaBuilder
         return $this;
     }
 
+    /**
+     * @return static
+     */
+    final public function withSchemaName(?string $schemaName)
+    {
+        $this->schemaName = $schemaName;
+        return $this;
+    }
+
     public function isNullable(): bool
     {
         return $this->nullable;
@@ -38,6 +49,11 @@ abstract class AbstractSchemaBuilder
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getSchemaName(): ?string
+    {
+        return $this->schemaName;
     }
 
     abstract public function build(): ValueSchemaInterface;

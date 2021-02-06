@@ -9,4 +9,6 @@ interface ValueSchemaInterface
     public function isNullable(): bool;
 
     public function getDescription(): ?string;
+
+    public function getSchemaName(): ?string;
 }
