@@ -31,23 +31,14 @@ class Test
     public array $users;
 }
 
-$schemaParser = new \ScrumWorks\OpenApiSchema\SchemaParser(
-    new \ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory(
-        new \ScrumWorks\PropertyReader\PropertyTypeReader(
-            new \ScrumWorks\PropertyReader\VariableTypeUnifyService()
-        ),
-        new \ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator(
-            [new \ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertyDecorator\AnnotationPropertySchemaDecorator()],
-            [new \ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator\AnnotationClassSchemaDecorator()]
-        )
-    )
-);
+$di = new \ScrumWorks\OpenApiSchema\DiContainer();
+$schemaParser = $di->getSchemaParser();
 $schema = $schemaParser->getEntitySchema('Test');
 // Now you can get informations about entity schema
 assert($schema->getPropertySchema('test') instanceof \ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema);
 
 // Getting OpenAPI entity schema (result is PHP array)
-$openApiTranslator = new \ScrumWorks\OpenApiSchema\OpenApiTranslator();
+$openApiTranslator = $di->getOpenApiTranslator();
 $openApiValueSchema = $openApiTranslator->translateValueSchema($schema);
 ```
 

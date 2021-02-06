@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\DiContainer;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
-use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator\AnnotationClassSchemaDecorator;
-use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertyDecorator\AnnotationPropertySchemaDecorator;
-use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator;
-use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
-use ScrumWorks\OpenApiSchema\SchemaParser;
+use ScrumWorks\OpenApiSchema\SchemaParserInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
@@ -20,8 +16,6 @@ use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
-use ScrumWorks\PropertyReader\PropertyTypeReader;
-use ScrumWorks\PropertyReader\VariableTypeUnifyService;
 
 class TestSubEntity
 {
@@ -77,20 +71,11 @@ class TestEntity
 
 class SchemaParserTest extends TestCase
 {
-    protected SchemaParser $schemaParser;
+    protected SchemaParserInterface $schemaParser;
 
     protected function setUp(): void
     {
-        $annotationReader = new AnnotationReader();
-        $this->schemaParser = new SchemaParser(
-            new SchemaBuilderFactory(
-                new PropertyTypeReader(new VariableTypeUnifyService()),
-                new SchemaBuilderDecorator(
-                    [new AnnotationPropertySchemaDecorator($annotationReader)],
-                    [new AnnotationClassSchemaDecorator($annotationReader)]
-                )
-            )
-        );
+        $this->schemaParser = (new DiContainer())->getSchemaParser();
     }
 
     public function testNonExistingEntity(): void
