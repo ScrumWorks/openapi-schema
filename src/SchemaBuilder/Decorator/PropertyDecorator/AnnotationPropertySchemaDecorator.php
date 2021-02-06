@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertyDecorator;
 
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\AbstractAnnotationSchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertySchemaDecoratorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
@@ -24,7 +25,16 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
     ): AbstractSchemaBuilder {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
 
-        return $this->decoratePropertySchemaBuilderFromAnnotations($builder, $annotations);
+        try {
+            return $this->decoratePropertySchemaBuilderFromAnnotations($builder, $annotations);
+        } catch (LogicException $exception) {
+            $propertyIdentification = "{$propertyReflection->getDeclaringClass()->getName()}::{$propertyReflection->getName()}";
+            throw new LogicException(
+                "Property ${propertyIdentification} annotation problem: " . $exception->getMessage(),
+                $exception->getCode(),
+                $exception
+            );
+        }
     }
 
     public function decoratePropertySchemaBuilderFromAnnotations(
