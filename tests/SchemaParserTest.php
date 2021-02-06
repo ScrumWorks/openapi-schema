@@ -16,6 +16,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 
 /**
  * @OA\ObjectValue(schemaName="subEntity")
@@ -27,6 +28,22 @@ class TestSubEntity
      * @OA\Property(description="sub...")
      */
     public int $subInteger;
+}
+
+/**
+ * @OA\ObjectValue(schemaName="AEnt")
+ */
+class AEntity
+{
+    public string $type;
+}
+
+/**
+ * @OA\ObjectValue(schemaName="BEnt")
+ */
+class BEntity
+{
+    public string $type;
 }
 
 class TestEntity
@@ -70,6 +87,20 @@ class TestEntity
     public array $hashmap = [];
 
     public TestSubEntity $class;
+
+    /**
+     * @var int|string|null
+     *
+     * @OA\Union(types={ @OA\IntegerValue(minimum=2), @OA\StringValue(minLength=10) })
+     */
+    public $scalarUnion;
+
+    /**
+     * @var AEntity|BEntity
+     *
+     * @OA\Union(discriminator="type", mapping={ "a":"AEnt", "b":"BEnt" })
+     */
+    public $objectUnion;
 }
 
 class SchemaParserTest extends TestCase
@@ -176,5 +207,25 @@ class SchemaParserTest extends TestCase
         $this->assertFalse($subIntSchema->isNullable());
         $this->assertSame('sub...', $subIntSchema->getDescription());
         $this->assertSame(25, $subIntSchema->getMinimum());
+
+        /** @var UnionSchema $scalarUnionSchema */
+        $scalarUnionSchema = $entitySchema->getPropertySchema('scalarUnion');
+        $this->assertInstanceOf(UnionSchema::class, $scalarUnionSchema);
+        $this->assertTrue($scalarUnionSchema->isNullable());
+        $this->assertEquals([new IntegerSchema(2), new StringSchema(10)], $scalarUnionSchema->getPossibleSchemas());
+
+        /** @var UnionSchema $objectUnionSchema */
+        $objectUnionSchema = $entitySchema->getPropertySchema('objectUnion');
+        $this->assertInstanceOf(UnionSchema::class, $objectUnionSchema);
+        $this->assertFalse($objectUnionSchema->isNullable());
+        $this->assertSame('type', $objectUnionSchema->getDiscriminatorName());
+        $this->assertEquals([
+            'a' => new ObjectSchema([
+                'type' => new StringSchema(),
+            ], ['type'], false, null, 'AEnt'),
+            'b' => new ObjectSchema([
+                'type' => new StringSchema(),
+            ], ['type'], false, null, 'BEnt'),
+        ], $objectUnionSchema->getPossibleSchemas());
     }
 }
