@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator;
 
 use Doctrine\Common\Annotations\Reader;
+use ReflectionClass;
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
@@ -21,6 +22,11 @@ abstract class AbstractAnnotationSchemaDecorator
     protected function getPropertyAnnotations(ReflectionProperty $propertyReflection): array
     {
         return $this->annotationReader->getPropertyAnnotations($propertyReflection);
+    }
+
+    protected function getClassAnnotations(ReflectionClass $classReflection): array
+    {
+        return $this->annotationReader->getClassAnnotations($classReflection);
     }
 
     protected function findAnnotation(
