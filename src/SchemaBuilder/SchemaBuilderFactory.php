@@ -6,7 +6,6 @@ namespace ScrumWorks\OpenApiSchema\SchemaBuilder;
 
 use ReflectionClass;
 use ReflectionProperty;
-use ScrumWorks\OpenApiSchema\Exception\DomainException;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
@@ -17,6 +16,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\Builder\IntegerSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\MixedSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\UnionSchemaBuilder;
 use ScrumWorks\PropertyReader\PropertyTypeReaderInterface;
 use ScrumWorks\PropertyReader\VariableType\ArrayVariableType;
 use ScrumWorks\PropertyReader\VariableType\ClassVariableType;
@@ -148,6 +148,9 @@ class SchemaBuilderFactory
 
     protected function createSchemaBuilderFromUnion(UnionVariableType $variableType): AbstractSchemaBuilder
     {
-        throw new DomainException('Union types are not supported');
+        return new UnionSchemaBuilder(\array_map(
+            fn (VariableTypeInterface $type) => $this->createForVariableType($type),
+            $variableType->getTypes()
+        ));
     }
 }

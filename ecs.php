@@ -66,10 +66,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
         // we can't use FQN in doctrine annotations
         ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME => [
-            __DIR__ . '/src/Annotation/ArrayValue.php', __DIR__ . '/src/Annotation/HashmapValue.php',
+            __DIR__ . '/src/Annotation/ArrayValue.php',
+            __DIR__ . '/src/Annotation/HashmapValue.php',
+            __DIR__ . '/src/Annotation/Union.php',
         ],
         UseFromSameNamespaceSniff::class . '.' . UseFromSameNamespaceSniff::CODE_USE_FROM_SAME_NAMESPACE => [
-            __DIR__ . '/src/Annotation/ArrayValue.php', __DIR__ . '/src/Annotation/HashmapValue.php',
+            __DIR__ . '/src/Annotation/ArrayValue.php',
+            __DIR__ . '/src/Annotation/HashmapValue.php',
+            __DIR__ . '/src/Annotation/Union.php',
         ],
 
         # resolve later with strict_types
