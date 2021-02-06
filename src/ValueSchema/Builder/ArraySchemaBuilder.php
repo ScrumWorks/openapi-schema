@@ -85,7 +85,8 @@ final class ArraySchemaBuilder extends AbstractSchemaBuilder
             $this->maxItems,
             $this->uniqueItems,
             $this->nullable,
-            $this->description
+            $this->description,
+            $this->schemaName
         );
     }
 }

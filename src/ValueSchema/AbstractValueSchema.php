@@ -10,10 +10,13 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
 
     protected ?string $description;
 
-    public function __construct(bool $nullable = false, ?string $description = null)
+    protected ?string $schemaName;
+
+    public function __construct(bool $nullable = false, ?string $description = null, ?string $schemaName = null)
     {
         $this->nullable = $nullable;
         $this->description = $description;
+        $this->schemaName = $schemaName;
         $this->validate();
     }
 
@@ -25,6 +28,11 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getSchemaName(): ?string
+    {
+        return $this->schemaName;
     }
 
     abstract protected function validate();
