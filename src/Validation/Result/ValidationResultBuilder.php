@@ -131,18 +131,20 @@ class ValidationResultBuilder
      */
     public function mergeViolations(array $violations): self
     {
-        $this->validityViolations = \array_merge($this->validityViolations, $violations);
+        foreach ($violations as $violation) {
+            $this->addViolation($violation);
+        }
         return $this;
     }
 
     public function createResult(): ValidationResultInterface
     {
-        return new ValidationResult($this->validityViolations);
+        return new ValidationResult(\array_values($this->validityViolations));
     }
 
     protected function addViolation(ValidityViolationInterface $validityViolation): self
     {
-        $this->validityViolations[] = $validityViolation;
+        $this->validityViolations[\serialize($validityViolation)] = $validityViolation;
         return $this;
     }
 }
