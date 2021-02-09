@@ -13,7 +13,7 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
      */
     protected array $possibleSchemaBuilders;
 
-    protected ?string $discriminatorName = null;
+    protected ?string $discriminatorPropertyName = null;
 
     /**
      * @param AbstractSchemaBuilder[] $possibleSchemaBuilders
@@ -34,11 +34,11 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
     }
 
     /**
-     * @return $this
+     * @return static
      */
-    public function withDiscriminatorName(?string $discriminatorName)
+    public function withDiscriminatorPropertyName(?string $discriminatorPropertyName)
     {
-        $this->discriminatorName = $discriminatorName;
+        $this->discriminatorPropertyName = $discriminatorPropertyName;
         return $this;
     }
 
@@ -50,9 +50,9 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
         return $this->possibleSchemaBuilders;
     }
 
-    public function getDiscriminatorName(): ?string
+    public function getDiscriminatorPropertyName(): ?string
     {
-        return $this->discriminatorName;
+        return $this->discriminatorPropertyName;
     }
 
     public function build(): UnionSchema
@@ -62,6 +62,6 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
             $this->possibleSchemaBuilders
         );
 
-        return new UnionSchema($possibleSchemas, $this->discriminatorName, $this->nullable, $this->description);
+        return new UnionSchema($possibleSchemas, $this->discriminatorPropertyName, $this->nullable, $this->description);
     }
 }

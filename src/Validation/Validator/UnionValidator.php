@@ -38,7 +38,7 @@ final class UnionValidator extends AbstractValidator
             return;
         }
 
-        if ($discriminatorName = $this->schema->getDiscriminatorName()) {
+        if ($discriminatorName = $this->schema->getDiscriminatorPropertyName()) {
             if (! \is_object($data)) {
                 $resultBuilder->addTypeViolation('object', $breadCrumbPath);
             } elseif (! \property_exists($data, $discriminatorName)) {
@@ -80,7 +80,7 @@ final class UnionValidator extends AbstractValidator
     ): void {
         parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
 
-        if ($discriminatorName = $this->schema->getDiscriminatorName()) {
+        if ($discriminatorName = $this->schema->getDiscriminatorPropertyName()) {
             $resultBuilder->addTypeViolation('object', $breadCrumbPath);
             $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb($discriminatorName));
             $resultBuilder->addEnumViolation(

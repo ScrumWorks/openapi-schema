@@ -13,19 +13,19 @@ final class UnionSchema extends AbstractValueSchema
      */
     private array $possibleSchemas;
 
-    private ?string $discriminatorName;
+    private ?string $discriminatorPropertyName;
 
     /**
      * @param ValueSchemaInterface[] $possibleSchemas
      */
     public function __construct(
         array $possibleSchemas,
-        ?string $discriminatorName = null,
+        ?string $discriminatorPropertyName = null,
         bool $nullable = false,
         ?string $description = null
     ) {
         $this->possibleSchemas = $possibleSchemas;
-        $this->discriminatorName = $discriminatorName;
+        $this->discriminatorPropertyName = $discriminatorPropertyName;
 
         parent::__construct($nullable, $description);
 
@@ -44,9 +44,9 @@ final class UnionSchema extends AbstractValueSchema
         return $this->possibleSchemas;
     }
 
-    public function getDiscriminatorName(): ?string
+    public function getDiscriminatorPropertyName(): ?string
     {
-        return $this->discriminatorName;
+        return $this->discriminatorPropertyName;
     }
 
     protected function validate(): void
@@ -62,7 +62,7 @@ final class UnionSchema extends AbstractValueSchema
                     ValueSchemaInterface::class
                 ));
             }
-            if ($this->discriminatorName !== null && ! $schema instanceof ObjectSchema) {
+            if ($this->discriminatorPropertyName !== null && ! $schema instanceof ObjectSchema) {
                 throw new InvalidArgumentException('Discriminator can be specified only for object schemas.');
             }
         }

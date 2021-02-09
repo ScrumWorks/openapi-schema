@@ -19,7 +19,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 
 /**
- * @OA\ObjectValue(schemaName="subEntity")
+ * @OA\ComponentSchema(schemaName="subEntity")
  */
 class TestSubEntity
 {
@@ -31,7 +31,7 @@ class TestSubEntity
 }
 
 /**
- * @OA\ObjectValue(schemaName="AEnt")
+ * @OA\ComponentSchema(schemaName="AEnt")
  */
 class AEntity
 {
@@ -39,7 +39,7 @@ class AEntity
 }
 
 /**
- * @OA\ObjectValue(schemaName="BEnt")
+ * @OA\ComponentSchema(schemaName="BEnt")
  */
 class BEntity
 {
@@ -98,7 +98,7 @@ class TestEntity
     /**
      * @var AEntity|BEntity
      *
-     * @OA\Union(discriminator="type", mapping={ "a":"AEnt", "b":"BEnt" })
+     * @OA\Union(discriminator="type", mapping={ "a": "AEnt", "b": "BEnt" })
      */
     public $objectUnion;
 }
@@ -218,7 +218,7 @@ class SchemaParserTest extends TestCase
         $objectUnionSchema = $entitySchema->getPropertySchema('objectUnion');
         $this->assertInstanceOf(UnionSchema::class, $objectUnionSchema);
         $this->assertFalse($objectUnionSchema->isNullable());
-        $this->assertSame('type', $objectUnionSchema->getDiscriminatorName());
+        $this->assertSame('type', $objectUnionSchema->getDiscriminatorPropertyName());
         $this->assertEquals([
             'a' => new ObjectSchema([
                 'type' => new StringSchema(),

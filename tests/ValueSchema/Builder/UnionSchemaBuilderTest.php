@@ -22,7 +22,7 @@ class UnionSchemaBuilderTest extends TestCase
     {
         $builder = new UnionSchemaBuilder([new ObjectSchemaBuilder()]);
         $builder->withSchemaName('SchemaName');
-        $builder->withDiscriminatorName('discriminatoR');
+        $builder->withDiscriminatorPropertyName('discriminatoR');
         $builder->withDescription('desc');
         $builder->withNullable(true);
 
