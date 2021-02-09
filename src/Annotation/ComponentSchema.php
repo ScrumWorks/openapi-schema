@@ -6,11 +6,11 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
 
 /**
  * @Annotation
- * @Target({"CLASS", "ANNOTATION"})
+ * @Target("CLASS")
  *
  * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
  */
-final class ObjectValue implements ValueInterface
+final class ComponentSchema implements ValueInterface
 {
     /**
      * @var string

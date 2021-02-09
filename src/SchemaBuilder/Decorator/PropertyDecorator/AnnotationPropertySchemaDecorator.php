@@ -256,7 +256,7 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
                         );
                     }
                 }
-                $builder = $builder->withDiscriminatorName($discriminator);
+                $builder = $builder->withDiscriminatorPropertyName($discriminator);
             }
 
             if ($annotation->mapping !== null) {
