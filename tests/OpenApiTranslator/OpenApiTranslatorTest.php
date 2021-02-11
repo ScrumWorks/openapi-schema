@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ScrumWorks\OpenApiSchema\Tests;
+namespace ScrumWorks\OpenApiSchema\Tests\OpenApiTranslator;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\OpenApiTranslator;
@@ -307,7 +307,7 @@ class OpenApiTranslatorTest extends TestCase
                         ],
                         'nextObject' => [
                             '$ref' => '#/components/obj',
-                        ]
+                        ],
                     ],
                     'required' => ['name'],
                     'description' => 'object',

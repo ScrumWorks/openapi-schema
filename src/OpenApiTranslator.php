@@ -14,6 +14,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\Reference;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 final class OpenApiTranslator implements OpenApiTranslatorInterface
@@ -39,6 +40,8 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
             $definition += $this->translateHashmapSchema($valueSchema);
         } elseif ($valueSchema instanceof Reference) {
             $definition += $this->translateReference($valueSchema);
+        } elseif ($valueSchema instanceof UnionSchema) {
+            $definition += $this->translateUnionSchema($valueSchema);
         }
         $definition += $this->translateGenericProperties($valueSchema);
         return $definition;
@@ -195,8 +198,32 @@ final class OpenApiTranslator implements OpenApiTranslatorInterface
     private function translateReference(Reference $reference): array
     {
         return [
-            '$ref' => $reference->getReferencePath()
+            '$ref' => $reference->getReferencePath(),
         ];
+    }
+
+    private function translateUnionSchema(UnionSchema $schema): array
+    {
+        $definition = [
+            'oneOf' => \array_map(
+                fn (ValueSchemaInterface $subSchema) => $this->translateValueSchema($subSchema),
+                \array_values($schema->getPossibleSchemas())
+            ),
+        ];
+
+        if ($schema->getDiscriminatorPropertyName()) {
+            $definition['discriminator'] = [
+                'propertyName' => $schema->getDiscriminatorPropertyName(),
+                'mapping' => [],
+            ];
+            foreach ($schema->getPossibleSchemas() as $discriminatorValue => $schema) {
+                if ($schema instanceof Reference) {
+                    $definition['discriminator']['mapping'][$discriminatorValue] = $schema->getReferencePath();
+                }
+            }
+        }
+
+        return $definition;
     }
 
     private function translateGenericProperties(ValueSchemaInterface $schema): array
