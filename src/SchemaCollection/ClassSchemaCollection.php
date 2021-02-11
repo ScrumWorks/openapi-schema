@@ -63,7 +63,7 @@ class ClassSchemaCollection implements IClassSchemaCollection
 
     public function getSchemaForReference(string $referencePath): ValueSchemaInterface
     {
-        if (! str_starts_with($referencePath, $this->componentsSchemasPath)) {
+        if (! \str_starts_with($referencePath, $this->componentsSchemasPath)) {
             throw new LogicException(\sprintf("Unprocessable reference path '%s'", $referencePath));
         }
 
