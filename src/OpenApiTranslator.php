@@ -12,10 +12,12 @@ use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Reference;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
-class OpenApiTranslator implements OpenApiTranslatorInterface
+final class OpenApiTranslator implements OpenApiTranslatorInterface
 {
     public function translateValueSchema(ValueSchemaInterface $valueSchema): array
     {
@@ -36,12 +38,16 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
             $definition += $this->translateEnumSchema($valueSchema);
         } elseif ($valueSchema instanceof HashmapSchema) {
             $definition += $this->translateHashmapSchema($valueSchema);
+        } elseif ($valueSchema instanceof Reference) {
+            $definition += $this->translateReference($valueSchema);
+        } elseif ($valueSchema instanceof UnionSchema) {
+            $definition += $this->translateUnionSchema($valueSchema);
         }
         $definition += $this->translateGenericProperties($valueSchema);
         return $definition;
     }
 
-    protected function translateStringSchema(StringSchema $schema): array
+    private function translateStringSchema(StringSchema $schema): array
     {
         $definition = [
             'type' => 'string',
@@ -61,7 +67,7 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    protected function translateIntegerSchema(IntegerSchema $schema): array
+    private function translateIntegerSchema(IntegerSchema $schema): array
     {
         $definition = [
             'type' => 'integer',
@@ -84,7 +90,7 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    protected function translateFloatSchema(FloatSchema $schema): array
+    private function translateFloatSchema(FloatSchema $schema): array
     {
         $definition = [
             'type' => 'number',
@@ -108,14 +114,14 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    protected function translateBooleanSchema(BooleanSchema $schema): array
+    private function translateBooleanSchema(BooleanSchema $schema): array
     {
         return [
             'type' => 'boolean',
         ];
     }
 
-    protected function translateArraySchema(ArraySchema $schema): array
+    private function translateArraySchema(ArraySchema $schema): array
     {
         $definition = [
             'type' => 'array',
@@ -133,7 +139,7 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    protected function translateObjectSchema(ObjectSchema $schema): array
+    private function translateObjectSchema(ObjectSchema $schema): array
     {
         $definition = [
             'type' => 'object',
@@ -155,7 +161,7 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    protected function translateEnumSchema(EnumSchema $schema): array
+    private function translateEnumSchema(EnumSchema $schema): array
     {
         $enum = $schema->getEnum();
         if ($schema->isNullable()) {
@@ -168,7 +174,7 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         ];
     }
 
-    protected function translateHashmapSchema(HashmapSchema $schema): array
+    private function translateHashmapSchema(HashmapSchema $schema): array
     {
         $definition = [
             'type' => 'object',
@@ -189,7 +195,38 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         return $definition;
     }
 
-    protected function translateGenericProperties(ValueSchemaInterface $schema): array
+    private function translateReference(Reference $reference): array
+    {
+        return [
+            '$ref' => $reference->getReferencePath(),
+        ];
+    }
+
+    private function translateUnionSchema(UnionSchema $schema): array
+    {
+        $definition = [
+            'oneOf' => \array_map(
+                fn (ValueSchemaInterface $subSchema) => $this->translateValueSchema($subSchema),
+                \array_values($schema->getPossibleSchemas())
+            ),
+        ];
+
+        if ($schema->getDiscriminatorPropertyName()) {
+            $definition['discriminator'] = [
+                'propertyName' => $schema->getDiscriminatorPropertyName(),
+                'mapping' => [],
+            ];
+            foreach ($schema->getPossibleSchemas() as $discriminatorValue => $schema) {
+                if ($schema instanceof Reference) {
+                    $definition['discriminator']['mapping'][$discriminatorValue] = $schema->getReferencePath();
+                }
+            }
+        }
+
+        return $definition;
+    }
+
+    private function translateGenericProperties(ValueSchemaInterface $schema): array
     {
         $definition = [];
         if ($schema->isNullable()) {

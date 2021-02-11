@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
+use ScrumWorks\OpenApiSchema\SchemaCollection\IClassSchemaCollection;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
@@ -15,17 +16,21 @@ final class ObjectValidator extends AbstractValidator
 {
     private ObjectSchema $schema;
 
+    private IClassSchemaCollection $classSchemaCollection;
+
     private ValueSchemaValidatorInterface $valueValidator;
 
     public function __construct(
         BreadCrumbPathFactoryInterface $breadCrumbPathFactory,
         ValidationResultBuilderFactory $validationResultBuilderFactory,
         ObjectSchema $schema,
+        IClassSchemaCollection $classSchemaCollection,
         ValueSchemaValidatorInterface $valueValidator
     ) {
         parent::__construct($breadCrumbPathFactory, $validationResultBuilderFactory, $schema);
 
         $this->schema = $schema;
+        $this->classSchemaCollection = $classSchemaCollection;
         $this->valueValidator = $valueValidator;
     }
 
@@ -57,6 +62,7 @@ final class ObjectValidator extends AbstractValidator
             } else {
                 $propertyValidationResult = $this->valueValidator->validate(
                     $propertySchemas[$propertyName],
+                    $this->classSchemaCollection,
                     $propertyData,
                     $breadCrumbPath->withNextBreadCrumb($propertyName))
                 ;
@@ -82,6 +88,7 @@ final class ObjectValidator extends AbstractValidator
             $resultBuilder->mergeViolations(
                 $this->valueValidator->getPossibleViolationExamples(
                     $propertySchema,
+                    $this->classSchemaCollection,
                     $breadCrumbPath->withNextBreadCrumb($propertyName)
                 ),
             );

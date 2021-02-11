@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ScrumWorks\OpenApiSchema\Tests;
+namespace ScrumWorks\OpenApiSchema\Tests\OpenApiTranslator;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\OpenApiTranslator;
@@ -14,6 +14,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Reference;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
@@ -293,6 +294,7 @@ class OpenApiTranslatorTest extends TestCase
                 new ObjectSchema([
                     'name' => new StringSchema(),
                     'age' => new IntegerSchema(),
+                    'nextObject' => new Reference('#/components/obj'),
                 ], ['name'], false, 'object'),
                 [
                     'type' => 'object',
@@ -302,6 +304,9 @@ class OpenApiTranslatorTest extends TestCase
                         ],
                         'age' => [
                             'type' => 'integer',
+                        ],
+                        'nextObject' => [
+                            '$ref' => '#/components/obj',
                         ],
                     ],
                     'required' => ['name'],

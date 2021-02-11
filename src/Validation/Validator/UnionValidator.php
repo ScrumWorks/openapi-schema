@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
+use ScrumWorks\OpenApiSchema\SchemaCollection\IClassSchemaCollection;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
@@ -15,17 +16,21 @@ final class UnionValidator extends AbstractValidator
 {
     private UnionSchema $schema;
 
+    private IClassSchemaCollection $classSchemaCollection;
+
     private ValueSchemaValidatorInterface $valueValidator;
 
     public function __construct(
         BreadCrumbPathFactoryInterface $breadCrumbPathFactory,
         ValidationResultBuilderFactory $validationResultBuilderFactory,
         UnionSchema $schema,
+        IClassSchemaCollection $classSchemaCollection,
         ValueSchemaValidatorInterface $valueValidator
     ) {
         parent::__construct($breadCrumbPathFactory, $validationResultBuilderFactory, $schema);
 
         $this->schema = $schema;
+        $this->classSchemaCollection = $classSchemaCollection;
         $this->valueValidator = $valueValidator;
     }
 
@@ -49,14 +54,24 @@ final class UnionValidator extends AbstractValidator
                     $breadCrumbPath->withNextBreadCrumb($discriminatorName)
                 );
             } else {
-                $validationResult = $this->valueValidator->validate($discriminatorSchema, $data, $breadCrumbPath);
+                $validationResult = $this->valueValidator->validate(
+                    $discriminatorSchema,
+                    $this->classSchemaCollection,
+                    $data,
+                    $breadCrumbPath
+                );
                 $resultBuilder->mergeResult($validationResult);
             }
         } else {
             // `oneOf` semantics applied
             $matchCount = 0;
             foreach ($this->schema->getPossibleSchemas() as $schema) {
-                $validationResult = $this->valueValidator->validate($schema, $data, $breadCrumbPath);
+                $validationResult = $this->valueValidator->validate(
+                    $schema,
+                    $this->classSchemaCollection,
+                    $data,
+                    $breadCrumbPath
+                );
                 if ($validationResult->isValid()) {
                     ++$matchCount;
                 }
@@ -89,7 +104,11 @@ final class UnionValidator extends AbstractValidator
             );
             foreach ($this->schema->getPossibleSchemas() as $schema) {
                 $resultBuilder->mergeViolations(
-                    $this->valueValidator->getPossibleViolationExamples($schema, $breadCrumbPath)
+                    $this->valueValidator->getPossibleViolationExamples(
+                        $schema,
+                        $this->classSchemaCollection,
+                        $breadCrumbPath
+                    )
                 );
             }
         } else {
