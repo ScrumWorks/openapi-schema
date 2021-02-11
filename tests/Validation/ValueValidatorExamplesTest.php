@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
 use PHPUnit\Framework\TestCase;
+use ScrumWorks\OpenApiSchema\SchemaCollection\ClassSchemaCollection;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\AssertViolationTrait;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
@@ -31,7 +32,10 @@ class ValueValidatorExamplesTest extends TestCase
      */
     public function test(ValueSchemaInterface $schema, array $expectedViolations): void
     {
-        $actualViolations = $this->createValueValidator()->getPossibleViolationExamples($schema);
+        $actualViolations = $this->createValueValidator()->getPossibleViolationExamples(
+            $schema,
+            new ClassSchemaCollection('')
+        );
 
         $this->assertViolations($expectedViolations, $actualViolations);
     }

@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema;
 
 use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
+use ScrumWorks\OpenApiSchema\SchemaCollection\IClassSchemaCollection;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 class SchemaParser implements SchemaParserInterface
@@ -17,13 +18,15 @@ class SchemaParser implements SchemaParserInterface
         $this->schemaBuilderFactory = $schemaBuilderFactory;
     }
 
-    public function getEntitySchema(string $class): ValueSchemaInterface
+    public function getEntitySchema(string $class, IClassSchemaCollection $classSchemaCollection): ValueSchemaInterface
     {
-        return $this->schemaBuilderFactory->createForClass($class)->build();
+        return $this->schemaBuilderFactory->createForClass($class, $classSchemaCollection)->build();
     }
 
-    public function getPropertySchema(ReflectionProperty $propertyReflection): ValueSchemaInterface
-    {
-        return $this->schemaBuilderFactory->createForProperty($propertyReflection)->build();
+    public function getPropertySchema(
+        ReflectionProperty $propertyReflection,
+        IClassSchemaCollection $classSchemaCollection
+    ): ValueSchemaInterface {
+        return $this->schemaBuilderFactory->createForProperty($propertyReflection, $classSchemaCollection)->build();
     }
 }

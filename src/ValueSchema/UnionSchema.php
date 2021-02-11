@@ -62,7 +62,7 @@ final class UnionSchema extends AbstractValueSchema
                     ValueSchemaInterface::class
                 ));
             }
-            if ($this->discriminatorPropertyName !== null && ! $schema instanceof ObjectSchema) {
+            if ($this->discriminatorPropertyName !== null && ! ($schema instanceof ObjectSchema || $schema instanceof Reference)) {
                 throw new InvalidArgumentException('Discriminator can be specified only for object schemas.');
             }
         }

@@ -7,6 +7,7 @@ namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
+use ScrumWorks\OpenApiSchema\SchemaCollection\ClassSchemaCollection;
 use ScrumWorks\OpenApiSchema\SchemaParser;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
@@ -38,8 +39,9 @@ class IntegrationTest extends TestCase
         $schemaParser = $this->createSchemaParser();
         $validator = $this->createValueValidator();
 
-        $schema = $schemaParser->getEntitySchema(TestEntity::class);
-        $validationResult = $validator->validate($schema, $data);
+        $classSchemaCollection = $this->createClassSchemaCollection();
+        $schema = $schemaParser->getEntitySchema(TestEntity::class, $classSchemaCollection);
+        $validationResult = $validator->validate($schema, $classSchemaCollection, $data);
 
         $this->assertTrue($validationResult->isValid());
         $this->assertSame([], $validationResult->getViolations());
@@ -65,8 +67,9 @@ class IntegrationTest extends TestCase
         $schemaParser = $this->createSchemaParser();
         $validator = $this->createValueValidator();
 
-        $schema = $schemaParser->getEntitySchema(TestEntity::class);
-        $validationResult = $validator->validate($schema, $data);
+        $classSchemaCollection = $this->createClassSchemaCollection();
+        $schema = $schemaParser->getEntitySchema(TestEntity::class, $classSchemaCollection);
+        $validationResult = $validator->validate($schema, $classSchemaCollection, $data);
 
         $this->assertFalse($validationResult->isValid());
         $this->assertCount(3, $violations = $validationResult->getViolations());
@@ -88,5 +91,10 @@ class IntegrationTest extends TestCase
         $variableTypeUnifyService = new VariableTypeUnifyService();
         $propertyReader = new PropertyTypeReader($variableTypeUnifyService);
         return new SchemaParser(new SchemaBuilderFactory($propertyReader, new SchemaBuilderDecorator([], [])));
+    }
+
+    private function createClassSchemaCollection(): ClassSchemaCollection
+    {
+        return new ClassSchemaCollection('#/components/schemas');
     }
 }

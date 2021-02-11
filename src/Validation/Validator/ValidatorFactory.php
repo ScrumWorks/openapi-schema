@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
 use LogicException;
+use ScrumWorks\OpenApiSchema\SchemaCollection\IClassSchemaCollection;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
 use ScrumWorks\OpenApiSchema\Validation\Validator\Format\DateTimeValidator;
@@ -19,6 +20,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Reference;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
@@ -39,13 +41,21 @@ class ValidatorFactory
 
     public function createValidator(
         ValueSchemaInterface $schema,
+        IClassSchemaCollection $classSchemaCollection,
         ValueSchemaValidatorInterface $valueSchemaValidator
     ): AbstractValidator {
-        if ($schema instanceof ArraySchema) {
+        if ($schema instanceof Reference) {
+            return $this->createValidator(
+                $classSchemaCollection->getSchemaForReference($schema->getReferencePath()),
+                $classSchemaCollection,
+                $valueSchemaValidator
+            );
+        } elseif ($schema instanceof ArraySchema) {
             return new ArrayValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
+                $classSchemaCollection,
                 $valueSchemaValidator,
             );
         } elseif ($schema instanceof BooleanSchema) {
@@ -67,6 +77,7 @@ class ValidatorFactory
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
+                $classSchemaCollection,
                 $valueSchemaValidator,
             );
         } elseif ($schema instanceof IntegerSchema) {
@@ -80,6 +91,7 @@ class ValidatorFactory
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
+                $classSchemaCollection,
                 $valueSchemaValidator,
             );
         } elseif ($schema instanceof StringSchema) {
@@ -100,6 +112,7 @@ class ValidatorFactory
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
+                $classSchemaCollection,
                 $valueSchemaValidator
             );
         }

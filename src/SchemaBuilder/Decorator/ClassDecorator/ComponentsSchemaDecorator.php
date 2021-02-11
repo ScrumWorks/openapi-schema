@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator;
+
+use ReflectionClass;
+use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\AbstractAnnotationSchemaDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassSchemaDecoratorInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
+
+final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecorator implements ClassSchemaDecoratorInterface
+{
+    public function decorateObjectSchemaBuilder(
+        ObjectSchemaBuilder $builder,
+        ReflectionClass $classReflection
+    ): ObjectSchemaBuilder {
+        $objectDefaultValues = $classReflection->getDefaultProperties();
+        $requiredProperties = [];
+        foreach ($classReflection->getProperties() as $propertyReflection) {
+            if ($this->isPropertyRequired($propertyReflection, $objectDefaultValues)) {
+                $requiredProperties[] = $propertyReflection->getName();
+            }
+        }
+
+        $classAnnotations = $this->getClassAnnotations($classReflection);
+        /** @var ?OA\ComponentSchema $componentSchema */
+        $componentSchema = $this->findAnnotation($classAnnotations, OA\ComponentSchema::class, true);
+        if ($componentSchema && $componentSchema->schemaName) {
+            $builder = $builder->withSchemaName($componentSchema->schemaName);
+        }
+
+        return $builder->withRequiredProperties($requiredProperties);
+    }
+}
