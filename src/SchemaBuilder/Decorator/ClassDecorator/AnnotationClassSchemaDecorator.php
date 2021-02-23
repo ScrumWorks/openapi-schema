@@ -20,7 +20,10 @@ final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecor
         $objectDefaultValues = $classReflection->getDefaultProperties();
         $requiredProperties = [];
         foreach ($classReflection->getProperties() as $propertyReflection) {
-            if ($this->isPropertyRequired($propertyReflection, $objectDefaultValues)) {
+            if (
+                $propertyReflection->isPublic()
+                && $this->isPropertyRequired($propertyReflection, $objectDefaultValues)
+            ) {
                 $requiredProperties[] = $propertyReflection->getName();
             }
         }
