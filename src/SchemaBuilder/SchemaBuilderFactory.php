@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\SchemaBuilder;
 
 use ReflectionClass;
 use ReflectionProperty;
+use ScrumWorks\OpenApiSchema\ClassReferenceBag;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
@@ -39,30 +40,31 @@ class SchemaBuilderFactory
         $this->schemaBuilderDecorator = $schemaBuilderDecorator;
     }
 
-    public function createForClass(string $class): AbstractSchemaBuilder
+    public function createForClass(string $class, ClassReferenceBag $referenceBag): AbstractSchemaBuilder
     {
         if (! \class_exists($class) && ! \interface_exists($class)) {
             throw new LogicException("Class or interface '${class}' does not exist");
         }
 
         $classReflection = new ReflectionClass($class);
-        return $this->schemaBuilderDecorator->decorateClassSchemaBuilder(
-            $this->createSchemaBuilderFromClass($classReflection),
-            $classReflection
-        );
+        return $this->createSchemaBuilderFromClass($classReflection, $referenceBag);
     }
 
-    public function createForProperty(ReflectionProperty $propertyReflection): AbstractSchemaBuilder
-    {
+    public function createForProperty(
+        ReflectionProperty $propertyReflection,
+        ClassReferenceBag $referenceBag
+    ): AbstractSchemaBuilder {
         $variableType = $this->propertyReader->readUnifiedVariableType($propertyReflection);
         return $this->schemaBuilderDecorator->decoratePropertySchemaBuilder(
-            $this->createForVariableType($variableType),
+            $this->createForVariableType($variableType, $referenceBag),
             $propertyReflection
         );
     }
 
-    protected function createForVariableType(?VariableTypeInterface $variableType): AbstractSchemaBuilder
-    {
+    protected function createForVariableType(
+        ?VariableTypeInterface $variableType,
+        ClassReferenceBag $referenceBag
+    ): AbstractSchemaBuilder {
         if ($variableType === null) {
             $schemaBuilder = $this->createSchemaBuilderFromMixed();
         } elseif ($variableType instanceof MixedVariableType) {
@@ -70,11 +72,11 @@ class SchemaBuilderFactory
         } elseif ($variableType instanceof ScalarVariableType) {
             $schemaBuilder = $this->createSchemaBuilderFromScalar($variableType);
         } elseif ($variableType instanceof ArrayVariableType) {
-            $schemaBuilder = $this->createSchemaBuilderFromArray($variableType);
+            $schemaBuilder = $this->createSchemaBuilderFromArray($variableType, $referenceBag);
         } elseif ($variableType instanceof ClassVariableType) {
-            $schemaBuilder = $this->createForClass($variableType->getClass());
+            $schemaBuilder = $this->createForClass($variableType->getClass(), $referenceBag);
         } elseif ($variableType instanceof UnionVariableType) {
-            $schemaBuilder = $this->createSchemaBuilderFromUnion($variableType);
+            $schemaBuilder = $this->createSchemaBuilderFromUnion($variableType, $referenceBag);
         } else {
             throw new LogicException(\sprintf(
                 "Unprocessable VariableTypeInterface '%s' (class %s)",
@@ -119,19 +121,37 @@ class SchemaBuilderFactory
         return $schemaBuilder;
     }
 
-    protected function createSchemaBuilderFromArray(ArrayVariableType $variableType): AbstractSchemaBuilder
-    {
+    protected function createSchemaBuilderFromArray(
+        ArrayVariableType $variableType,
+        ClassReferenceBag $referenceBag
+    ): AbstractSchemaBuilder {
         if ($variableType->getKeyType() === null) {
             $schemaBuilder = new ArraySchemaBuilder();
         } else {
             $schemaBuilder = new HashmapSchemaBuilder();
         }
 
-        return $schemaBuilder->withItemsSchemaBuilder($this->createForVariableType($variableType->getItemType()));
+        return $schemaBuilder->withItemsSchemaBuilder(
+            $this->createForVariableType($variableType->getItemType(), $referenceBag)
+        );
     }
 
-    protected function createSchemaBuilderFromClass(ReflectionClass $classReflection): ObjectSchemaBuilder
-    {
+    protected function createSchemaBuilderFromClass(
+        ReflectionClass $classReflection,
+        ClassReferenceBag $referenceBag
+    ): AbstractSchemaBuilder {
+        if ($referenceBag->hasClassBuilder($classReflection->getName())) {
+            return $referenceBag->getClassBuilderReference($classReflection->getName());
+        }
+
+        $builder = (new ObjectSchemaBuilder());
+
+        $referenceBag->addClassBuilder(
+            $classReflection->getName(),
+            $builder
+        // we must add builder to bag before processing properties
+        );
+
         $propertiesSchemas = [];
         foreach ($classReflection->getProperties() as $propertyReflection) {
             // if property is not public, then skip it.
@@ -139,17 +159,28 @@ class SchemaBuilderFactory
                 continue;
             }
 
-            $propertiesSchemas[$propertyReflection->getName()] = $this->createForProperty($propertyReflection);
+            $propertiesSchemas[$propertyReflection->getName()] = $this->createForProperty(
+                $propertyReflection,
+                $referenceBag
+            );
         }
 
-        return (new ObjectSchemaBuilder())
-            ->withPropertiesSchemaBuilders($propertiesSchemas);
+        $builder->withPropertiesSchemaBuilders($propertiesSchemas);
+
+        $builder = $this->schemaBuilderDecorator->decorateClassSchemaBuilder($builder, $classReflection);
+
+        // update builder in reference bag after decoration
+        $referenceBag->addClassBuilder($classReflection->getName(), $builder);
+
+        return $referenceBag->getClassBuilderReference($classReflection->getName());
     }
 
-    protected function createSchemaBuilderFromUnion(UnionVariableType $variableType): AbstractSchemaBuilder
-    {
+    protected function createSchemaBuilderFromUnion(
+        UnionVariableType $variableType,
+        ClassReferenceBag $referenceBag
+    ): AbstractSchemaBuilder {
         return new UnionSchemaBuilder(\array_map(
-            fn (VariableTypeInterface $type) => $this->createForVariableType($type),
+            fn (VariableTypeInterface $type) => $this->createForVariableType($type, $referenceBag),
             $variableType->getTypes()
         ));
     }

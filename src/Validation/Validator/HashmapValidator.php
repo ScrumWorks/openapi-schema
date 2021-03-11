@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
+use ScrumWorks\OpenApiSchema\ReferencedSchemaBag;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
@@ -32,6 +33,7 @@ final class HashmapValidator extends AbstractValidator
     protected function doValidation(
         ValidationResultBuilder $resultBuilder,
         $data,
+        ReferencedSchemaBag $referencedSchemaBag,
         BreadCrumbPathInterface $breadCrumbPath
     ): void {
         if (! $this->validateNullable($resultBuilder, $data, $breadCrumbPath)) {
@@ -54,6 +56,7 @@ final class HashmapValidator extends AbstractValidator
         foreach ($data as $itemKey => $itemData) {
             $propertyValidationResult = $this->valueValidator->validate(
                 $itemsSchema,
+                $referencedSchemaBag,
                 $itemData,
                 $breadCrumbPath->withNextBreadCrumb($itemKey)
             );
@@ -63,9 +66,10 @@ final class HashmapValidator extends AbstractValidator
 
     protected function collectPossibleViolationExamples(
         ValidationResultBuilder $resultBuilder,
+        ReferencedSchemaBag $referencedSchemaBag,
         BreadCrumbPathInterface $breadCrumbPath
     ): void {
-        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+        parent::collectPossibleViolationExamples($resultBuilder, $referencedSchemaBag, $breadCrumbPath);
 
         $resultBuilder->addTypeViolation('object', $breadCrumbPath);
 
@@ -76,6 +80,7 @@ final class HashmapValidator extends AbstractValidator
         $resultBuilder->mergeViolations(
             $this->valueValidator->getPossibleViolationExamples(
                 $this->schema->getItemsSchema(),
+                $referencedSchemaBag,
                 $breadCrumbPath->withNextBreadCrumb('-key-')
             ),
         );

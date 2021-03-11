@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
+use ScrumWorks\OpenApiSchema\ReferencedSchemaBag;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
@@ -27,6 +28,7 @@ final class EnumValidator extends AbstractValidator
     protected function doValidation(
         ValidationResultBuilder $resultBuilder,
         $data,
+        ReferencedSchemaBag $referencedSchemaBag,
         BreadCrumbPathInterface $breadCrumbPath
     ): void {
         if (! $this->validateNullable($resultBuilder, $data, $breadCrumbPath)) {
@@ -42,9 +44,10 @@ final class EnumValidator extends AbstractValidator
 
     protected function collectPossibleViolationExamples(
         ValidationResultBuilder $resultBuilder,
+        ReferencedSchemaBag $referencedSchemaBag,
         BreadCrumbPathInterface $breadCrumbPath
     ): void {
-        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+        parent::collectPossibleViolationExamples($resultBuilder, $referencedSchemaBag, $breadCrumbPath);
 
         $resultBuilder->addTypeViolation('string', $breadCrumbPath);
         $resultBuilder->addEnumViolation($this->schema->getEnum(), $breadCrumbPath);

@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Tests;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\ClassReferenceBag;
 use ScrumWorks\OpenApiSchema\DiContainer;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
@@ -15,6 +16,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ReferenceSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 
@@ -107,22 +109,28 @@ class SchemaParserTest extends TestCase
 {
     protected SchemaParserInterface $schemaParser;
 
+    protected ClassReferenceBag $referenceBag;
+
     protected function setUp(): void
     {
         $this->schemaParser = (new DiContainer())->getSchemaParser();
+        $this->referenceBag = new ClassReferenceBag();
     }
 
     public function testNonExistingEntity(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage("Class or interface 'abc-not-existing' does not exist");
-        $this->schemaParser->getEntitySchema('abc-not-existing');
+        $this->schemaParser->getEntitySchema('abc-not-existing', $this->referenceBag);
     }
 
     public function testEntity(): void
     {
+        /** @var ReferenceSchema $entitySchemaReference */
+        $entitySchemaReference = $this->schemaParser->getEntitySchema(TestEntity::class, $this->referenceBag);
+        $referencedSchemaBag = $this->referenceBag->build();
         /** @var ObjectSchema $entitySchema */
-        $entitySchema = $this->schemaParser->getEntitySchema(TestEntity::class);
+        $entitySchema = $referencedSchemaBag->getSchema($entitySchemaReference->getReference());
         $this->assertInstanceOf(ObjectSchema::class, $entitySchema);
         $this->assertFalse($entitySchema->isNullable());
         $this->assertNull($entitySchema->getDescription());
@@ -195,8 +203,10 @@ class SchemaParserTest extends TestCase
         $this->assertInstanceOf(IntegerSchema::class, $arrayItemSchema);
         $this->assertSame(2, $arrayItemSchema->getMultipleOf());
 
+        /** @var ReferenceSchema $objectSchemaReference */
+        $objectSchemaReference = $entitySchema->getPropertySchema('class');
         /** @var ObjectSchema $objectSchema */
-        $objectSchema = $entitySchema->getPropertySchema('class');
+        $objectSchema = $referencedSchemaBag->getSchema($objectSchemaReference->getReference());
         $this->assertInstanceOf(ObjectSchema::class, $objectSchema);
         $this->assertFalse($objectSchema->isNullable());
         $this->assertNull($objectSchema->getDescription());
@@ -220,12 +230,20 @@ class SchemaParserTest extends TestCase
         $this->assertFalse($objectUnionSchema->isNullable());
         $this->assertSame('type', $objectUnionSchema->getDiscriminatorPropertyName());
         $this->assertEquals([
-            'a' => new ObjectSchema([
+            'a' => new ReferenceSchema('AEnt'),
+            'b' => new ReferenceSchema('BEnt'),
+        ], $objectUnionSchema->getPossibleSchemas());
+        $this->assertEquals(
+            new ObjectSchema([
                 'type' => new StringSchema(),
             ], ['type'], false, null, 'AEnt'),
-            'b' => new ObjectSchema([
+            $referencedSchemaBag->getSchema('AEnt')
+        );
+        $this->assertEquals(
+            new ObjectSchema([
                 'type' => new StringSchema(),
             ], ['type'], false, null, 'BEnt'),
-        ], $objectUnionSchema->getPossibleSchemas());
+            $referencedSchemaBag->getSchema('BEnt')
+        );
     }
 }

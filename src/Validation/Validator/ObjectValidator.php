@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
+use ScrumWorks\OpenApiSchema\ReferencedSchemaBag;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
@@ -32,6 +33,7 @@ final class ObjectValidator extends AbstractValidator
     protected function doValidation(
         ValidationResultBuilder $resultBuilder,
         $data,
+        ReferencedSchemaBag $referencedSchemaBag,
         BreadCrumbPathInterface $breadCrumbPath
     ): void {
         if (! $this->validateNullable($resultBuilder, $data, $breadCrumbPath)) {
@@ -57,6 +59,7 @@ final class ObjectValidator extends AbstractValidator
             } else {
                 $propertyValidationResult = $this->valueValidator->validate(
                     $propertySchemas[$propertyName],
+                    $referencedSchemaBag,
                     $propertyData,
                     $breadCrumbPath->withNextBreadCrumb($propertyName))
                 ;
@@ -67,9 +70,10 @@ final class ObjectValidator extends AbstractValidator
 
     protected function collectPossibleViolationExamples(
         ValidationResultBuilder $resultBuilder,
+        ReferencedSchemaBag $referencedSchemaBag,
         BreadCrumbPathInterface $breadCrumbPath
     ): void {
-        parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+        parent::collectPossibleViolationExamples($resultBuilder, $referencedSchemaBag, $breadCrumbPath);
 
         $resultBuilder->addTypeViolation('object', $breadCrumbPath);
         $resultBuilder->addUnexpectedViolation($breadCrumbPath->withNextBreadCrumb('-unknown-property-'));
@@ -82,6 +86,7 @@ final class ObjectValidator extends AbstractValidator
             $resultBuilder->mergeViolations(
                 $this->valueValidator->getPossibleViolationExamples(
                     $propertySchema,
+                    $referencedSchemaBag,
                     $breadCrumbPath->withNextBreadCrumb($propertyName)
                 ),
             );

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation;
 
+use ScrumWorks\OpenApiSchema\ReferencedSchemaBag;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 interface ValueSchemaValidatorInterface
@@ -13,6 +14,7 @@ interface ValueSchemaValidatorInterface
      */
     public function validate(
         ValueSchemaInterface $schema,
+        ReferencedSchemaBag $referencedSchemaBag,
         $data,
         ?BreadCrumbPathInterface $breadCrumbPath = null
     ): ValidationResultInterface;
@@ -22,6 +24,7 @@ interface ValueSchemaValidatorInterface
      */
     public function getPossibleViolationExamples(
         ValueSchemaInterface $schema,
+        ReferencedSchemaBag $referencedSchemaBag,
         ?BreadCrumbPathInterface $breadCrumbPath = null
     ): array;
 }
