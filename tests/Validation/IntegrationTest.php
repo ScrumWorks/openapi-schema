@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
 use PHPUnit\Framework\TestCase;
+use ScrumWorks\OpenApiSchema\ClassReferenceBag;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
 use ScrumWorks\OpenApiSchema\SchemaParser;
@@ -17,6 +18,13 @@ use ScrumWorks\PropertyReader\VariableTypeUnifyService;
 class IntegrationTest extends TestCase
 {
     use CreateValidatorTrait;
+
+    protected ClassReferenceBag $referenceBag;
+
+    protected function setUp(): void
+    {
+        $this->referenceBag = new ClassReferenceBag();
+    }
 
     public function testValid(): void
     {
@@ -38,8 +46,9 @@ class IntegrationTest extends TestCase
         $schemaParser = $this->createSchemaParser();
         $validator = $this->createValueValidator();
 
-        $schema = $schemaParser->getEntitySchema(TestEntity::class);
-        $validationResult = $validator->validate($schema, $data);
+        $schema = $schemaParser->getEntitySchema(TestEntity::class, $this->referenceBag);
+        $referencedSchemaBag = $this->referenceBag->build();
+        $validationResult = $validator->validate($schema, $referencedSchemaBag, $data);
 
         $this->assertTrue($validationResult->isValid());
         $this->assertSame([], $validationResult->getViolations());
@@ -65,8 +74,9 @@ class IntegrationTest extends TestCase
         $schemaParser = $this->createSchemaParser();
         $validator = $this->createValueValidator();
 
-        $schema = $schemaParser->getEntitySchema(TestEntity::class);
-        $validationResult = $validator->validate($schema, $data);
+        $schema = $schemaParser->getEntitySchema(TestEntity::class, $this->referenceBag);
+        $referencedSchemaBag = $this->referenceBag->build();
+        $validationResult = $validator->validate($schema, $referencedSchemaBag, $data);
 
         $this->assertFalse($validationResult->isValid());
         $this->assertCount(3, $violations = $validationResult->getViolations());

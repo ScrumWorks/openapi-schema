@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
 use LogicException;
+use ScrumWorks\OpenApiSchema\ReferencedSchemaBag;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
 use ScrumWorks\OpenApiSchema\Validation\Validator\Format\DateTimeValidator;
@@ -19,6 +20,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ReferenceSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
@@ -39,8 +41,13 @@ class ValidatorFactory
 
     public function createValidator(
         ValueSchemaInterface $schema,
+        ReferencedSchemaBag $referencedSchemaBag,
         ValueSchemaValidatorInterface $valueSchemaValidator
     ): AbstractValidator {
+        while ($schema instanceof ReferenceSchema) {
+            $schema = $referencedSchemaBag->getSchema($schema->getReference());
+        }
+
         if ($schema instanceof ArraySchema) {
             return new ArrayValidator(
                 $this->breadCrumbPathFactory,

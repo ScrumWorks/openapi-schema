@@ -90,3 +90,9 @@ type: object
 minProperties: 2
 maxProperties: 10
 ```
+
+
+
+
+
+- problem ze pri teto implementadci

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Validation\Validator;
 
+use ScrumWorks\OpenApiSchema\ReferencedSchemaBag;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathFactoryInterface;
 use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
@@ -33,12 +34,15 @@ abstract class AbstractValidator
     /**
      * @param mixed $data
      */
-    public function validate($data, ?BreadCrumbPathInterface $breadCrumbPath = null): ValidationResultInterface
-    {
+    public function validate(
+        $data,
+        ReferencedSchemaBag $referencedSchemaBag,
+        ?BreadCrumbPathInterface $breadCrumbPath = null
+    ): ValidationResultInterface {
         $breadCrumbPath ??= $this->breadCrumbPathFactory->create();
         $resultBuilder = $this->validationResultBuilderFactory->create();
 
-        $this->doValidation($resultBuilder, $data, $breadCrumbPath);
+        $this->doValidation($resultBuilder, $data, $referencedSchemaBag, $breadCrumbPath);
 
         return $resultBuilder->createResult();
     }
@@ -46,12 +50,14 @@ abstract class AbstractValidator
     /**
      * @return ValidityViolationInterface[]
      */
-    public function getPossibleViolationExamples(?BreadCrumbPathInterface $breadCrumbPath = null): array
-    {
+    public function getPossibleViolationExamples(
+        ReferencedSchemaBag $referencedSchemaBag,
+        ?BreadCrumbPathInterface $breadCrumbPath = null
+    ): array {
         $breadCrumbPath ??= $this->breadCrumbPathFactory->create();
         $resultBuilder = $this->validationResultBuilderFactory->create();
 
-        $this->collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
+        $this->collectPossibleViolationExamples($resultBuilder, $referencedSchemaBag, $breadCrumbPath);
 
         return $resultBuilder->createResult()->getViolations();
     }
@@ -78,6 +84,7 @@ abstract class AbstractValidator
 
     protected function collectPossibleViolationExamples(
         ValidationResultBuilder $resultBuilder,
+        ReferencedSchemaBag $referencedSchemaBag,
         BreadCrumbPathInterface $breadCrumbPath
     ): void {
         if (! $this->schema->isNullable()) {
@@ -91,6 +98,7 @@ abstract class AbstractValidator
     abstract protected function doValidation(
         ValidationResultBuilder $resultBuilder,
         $data,
+        ReferencedSchemaBag $referencedSchemaBag,
         BreadCrumbPathInterface $breadCrumbPath
     ): void;
 }

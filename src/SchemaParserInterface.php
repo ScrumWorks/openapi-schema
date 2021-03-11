@@ -9,7 +9,10 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 interface SchemaParserInterface
 {
-    public function getEntitySchema(string $class): ValueSchemaInterface;
+    public function getEntitySchema(string $class, ClassReferenceBag $referenceBag): ValueSchemaInterface;
 
-    public function getPropertySchema(ReflectionProperty $propertyReflection): ValueSchemaInterface;
+    public function getPropertySchema(
+        ReflectionProperty $propertyReflection,
+        ClassReferenceBag $referenceBag
+    ): ValueSchemaInterface;
 }

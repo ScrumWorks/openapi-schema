@@ -11,6 +11,7 @@ use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\AbstractAnnotationSchemaDec
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertySchemaDecoratorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ClassReferenceSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\EnumSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\FloatSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\HashmapSchemaBuilder;
@@ -247,6 +248,9 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
 
             if ($discriminator = $annotation->discriminator) {
                 foreach ($possibleSchemaBuilders as $possibleSchemaBuilder) {
+                    if ($possibleSchemaBuilder instanceof ClassReferenceSchemaBuilder) {
+                        $possibleSchemaBuilder = $possibleSchemaBuilder->getReferencedSchemaBuilder();
+                    }
                     if (
                         ! $possibleSchemaBuilder instanceof ObjectSchemaBuilder
                         || ! isset($possibleSchemaBuilder->getPropertiesSchemaBuilders()[$discriminator])
@@ -262,7 +266,13 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
             if ($annotation->mapping !== null) {
                 $possibleSchemaBuildersMap = [];
                 foreach ($possibleSchemaBuilders as $possibleSchemaBuilder) {
-                    if ($schemaName = $possibleSchemaBuilder->getSchemaName()) {
+                    if ($possibleSchemaBuilder instanceof ClassReferenceSchemaBuilder) {
+                        $schemaName = $possibleSchemaBuilder->getReferencedSchemaBuilder()->getSchemaName();
+                    } else {
+                        $schemaName = $possibleSchemaBuilder->getSchemaName();
+                    }
+
+                    if ($schemaName) {
                         $possibleSchemaBuildersMap[$schemaName] = $possibleSchemaBuilder;
                     } else {
                         throw new LogicException(

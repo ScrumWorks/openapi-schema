@@ -17,13 +17,15 @@ class SchemaParser implements SchemaParserInterface
         $this->schemaBuilderFactory = $schemaBuilderFactory;
     }
 
-    public function getEntitySchema(string $class): ValueSchemaInterface
+    public function getEntitySchema(string $class, ClassReferenceBag $referenceBag): ValueSchemaInterface
     {
-        return $this->schemaBuilderFactory->createForClass($class)->build();
+        return $this->schemaBuilderFactory->createForClass($class, $referenceBag)->build();
     }
 
-    public function getPropertySchema(ReflectionProperty $propertyReflection): ValueSchemaInterface
-    {
-        return $this->schemaBuilderFactory->createForProperty($propertyReflection)->build();
+    public function getPropertySchema(
+        ReflectionProperty $propertyReflection,
+        ClassReferenceBag $referenceBag
+    ): ValueSchemaInterface {
+        return $this->schemaBuilderFactory->createForProperty($propertyReflection, $referenceBag)->build();
     }
 }
