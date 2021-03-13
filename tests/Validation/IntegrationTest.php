@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
 use PHPUnit\Framework\TestCase;
-use ScrumWorks\OpenApiSchema\DiContainer;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
+use ScrumWorks\OpenApiSchema\Tests\DiTrait;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\TestEntity;
 
 class IntegrationTest extends TestCase
 {
     use CreateValidatorTrait;
+    use DiTrait;
 
     public function testValid(): void
     {
@@ -81,6 +82,6 @@ class IntegrationTest extends TestCase
 
     private function createSchemaParser(): SchemaParserInterface
     {
-        return (new DiContainer())->getSchemaParser();
+        return $this->getServiceFromContainerByType(SchemaParserInterface::class);
     }
 }
