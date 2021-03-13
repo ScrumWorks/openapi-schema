@@ -6,7 +6,6 @@ namespace ScrumWorks\OpenApiSchema\Tests;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
-use ScrumWorks\OpenApiSchema\DiContainer;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
@@ -105,11 +104,13 @@ class TestEntity
 
 class SchemaParserTest extends TestCase
 {
+    use DiTrait;
+
     protected SchemaParserInterface $schemaParser;
 
     protected function setUp(): void
     {
-        $this->schemaParser = (new DiContainer())->getSchemaParser();
+        $this->schemaParser = $this->getServiceFromContainerByType(SchemaParserInterface::class);
     }
 
     public function testNonExistingEntity(): void
