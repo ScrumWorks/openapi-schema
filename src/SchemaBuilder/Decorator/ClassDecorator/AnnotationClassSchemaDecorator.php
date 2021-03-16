@@ -9,14 +9,19 @@ use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\AbstractAnnotationSchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassSchemaDecoratorInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 
 final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecorator implements ClassSchemaDecoratorInterface
 {
-    public function decorateObjectSchemaBuilder(
-        ObjectSchemaBuilder $builder,
+    public function decorateClassSchemaBuilder(
+        AbstractSchemaBuilder $builder,
         ReflectionClass $classReflection
-    ): ObjectSchemaBuilder {
+    ): AbstractSchemaBuilder {
+        if (! $builder instanceof ObjectSchemaBuilder) {
+            return $builder;
+        }
+
         $objectDefaultValues = $classReflection->getDefaultProperties();
         $requiredProperties = [];
         foreach ($classReflection->getProperties() as $propertyReflection) {

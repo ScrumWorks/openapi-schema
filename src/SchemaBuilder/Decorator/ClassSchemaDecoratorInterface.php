@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator;
 
 use ReflectionClass;
-use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 
 interface ClassSchemaDecoratorInterface
 {
-    public function decorateObjectSchemaBuilder(
-        ObjectSchemaBuilder $builder,
+    public function decorateClassSchemaBuilder(
+        AbstractSchemaBuilder $builder,
         ReflectionClass $classReflection
-    ): ObjectSchemaBuilder;
+    ): AbstractSchemaBuilder;
 }

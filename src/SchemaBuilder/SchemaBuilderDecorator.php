@@ -9,7 +9,6 @@ use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassSchemaDecoratorInterface;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertySchemaDecoratorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 
 class SchemaBuilderDecorator
 {
@@ -34,11 +33,11 @@ class SchemaBuilderDecorator
     }
 
     public function decorateClassSchemaBuilder(
-        ObjectSchemaBuilder $builder,
+        AbstractSchemaBuilder $builder,
         ReflectionClass $classReflection
     ): AbstractSchemaBuilder {
-        foreach ($this->classDecorators as $propertyDecorator) {
-            $builder = $propertyDecorator->decorateObjectSchemaBuilder($builder, $classReflection);
+        foreach ($this->classDecorators as $classDecorator) {
+            $builder = $classDecorator->decorateClassSchemaBuilder($builder, $classReflection);
         }
 
         return $builder;

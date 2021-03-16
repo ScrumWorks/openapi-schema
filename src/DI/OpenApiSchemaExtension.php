@@ -12,6 +12,7 @@ use Nette\DI\Definitions\ServiceDefinition;
 use Nette\PhpGenerator\ClassType;
 use ScrumWorks\OpenApiSchema\OpenApiTranslator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator\AnnotationClassSchemaDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator\DateTimeClassSchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertyDecorator\AnnotationPropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
@@ -34,6 +35,8 @@ class OpenApiSchemaExtension extends CompilerExtension
     {
         parent::beforeCompile();
 
+        $this->addService('dateTimeClassSchemaDecorator', DateTimeClassSchemaDecorator::class)
+            ->addTag(self::TAG_PRIORITY, 90);
         $this->addService('annotationClassSchemaDecorator', AnnotationClassSchemaDecorator::class)
             ->addTag(self::TAG_PRIORITY, 100);
         $this->addService('annotationPropertySchemaDecorator', AnnotationPropertySchemaDecorator::class)

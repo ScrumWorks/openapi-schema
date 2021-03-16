@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
@@ -100,6 +101,11 @@ class TestEntity
      * @OA\Union(discriminator="type", mapping={ "a": "AEnt", "b": "BEnt" })
      */
     public $objectUnion;
+
+    /**
+     * @OA\Property(description="Moment")
+     */
+    public ?DateTimeInterface $dateTime = null;
 }
 
 class SchemaParserTest extends TestCase
@@ -228,5 +234,12 @@ class SchemaParserTest extends TestCase
                 'type' => new StringSchema(),
             ], ['type'], false, null, 'BEnt'),
         ], $objectUnionSchema->getPossibleSchemas());
+
+        /** @var StringSchema $dateTimeSchema */
+        $dateTimeSchema = $entitySchema->getPropertySchema('dateTime');
+        $this->assertInstanceOf(StringSchema::class, $dateTimeSchema);
+        $this->assertTrue($dateTimeSchema->isNullable());
+        $this->assertSame('Moment', $dateTimeSchema->getDescription());
+        $this->assertSame('date-time', $dateTimeSchema->getFormat());
     }
 }
