@@ -6,14 +6,19 @@ namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator;
 
 use ReflectionClass;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassSchemaDecoratorInterface;
+use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 
 final class BasicClassSchemaDecorator implements ClassSchemaDecoratorInterface
 {
-    public function decorateObjectSchemaBuilder(
-        ObjectSchemaBuilder $builder,
+    public function decorateClassSchemaBuilder(
+        AbstractSchemaBuilder $builder,
         ReflectionClass $classReflexion
-    ): ObjectSchemaBuilder {
+    ): AbstractSchemaBuilder {
+        if (! $builder instanceof ObjectSchemaBuilder) {
+            return $builder;
+        }
+
         $objectDefaultValues = $classReflexion->getDefaultProperties();
         $requiredProperties = [];
         foreach (\array_keys($builder->getPropertiesSchemaBuilders()) as $propertyName) {
