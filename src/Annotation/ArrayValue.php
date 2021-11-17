@@ -28,7 +28,6 @@ final class ArrayValue implements ValueInterface
     public ?bool $uniqueItems = null;
 
     /**
-     * @codingStandardsIgnoreLine
      * @var \ScrumWorks\OpenApiSchema\Annotation\ValueInterface we can't FQN, because shitty doctrine annotations
      */
     public ?ValueInterface $itemsSchema = null;

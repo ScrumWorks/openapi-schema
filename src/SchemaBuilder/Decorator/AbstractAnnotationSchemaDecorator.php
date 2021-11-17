@@ -7,7 +7,7 @@ namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator;
 use Doctrine\Common\Annotations\Reader;
 use ReflectionClass;
 use ReflectionProperty;
-use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Annotation\ValueInterface;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 
 abstract class AbstractAnnotationSchemaDecorator
@@ -50,7 +50,7 @@ abstract class AbstractAnnotationSchemaDecorator
                 $found = $annotation;
             } elseif (
                 $exceptionOnAnotherValueInterface
-                && is_subclass_of($annotation, OA\ValueInterface::class)
+                && is_subclass_of($annotation, ValueInterface::class)
             ) {
                 throw new LogicException(sprintf("Unexpected annotation '%s'", \get_class($annotation)));
             }

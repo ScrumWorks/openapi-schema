@@ -2,17 +2,14 @@
 
 declare(strict_types=1);
 
-//use PhpCsFixer\Fixer\Basic\Psr4Fixer;
 use PhpCsFixer\Fixer\Casing\NativeFunctionCasingFixer;
+use PhpCsFixer\Fixer\ClassNotation\ProtectedToPrivateFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer;
 use PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer;
 use PhpCsFixer\Fixer\Import\GlobalNamespaceImportFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocLineSpanFixer;
-use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
-use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
-use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use PhpCsFixer\Fixer\Whitespace\IndentationTypeFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use SlevomatCodingStandard\Sniffs\Arrays\DisallowImplicitArrayCreationSniff;
@@ -21,6 +18,7 @@ use SlevomatCodingStandard\Sniffs\Classes\UselessLateStaticBindingSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\RequireNullCoalesceOperatorSniff;
 use SlevomatCodingStandard\Sniffs\Exceptions\DeadCatchSniff;
 use SlevomatCodingStandard\Sniffs\Functions\StaticClosureSniff;
+use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
 use SlevomatCodingStandard\Sniffs\Namespaces\UseFromSameNamespaceSniff;
 use SlevomatCodingStandard\Sniffs\PHP\OptimizedFunctionsWithoutUnpackingSniff;
 use SlevomatCodingStandard\Sniffs\PHP\UselessParenthesesSniff;
@@ -51,47 +49,28 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::CLEAN_CODE);
 
     $parameters->set(Option::SKIP, [
-        __DIR__ . '/src/SchemaBuilder/Decorator/PropertyDecorator/AnnotationPropertySchemaDecorator.php',
-        __DIR__ . '/src/Validation/Validator/UnionValidator.php',
+        // allowed
+        \PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff::class . '.FoundInWhileCondition',
 
-//        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME_WITHOUT_NAMESPACE => null,
-//        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_PARTIAL_USE => null,
-//
-//        // we can't use FQN in doctrine annotations
-//        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME => [
-//            __DIR__ . '/src/Annotation/ArrayValue.php',
-//            __DIR__ . '/src/Annotation/HashmapValue.php',
-//            __DIR__ . '/src/Annotation/Union.php',
-//        ],
-//        UseFromSameNamespaceSniff::class . '.' . UseFromSameNamespaceSniff::CODE_USE_FROM_SAME_NAMESPACE => [
-//            __DIR__ . '/src/Annotation/ArrayValue.php',
-//            __DIR__ . '/src/Annotation/HashmapValue.php',
-//            __DIR__ . '/src/Annotation/Union.php',
-//        ],
-//
-//        # resolve later with strict_types
-//        DeclareStrictTypesFixer::class => null,
-//        StrictComparisonFixer::class => null,
+        // we can't use FQN in doctrine annotations
+        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME => [
+            __DIR__ . '/src/Annotation/ArrayValue.php',
+            __DIR__ . '/src/Annotation/HashmapValue.php',
+            __DIR__ . '/src/Annotation/Union.php',
+            __DIR__ . '/src/Annotation/HashmapValue.php',
+        ],
+
+        // compare 2 object contents
         PhpUnitStrictFixer::class => [
-            // compare 2 object contents
             __DIR__ . '/tests/ValueSchema/Builder',
             __DIR__ . '/tests/SchemaParserTest.php',
             __DIR__ . '/tests/OpenApiTranslatorTest.php',
         ],
-//        StrictParamFixer::class => null,
-//        # breaks code
-//        ReferenceThrowableOnlySniff::class . '.' . ReferenceThrowableOnlySniff::CODE_REFERENCED_GENERAL_EXCEPTION => null,
-//        Psr4Fixer::class => null,
-//        UnusedUsesSniff::class . '.' . UnusedUsesSniff::CODE_MISMATCHING_CASE => [
-//            __DIR__ . '/tests/*',
-//        ],
     ]);
 
     $services = $containerConfigurator->services();
 
-    // @todo fix
-    // $services->set(ProtectedToPrivateFixer::class);
-
+    $services->set(ProtectedToPrivateFixer::class);
     $services->set(MethodChainingIndentationFixer::class);
 
     $services->set(GeneralPhpdocAnnotationRemoveFixer::class)
@@ -106,11 +85,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(LineLengthFixer::class);
 
     # imports FQN names
-//    $services->set(ReferenceUsedNamesOnlySniff::class)
-//        ->property('searchAnnotations', true)
-//        ->property('allowFullyQualifiedGlobalFunctions', true)
-//        ->property('allowFullyQualifiedGlobalConstants', true)
-//        ->property('allowPartialUses', false);
+    $services->set(ReferenceUsedNamesOnlySniff::class)
+        ->property('searchAnnotations', true)
+        ->property('allowFullyQualifiedGlobalFunctions', true)
+        ->property('allowFullyQualifiedGlobalConstants', true)
+        ->property('allowPartialUses', false);
 
     # make @var annotation into doc block
     $services->set(PhpdocLineSpanFixer::class);
@@ -123,9 +102,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # make @param, @return and @var format united
     $services->set(ParamReturnAndVarTagMalformsFixer::class);
 
-    # spaces
-    // $services->set(RemoveSpacingAroundModifierAndConstFixer::class);
-
     # use 4 spaces to indent
     $services->set(IndentationTypeFixer::class);
 
@@ -134,31 +110,19 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     # import namespaces
     $services->set(FullyQualifiedStrictTypesFixer::class);
-
     $services->set(GlobalNamespaceImportFixer::class);
 
-    # slevomat rules from ruleset.xml
+    // slevomat rules
     $services->set(UseFromSameNamespaceSniff::class);
-
     $services->set(DuplicateAssignmentToVariableSniff::class);
-
     $services->set(OptimizedFunctionsWithoutUnpackingSniff::class);
-
     $services->set(UselessSemicolonSniff::class);
-
     $services->set(DeadCatchSniff::class);
-
     $services->set(UselessVariableSniff::class);
-
     $services->set(UselessParenthesesSniff::class);
-
     $services->set(DisallowLateStaticBindingForConstantsSniff::class);
-
     $services->set(UselessLateStaticBindingSniff::class);
-
     $services->set(RequireNullCoalesceOperatorSniff::class);
-
     $services->set(StaticClosureSniff::class);
-
     $services->set(DisallowImplicitArrayCreationSniff::class);
 };

@@ -18,7 +18,6 @@ final class HashmapValue implements ValueInterface
     public array $requiredProperties = [];
 
     /**
-     * @codingStandardsIgnoreLine
      * @var \ScrumWorks\OpenApiSchema\Annotation\ValueInterface we can't FQN, because shitty doctrine annotations
      */
     public ?ValueInterface $itemsSchema = null;

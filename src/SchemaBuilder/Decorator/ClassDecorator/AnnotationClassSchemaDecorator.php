@@ -6,7 +6,8 @@ namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator;
 
 use ReflectionClass;
 use ReflectionProperty;
-use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Annotation\ComponentSchema;
+use ScrumWorks\OpenApiSchema\Annotation\Property;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\AbstractAnnotationSchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassSchemaDecoratorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
@@ -34,9 +35,9 @@ final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecor
         }
 
         $classAnnotations = $this->getClassAnnotations($classReflection);
-        /** @var ?OA\ComponentSchema $componentSchema */
-        $componentSchema = $this->findAnnotation($classAnnotations, OA\ComponentSchema::class, true);
-        if ($componentSchema && $componentSchema->schemaName) {
+
+        $componentSchema = $this->findAnnotation($classAnnotations, ComponentSchema::class, true);
+        if ($componentSchema instanceof ComponentSchema && $componentSchema->schemaName) {
             $builder = $builder->withSchemaName($componentSchema->schemaName);
         }
 
@@ -46,9 +47,9 @@ final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecor
     private function isPropertyRequired(ReflectionProperty $propertyReflection, array $objectDefaultValues): bool
     {
         $annotations = $this->getPropertyAnnotations($propertyReflection);
-        /** @var ?OA\Property $annotation */
-        $annotation = $this->findAnnotation($annotations, OA\Property::class, false);
-        if ($annotation && $annotation->required !== null) {
+
+        $annotation = $this->findAnnotation($annotations, Property::class, false);
+        if ($annotation instanceof Property && $annotation->required !== null) {
             return $annotation->required;
         }
         return ! \array_key_exists($propertyReflection->getName(), $objectDefaultValues);

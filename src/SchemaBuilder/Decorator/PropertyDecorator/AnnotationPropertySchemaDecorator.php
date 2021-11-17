@@ -5,7 +5,14 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertyDecorator;
 
 use ReflectionProperty;
-use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Annotation\ArrayValue;
+use ScrumWorks\OpenApiSchema\Annotation\EnumValue;
+use ScrumWorks\OpenApiSchema\Annotation\FloatValue;
+use ScrumWorks\OpenApiSchema\Annotation\HashmapValue;
+use ScrumWorks\OpenApiSchema\Annotation\IntegerValue;
+use ScrumWorks\OpenApiSchema\Annotation\Property;
+use ScrumWorks\OpenApiSchema\Annotation\StringValue;
+use ScrumWorks\OpenApiSchema\Annotation\Union;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\AbstractAnnotationSchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertySchemaDecoratorInterface;
@@ -68,9 +75,9 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
         AbstractSchemaBuilder $builder,
         array $annotations
     ): AbstractSchemaBuilder {
-        $annotation = $this->findAnnotation($annotations, OA\Property ::class, false);
+        $annotation = $this->findAnnotation($annotations, Property ::class, false);
 
-        if ($annotation instanceof OA\Property) {
+        if ($annotation instanceof Property) {
             if ($annotation->description !== null) {
                 $builder = $builder->withDescription($annotation->description);
             }
@@ -87,8 +94,9 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
         IntegerSchemaBuilder $builder,
         array $annotations
     ): AbstractSchemaBuilder {
-        $annotation = $this->findAnnotation($annotations, OA\IntegerValue::class);
-        if ($annotation instanceof OA\IntegerValue) {
+        $annotation = $this->findAnnotation($annotations, IntegerValue::class);
+
+        if ($annotation instanceof IntegerValue) {
             if ($annotation->minimum !== null) {
                 $builder = $builder->withMinimum($annotation->minimum);
             }
@@ -113,9 +121,9 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
         FloatSchemaBuilder $builder,
         array $annotations
     ): AbstractSchemaBuilder {
-        $annotation = $this->findAnnotation($annotations, OA\FloatValue::class);
+        $annotation = $this->findAnnotation($annotations, FloatValue::class);
 
-        if ($annotation instanceof OA\FloatValue) {
+        if ($annotation instanceof FloatValue) {
             if ($annotation->minimum !== null) {
                 $builder = $builder->withMinimum($annotation->minimum);
             }
@@ -140,14 +148,14 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
         StringSchemaBuilder $builder,
         array $annotations
     ): AbstractSchemaBuilder {
-        if ($this->findAnnotation($annotations, OA\EnumValue::class, false)) {
+        if ($this->findAnnotation($annotations, EnumValue::class, false)) {
             $builder = (new EnumSchemaBuilder())
                 ->withNullable($builder->isNullable());
             return $this->decorateEnumSchemaBuilder($builder, $annotations);
         }
 
-        $annotation = $this->findAnnotation($annotations, OA\StringValue::class);
-        if ($annotation instanceof OA\StringValue) {
+        $annotation = $this->findAnnotation($annotations, StringValue::class);
+        if ($annotation instanceof StringValue) {
             if ($annotation->minLength !== null) {
                 $builder = $builder->withMinLength($annotation->minLength);
             }
@@ -169,8 +177,8 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
         EnumSchemaBuilder $builder,
         array $annotations
     ): AbstractSchemaBuilder {
-        $annotation = $this->findAnnotation($annotations, OA\EnumValue::class);
-        if ($annotation instanceof OA\EnumValue) {
+        $annotation = $this->findAnnotation($annotations, EnumValue::class);
+        if ($annotation instanceof EnumValue) {
             if ($annotation->enum) {
                 $builder = $builder->withEnum($annotation->enum);
             }
@@ -183,8 +191,9 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
         ArraySchemaBuilder $builder,
         array $annotations
     ): AbstractSchemaBuilder {
-        $annotation = $this->findAnnotation($annotations, OA\ArrayValue::class);
-        if ($annotation instanceof OA\ArrayValue) {
+        $annotation = $this->findAnnotation($annotations, ArrayValue::class);
+
+        if ($annotation instanceof ArrayValue) {
             if ($annotation->minItems !== null) {
                 $builder = $builder->withMinItems($annotation->minItems);
             }
@@ -194,7 +203,9 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
             if ($annotation->uniqueItems !== null) {
                 $builder = $builder->withUniqueItems($annotation->uniqueItems);
             }
-            if ($annotation->itemsSchema !== null && ($itemsBuilder = $builder->getItemsSchemaBuilder())) {
+
+            $itemsBuilder = $builder->getItemsSchemaBuilder();
+            if ($annotation->itemsSchema !== null && $itemsBuilder) {
                 $itemsBuilder = $this->decoratePropertySchemaBuilderFromAnnotations(
                     $itemsBuilder,
                     [$annotation->itemsSchema]
@@ -210,14 +221,16 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
         HashmapSchemaBuilder $builder,
         array $annotations
     ): AbstractSchemaBuilder {
-        $annotation = $this->findAnnotation($annotations, OA\HashmapValue::class);
+        $annotation = $this->findAnnotation($annotations, HashmapValue::class);
 
-        if ($annotation instanceof OA\HashmapValue) {
+        if ($annotation instanceof HashmapValue) {
             if ($annotation->requiredProperties !== null) {
                 $builder = $builder->withRequiredProperties($annotation->requiredProperties);
             }
 
-            if ($annotation->itemsSchema !== null && ($itemsBuilder = $builder->getItemsSchemaBuilder())) {
+            $itemsBuilder = $builder->getItemsSchemaBuilder();
+
+            if ($annotation->itemsSchema !== null && $itemsBuilder) {
                 $itemsBuilder = $this->decoratePropertySchemaBuilderFromAnnotations(
                     $itemsBuilder,
                     [$annotation->itemsSchema]
@@ -233,10 +246,9 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
         UnionSchemaBuilder $builder,
         array $annotations
     ): AbstractSchemaBuilder {
-        $annotation = $this->findAnnotation($annotations, OA\Union::class);
+        $annotation = $this->findAnnotation($annotations, Union::class);
 
-        if ($annotation) {
-            /** @var OA\Union $annotation */
+        if ($annotation instanceof Union) {
             $possibleSchemaBuilders = $builder->getPossibleSchemaBuilders();
             $annotatedBuilders = [];
             $typeAnnotations = $annotation->types ?? [];

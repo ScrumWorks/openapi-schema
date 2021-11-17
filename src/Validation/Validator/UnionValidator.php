@@ -10,6 +10,7 @@ use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
 use ScrumWorks\OpenApiSchema\Validation\ValueSchemaValidatorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 final class UnionValidator extends AbstractValidator
 {
@@ -38,19 +39,23 @@ final class UnionValidator extends AbstractValidator
             return;
         }
 
-        if ($discriminatorName = $this->schema->getDiscriminatorPropertyName()) {
+        $discriminatorName = $this->schema->getDiscriminatorPropertyName();
+        if ($discriminatorName) {
             if (! \is_object($data)) {
                 $resultBuilder->addTypeViolation('object', $breadCrumbPath);
             } elseif (! property_exists($data, $discriminatorName)) {
                 $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb($discriminatorName));
-            } elseif (! ($discriminatorSchema = $this->schema->getPossibleSchemas()[$data->{$discriminatorName}] ?? null)) {
-                $resultBuilder->addEnumViolation(
-                    array_keys($this->schema->getPossibleSchemas()),
-                    $breadCrumbPath->withNextBreadCrumb($discriminatorName)
-                );
             } else {
-                $validationResult = $this->valueValidator->validate($discriminatorSchema, $data, $breadCrumbPath);
-                $resultBuilder->mergeResult($validationResult);
+                $discriminatorSchema = $this->schema->getPossibleSchemas()[$data->{$discriminatorName}] ?? null;
+                if (! $discriminatorSchema instanceof ValueSchemaInterface) {
+                    $resultBuilder->addEnumViolation(
+                        array_keys($this->schema->getPossibleSchemas()),
+                        $breadCrumbPath->withNextBreadCrumb($discriminatorName)
+                    );
+                } else {
+                    $validationResult = $this->valueValidator->validate($discriminatorSchema, $data, $breadCrumbPath);
+                    $resultBuilder->mergeResult($validationResult);
+                }
             }
         } else {
             // `oneOf` semantics applied
