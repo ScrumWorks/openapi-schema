@@ -6,7 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
 
 /**
  * @Annotation
- * @Target("PROPERTY")
+ * @\Doctrine\Common\Annotations\Annotation\Target("PROPERTY")
  *
  * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
  */

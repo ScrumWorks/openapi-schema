@@ -10,6 +10,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set(DoctrineAnnotationClassToAttributeRector::class)
         ->call('configure', [[
-            DoctrineAnnotationClassToAttributeRector::REMOVE_ANNOTATIONS => true,
+            DoctrineAnnotationClassToAttributeRector::REMOVE_ANNOTATIONS => false,
         ]]);
 };

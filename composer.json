@@ -15,7 +15,7 @@
         "ext-json": "*",
         "nette/di": "^3.0",
         "nette/utils": "^3.1",
-        "php": ">=7.4",
+        "php": ">=8.0",
         "scrumworks/property-reader": "^0.3.1",
         "koriym/attributes": "^1.0"
     },
