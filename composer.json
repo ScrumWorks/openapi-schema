@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "doctrine/annotations": "^1.11",
+        "doctrine/annotations": "^1.13",
         "ext-json": "*",
         "nette/di": "^3.0",
         "nette/utils": "^3.1",
@@ -19,27 +19,24 @@
         "scrumworks/property-reader": "^0.3.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.4.2",
+        "phpunit/phpunit": "^9.5",
         "php-parallel-lint/php-parallel-lint": "^1.2",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^0.12.48",
-        "phpstan/phpstan-nette": "^0.12.0",
-        "symplify/easy-coding-standard": "^8.3",
-        "symplify/easy-testing": "^8.3",
-        "migrify/template-checker": "^0.3.49",
-        "symplify/phpstan-extensions": "^8.3",
-        "slevomat/coding-standard": "^6.4"
+        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan-nette": "^1.0",
+        "symplify/easy-coding-standard": "^10.0",
+        "symplify/easy-testing": "^10.0",
+        "symplify/easy-ci": "^10.0",
+        "symplify/phpstan-extensions": "^10.0"
     },
     "autoload": {
         "psr-4": {
-            "ScrumWorks\\OpenApiSchema\\": [
-                "src"
-            ]
+            "ScrumWorks\\OpenApiSchema\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ScrumWorks\\OpenApiSchema\\Tests\\": "tests/"
+            "ScrumWorks\\OpenApiSchema\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -49,5 +46,7 @@
         "phpstan" : "php -d memory_limit=2048M vendor/bin/phpstan.phar analyse --ansi --error-format symplify",
         "phpunit": "php vendor/bin/phpunit -c ./phpunit.xml",
         "test": ["@lint", "@check-cs", "@phpstan", "@phpunit"]
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
