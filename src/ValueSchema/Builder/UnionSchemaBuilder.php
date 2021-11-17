@@ -57,7 +57,7 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
 
     public function build(): UnionSchema
     {
-        $possibleSchemas = \array_map(
+        $possibleSchemas = array_map(
             static fn (AbstractSchemaBuilder $builder) => $builder->build(),
             $this->possibleSchemaBuilders
         );

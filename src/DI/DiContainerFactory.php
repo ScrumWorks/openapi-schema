@@ -16,7 +16,7 @@ class DiContainerFactory
 
     public function __construct(?string $tempDir = null, bool $autoRebuild = false)
     {
-        $this->tempDir = $tempDir ?? \sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'ScrumWorksOpenApiSchema';
+        $this->tempDir = $tempDir ?? sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'ScrumWorksOpenApiSchema';
         $this->autoRebuild = $autoRebuild;
     }
 

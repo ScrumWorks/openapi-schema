@@ -200,7 +200,7 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'array:full' => [
-                new ArraySchema(new StringSchema(), 1, 3, true, false, 'array', ),
+                new ArraySchema(new StringSchema(), 1, 3, true, false, 'array',),
                 [
                     'type' => 'array',
                     'items' => [

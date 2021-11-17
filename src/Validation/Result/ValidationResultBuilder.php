@@ -149,12 +149,12 @@ class ValidationResultBuilder
 
     public function createResult(): ValidationResultInterface
     {
-        return new ValidationResult(\array_values($this->validityViolations));
+        return new ValidationResult(array_values($this->validityViolations));
     }
 
     protected function addViolation(ValidityViolationInterface $validityViolation): self
     {
-        $this->validityViolations[\serialize($validityViolation)] = $validityViolation;
+        $this->validityViolations[serialize($validityViolation)] = $validityViolation;
         return $this;
     }
 }

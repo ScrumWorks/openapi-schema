@@ -29,6 +29,11 @@ abstract class AbstractAnnotationSchemaDecorator
         return $this->annotationReader->getClassAnnotations($classReflection);
     }
 
+    /**
+     * @template T as object
+     * @param class-string<T> $annotationClass
+     * @return T|null
+     */
     protected function findAnnotation(
         array $annotations,
         string $annotationClass,
@@ -45,9 +50,9 @@ abstract class AbstractAnnotationSchemaDecorator
                 $found = $annotation;
             } elseif (
                 $exceptionOnAnotherValueInterface
-                && \is_subclass_of($annotation, OA\ValueInterface::class)
+                && is_subclass_of($annotation, OA\ValueInterface::class)
             ) {
-                throw new LogicException(\sprintf("Unexpected annotation '%s'", \get_class($annotation)));
+                throw new LogicException(sprintf("Unexpected annotation '%s'", \get_class($annotation)));
             }
         }
 

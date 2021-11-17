@@ -56,7 +56,7 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
 
     public function build(): ObjectSchema
     {
-        $propertySchemas = \array_map(
+        $propertySchemas = array_map(
             static fn (AbstractSchemaBuilder $builder) => $builder->build(),
             $this->propertiesSchemaBuilders
         );

@@ -226,6 +226,7 @@ class SchemaParserTest extends TestCase
         $this->assertInstanceOf(UnionSchema::class, $objectUnionSchema);
         $this->assertFalse($objectUnionSchema->isNullable());
         $this->assertSame('type', $objectUnionSchema->getDiscriminatorPropertyName());
+
         $this->assertEquals([
             'a' => new ObjectSchema([
                 'type' => new StringSchema(),

@@ -21,7 +21,7 @@ final class BasicClassSchemaDecorator implements ClassSchemaDecoratorInterface
 
         $objectDefaultValues = $classReflexion->getDefaultProperties();
         $requiredProperties = [];
-        foreach (\array_keys($builder->getPropertiesSchemaBuilders()) as $propertyName) {
+        foreach (array_keys($builder->getPropertiesSchemaBuilders()) as $propertyName) {
             if (! \array_key_exists($propertyName, $objectDefaultValues)) {
                 $requiredProperties[] = $propertyName;
             }

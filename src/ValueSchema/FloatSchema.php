@@ -65,13 +65,13 @@ final class FloatSchema extends AbstractValueSchema
     protected function validate(): void
     {
         if ($this->minimum !== null && $this->minimum < 0) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'minimum'", $this->minimum));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'minimum'", $this->minimum));
         }
         if ($this->maximum !== null && $this->maximum < 0) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maximum'", $this->maximum));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'maximum'", $this->maximum));
         }
         if ($this->minimum !== null && $this->maximum !== null && $this->maximum < $this->minimum) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maximum'", $this->maximum));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'maximum'", $this->maximum));
         }
         if ($this->minimum === null && $this->exclusiveMinimum !== null) {
             throw new InvalidArgumentException("Can't set 'exclusiveMinimum' without 'minimum' argument");

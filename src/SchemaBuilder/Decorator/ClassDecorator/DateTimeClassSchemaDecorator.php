@@ -16,7 +16,7 @@ final class DateTimeClassSchemaDecorator implements ClassSchemaDecoratorInterfac
         AbstractSchemaBuilder $builder,
         ReflectionClass $classReflection
     ): AbstractSchemaBuilder {
-        if (\is_a($classReflection->getName(), DateTimeInterface::class, true)) {
+        if (is_a($classReflection->getName(), DateTimeInterface::class, true)) {
             return (new StringSchemaBuilder())
                 ->withNullable($builder->isNullable())
                 ->withSchemaName($builder->getSchemaName())

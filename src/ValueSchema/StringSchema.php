@@ -56,13 +56,13 @@ final class StringSchema extends AbstractValueSchema
     protected function validate(): void
     {
         if ($this->minLength !== null && $this->minLength < 0) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'minLength'", $this->minLength));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'minLength'", $this->minLength));
         }
         if ($this->maxLength !== null && $this->maxLength < 0) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maxLength'", $this->maxLength));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'maxLength'", $this->maxLength));
         }
         if ($this->minLength !== null && $this->maxLength !== null && $this->maxLength < $this->minLength) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maxLength'", $this->maxLength));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'maxLength'", $this->maxLength));
         }
         // TODO assert for $pattern
         // TODO $format and $pattern is probably exclusive

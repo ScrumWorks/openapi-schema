@@ -48,7 +48,7 @@ final class ObjectSchema extends AbstractValueSchema
     public function getPropertySchema(string $property): ValueSchemaInterface
     {
         if (! isset($this->propertiesSchemas[$property])) {
-            throw new InvalidArgumentException(\sprintf("Property '%s' doesn't exists", $property));
+            throw new InvalidArgumentException(sprintf("Property '%s' doesn't exists", $property));
         }
         return $this->propertiesSchemas[$property];
     }
@@ -66,10 +66,10 @@ final class ObjectSchema extends AbstractValueSchema
         $properties = [];
         foreach ($this->propertiesSchemas as $property => $schema) {
             if (! \is_string($property)) {
-                throw new InvalidArgumentException(\sprintf("Property key '%s' must be string", $property));
+                throw new InvalidArgumentException(sprintf("Property key '%s' must be string", $property));
             }
             if (! ($schema instanceof ValueSchemaInterface)) {
-                throw new InvalidArgumentException(\sprintf(
+                throw new InvalidArgumentException(sprintf(
                     'Invalid schema (must be instance of %s)',
                     ValueSchemaInterface::class
                 ));
@@ -77,11 +77,11 @@ final class ObjectSchema extends AbstractValueSchema
             $properties[] = $property;
         }
 
-        $excludingRequiredProperties = \array_diff($this->requiredProperties, $properties);
+        $excludingRequiredProperties = array_diff($this->requiredProperties, $properties);
         if ($excludingRequiredProperties) {
-            throw new InvalidArgumentException(\sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Required properties are not listed in schema (%s)',
-                \implode(', ', $excludingRequiredProperties)
+                implode(', ', $excludingRequiredProperties)
             ));
         }
     }

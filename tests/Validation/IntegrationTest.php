@@ -17,7 +17,7 @@ class IntegrationTest extends TestCase
 
     public function testValid(): void
     {
-        $data = \json_decode('
+        $data = json_decode('
             {
                 "cislo":123,
                 "retezec":"hello",
@@ -44,7 +44,7 @@ class IntegrationTest extends TestCase
 
     public function testInvalid(): void
     {
-        $data = \json_decode('
+        $data = json_decode('
             {
                 "cislo":123,
                 "retezec":"hello",

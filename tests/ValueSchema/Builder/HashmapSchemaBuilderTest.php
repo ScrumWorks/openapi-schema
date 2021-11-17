@@ -27,10 +27,7 @@ class HashmapSchemaBuilderTest extends TestCase
         $builder = $builder->withRequiredProperties(['property']);
         $builder = $builder->withDescription('hashmap');
         $builder = $builder->withNullable(true);
-        $this->assertEquals(
-            new HashmapSchema(new StringSchema(), ['property'], true, 'hashmap'),
-            $builder->build()
-        );
+        $this->assertEquals(new HashmapSchema(new StringSchema(), ['property'], true, 'hashmap'), $builder->build());
     }
 
     public function testMissingData(): void

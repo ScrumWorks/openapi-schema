@@ -29,7 +29,7 @@ final class UnionSchema extends AbstractValueSchema
 
         parent::__construct($nullable, $description);
 
-        $this->nullable = $this->nullable || \array_reduce(
+        $this->nullable = $this->nullable || array_reduce(
             $possibleSchemas,
             static fn (bool $carry, ValueSchemaInterface $type) => $carry || $type->isNullable(),
             false
@@ -57,7 +57,7 @@ final class UnionSchema extends AbstractValueSchema
 
         foreach ($this->possibleSchemas as $schema) {
             if (! ($schema instanceof ValueSchemaInterface)) {
-                throw new InvalidArgumentException(\sprintf(
+                throw new InvalidArgumentException(sprintf(
                     'Invalid schema (must be instance of %s)',
                     ValueSchemaInterface::class
                 ));

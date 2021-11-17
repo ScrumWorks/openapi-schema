@@ -35,7 +35,7 @@ final class EnumValidator extends AbstractValidator
 
         if (! \is_string($data)) {
             $resultBuilder->addTypeViolation('string', $breadCrumbPath);
-        } elseif (! \in_array($data, $this->schema->getEnum())) {
+        } elseif (! \in_array($data, $this->schema->getEnum(), true)) {
             $resultBuilder->addEnumViolation($this->schema->getEnum(), $breadCrumbPath);
         }
     }

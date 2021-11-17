@@ -44,7 +44,7 @@ final class ObjectValidator extends AbstractValidator
         }
 
         foreach ($this->schema->getRequiredProperties() as $requiredProperty) {
-            if (! \property_exists($data, $requiredProperty)) {
+            if (! property_exists($data, $requiredProperty)) {
                 $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb($requiredProperty));
             }
         }
@@ -58,7 +58,8 @@ final class ObjectValidator extends AbstractValidator
                 $propertyValidationResult = $this->valueValidator->validate(
                     $propertySchemas[$propertyName],
                     $propertyData,
-                    $breadCrumbPath->withNextBreadCrumb($propertyName))
+                    $breadCrumbPath->withNextBreadCrumb($propertyName)
+                )
                 ;
                 $resultBuilder->mergeResult($propertyValidationResult);
             }

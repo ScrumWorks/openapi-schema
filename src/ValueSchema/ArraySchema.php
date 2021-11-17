@@ -56,13 +56,13 @@ final class ArraySchema extends AbstractValueSchema
     protected function validate(): void
     {
         if ($this->minItems !== null && $this->minItems < 0) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'minItems'", $this->minItems));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'minItems'", $this->minItems));
         }
         if ($this->maxItems !== null && $this->maxItems < 0) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maxItems'", $this->maxItems));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'maxItems'", $this->maxItems));
         }
         if ($this->minItems !== null && $this->maxItems !== null && $this->maxItems < $this->minItems) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maxItems'", $this->maxItems));
+            throw new InvalidArgumentException(sprintf("Invalid value %d for argument 'maxItems'", $this->maxItems));
         }
     }
 }

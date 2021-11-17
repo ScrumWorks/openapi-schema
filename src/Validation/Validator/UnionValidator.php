@@ -41,11 +41,11 @@ final class UnionValidator extends AbstractValidator
         if ($discriminatorName = $this->schema->getDiscriminatorPropertyName()) {
             if (! \is_object($data)) {
                 $resultBuilder->addTypeViolation('object', $breadCrumbPath);
-            } elseif (! \property_exists($data, $discriminatorName)) {
+            } elseif (! property_exists($data, $discriminatorName)) {
                 $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb($discriminatorName));
             } elseif (! ($discriminatorSchema = $this->schema->getPossibleSchemas()[$data->{$discriminatorName}] ?? null)) {
                 $resultBuilder->addEnumViolation(
-                    \array_keys($this->schema->getPossibleSchemas()),
+                    array_keys($this->schema->getPossibleSchemas()),
                     $breadCrumbPath->withNextBreadCrumb($discriminatorName)
                 );
             } else {
@@ -80,11 +80,12 @@ final class UnionValidator extends AbstractValidator
     ): void {
         parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
 
-        if ($discriminatorName = $this->schema->getDiscriminatorPropertyName()) {
+        $discriminatorName = $this->schema->getDiscriminatorPropertyName();
+        if ($discriminatorName) {
             $resultBuilder->addTypeViolation('object', $breadCrumbPath);
             $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb($discriminatorName));
             $resultBuilder->addEnumViolation(
-                \array_keys($this->schema->getPossibleSchemas()),
+                array_keys($this->schema->getPossibleSchemas()),
                 $breadCrumbPath->withNextBreadCrumb($discriminatorName)
             );
             foreach ($this->schema->getPossibleSchemas() as $schema) {

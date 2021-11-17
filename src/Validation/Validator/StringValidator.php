@@ -47,24 +47,28 @@ final class StringValidator extends AbstractValidator
             return;
         }
 
-        $strlen = $this->schema->getFormat() === 'binary' ? \strlen($data) : \mb_strlen($data);
+        $strlen = $this->schema->getFormat() === 'binary' ? \strlen($data) : mb_strlen($data);
 
-        if (($minLength = $this->schema->getMinLength()) !== null && $minLength > $strlen) {
+        $minLength = $this->schema->getMinLength();
+        if ($minLength !== null && $minLength > $strlen) {
             $resultBuilder->addMinLengthViolation($minLength, $breadCrumbPath);
         }
-        if (($maxLength = $this->schema->getMaxLength()) !== null && $maxLength < $strlen) {
+
+        $maxLength = $this->schema->getMaxLength();
+        if ($maxLength !== null && $maxLength < $strlen) {
             $resultBuilder->addMaxLengthViolation($maxLength, $breadCrumbPath);
         }
-        if (($pattern = $this->schema->getPattern()) !== null) {
-            $escapedPattern = \str_replace('~', '\\~', $pattern);
+
+        $pattern = $this->schema->getPattern();
+        if ($pattern !== null) {
+            $escapedPattern = str_replace('~', '\\~', $pattern);
             if (! Strings::match($data, "~${escapedPattern}~")) {
                 $resultBuilder->addPatternViolation($pattern, $breadCrumbPath);
             }
         }
-        if (
-            ($format = $this->schema->getFormat()) !== null
-            && ! $this->hasValidFormat($format, $data)
-        ) {
+
+        $format = $this->schema->getFormat();
+        if ($format !== null && ! $this->hasValidFormat($format, $data)) {
             $resultBuilder->addFormatViolation($format, $breadCrumbPath);
         }
     }
@@ -76,16 +80,24 @@ final class StringValidator extends AbstractValidator
         parent::collectPossibleViolationExamples($resultBuilder, $breadCrumbPath);
 
         $resultBuilder->addTypeViolation('string', $breadCrumbPath);
-        if (($minLength = $this->schema->getMinLength()) !== null) {
+
+        $minLength = $this->schema->getMinLength();
+        if ($minLength !== null) {
             $resultBuilder->addMinLengthViolation($minLength, $breadCrumbPath);
         }
-        if (($maxLength = $this->schema->getMaxLength()) !== null) {
+
+        $maxLength = $this->schema->getMaxLength();
+        if ($maxLength !== null) {
             $resultBuilder->addMaxLengthViolation($maxLength, $breadCrumbPath);
         }
-        if (($pattern = $this->schema->getPattern()) !== null) {
+
+        $pattern = $this->schema->getPattern();
+        if ($pattern !== null) {
             $resultBuilder->addPatternViolation($pattern, $breadCrumbPath);
         }
-        if (($format = $this->schema->getFormat()) !== null) {
+
+        $format = $this->schema->getFormat();
+        if ($format !== null) {
             $resultBuilder->addFormatViolation($format, $breadCrumbPath);
         }
     }

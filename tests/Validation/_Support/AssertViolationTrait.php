@@ -16,7 +16,7 @@ trait AssertViolationTrait
      */
     public function assertViolations(array $expectedViolations, array $actualViolations): void
     {
-        $differentViolationCountMsg = \implode("\n", \array_map(
+        $differentViolationCountMsg = implode("\n", array_map(
             static fn (ValidityViolation $actualViolation) => $actualViolation->getMessageTemplate(),
             $actualViolations
         ));

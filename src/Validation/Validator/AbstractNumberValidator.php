@@ -36,7 +36,7 @@ abstract class AbstractNumberValidator extends AbstractValidator
             $resultBuilder->addMaximumViolation($max, $breadCrumbPath);
         }
 
-        if ($multipleOf !== null && \abs(0 - \fmod($data, $multipleOf)) > 0.0001) {
+        if ($multipleOf !== null && abs(0 - fmod($data, $multipleOf)) > 0.0001) {
             $resultBuilder->addMultipleOfViolation($multipleOf, $breadCrumbPath);
         }
     }

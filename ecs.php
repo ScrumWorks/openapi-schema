@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpCsFixer\Fixer\Basic\Psr4Fixer;
+//use PhpCsFixer\Fixer\Basic\Psr4Fixer;
 use PhpCsFixer\Fixer\Casing\NativeFunctionCasingFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer;
 use PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer;
@@ -15,78 +15,76 @@ use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
 use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use PhpCsFixer\Fixer\Whitespace\IndentationTypeFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
-use SlevomatCodingStandard\Helpers\PropertyTypeHint;
 use SlevomatCodingStandard\Sniffs\Arrays\DisallowImplicitArrayCreationSniff;
 use SlevomatCodingStandard\Sniffs\Classes\DisallowLateStaticBindingForConstantsSniff;
-use SlevomatCodingStandard\Sniffs\Classes\UnusedPrivateElementsSniff;
 use SlevomatCodingStandard\Sniffs\Classes\UselessLateStaticBindingSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\RequireNullCoalesceOperatorSniff;
 use SlevomatCodingStandard\Sniffs\Exceptions\DeadCatchSniff;
-use SlevomatCodingStandard\Sniffs\Exceptions\ReferenceThrowableOnlySniff;
 use SlevomatCodingStandard\Sniffs\Functions\StaticClosureSniff;
-use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
-use SlevomatCodingStandard\Sniffs\Namespaces\UnusedUsesSniff;
 use SlevomatCodingStandard\Sniffs\Namespaces\UseFromSameNamespaceSniff;
 use SlevomatCodingStandard\Sniffs\PHP\OptimizedFunctionsWithoutUnpackingSniff;
 use SlevomatCodingStandard\Sniffs\PHP\UselessParenthesesSniff;
 use SlevomatCodingStandard\Sniffs\PHP\UselessSemicolonSniff;
-use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
 use SlevomatCodingStandard\Sniffs\Variables\DuplicateAssignmentToVariableSniff;
-use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
 use SlevomatCodingStandard\Sniffs\Variables\UselessVariableSniff;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
 use Symplify\CodingStandard\Fixer\Commenting\ParamReturnAndVarTagMalformsFixer;
 use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
-use Symplify\CodingStandard\Fixer\Spacing\RemoveSpacingAroundModifierAndConstFixer;
+use Symplify\EasyCodingStandard\ValueObject\Option;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 # see https://github.com/symplify/easy-coding-standard
 return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
 
-    $parameters->set('paths', [
+    $parameters->set(Option::PARALLEL, true);
+
+    $parameters->set(Option::PATHS, [
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ]);
 
-    $parameters->set('sets', [
-        # pick anything from https://github.com/symplify/easy-coding-standard#use-prepared-checker-sets
-        SetList::PSR_12,
-        SetList::COMMON,
-        SetList::PHP_70,
-        SetList::PHP_71,
-        SetList::CLEAN_CODE,
-        SetList::DEAD_CODE,
-    ]);
+    // pick anything from https://github.com/symplify/easy-coding-standard#use-prepared-checker-sets
+    $containerConfigurator->import(SetList::PSR_12);
+    $containerConfigurator->import(SetList::COMMON);
+    $containerConfigurator->import(SetList::CLEAN_CODE);
 
-    $parameters->set('skip', [
-        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME_WITHOUT_NAMESPACE => null,
-        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_PARTIAL_USE => null,
+    $parameters->set(Option::SKIP, [
+        __DIR__ . '/src/SchemaBuilder/Decorator/PropertyDecorator/AnnotationPropertySchemaDecorator.php',
+        __DIR__ . '/src/Validation/Validator/UnionValidator.php',
 
-        // we can't use FQN in doctrine annotations
-        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME => [
-            __DIR__ . '/src/Annotation/ArrayValue.php',
-            __DIR__ . '/src/Annotation/HashmapValue.php',
-            __DIR__ . '/src/Annotation/Union.php',
+//        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME_WITHOUT_NAMESPACE => null,
+//        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_PARTIAL_USE => null,
+//
+//        // we can't use FQN in doctrine annotations
+//        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME => [
+//            __DIR__ . '/src/Annotation/ArrayValue.php',
+//            __DIR__ . '/src/Annotation/HashmapValue.php',
+//            __DIR__ . '/src/Annotation/Union.php',
+//        ],
+//        UseFromSameNamespaceSniff::class . '.' . UseFromSameNamespaceSniff::CODE_USE_FROM_SAME_NAMESPACE => [
+//            __DIR__ . '/src/Annotation/ArrayValue.php',
+//            __DIR__ . '/src/Annotation/HashmapValue.php',
+//            __DIR__ . '/src/Annotation/Union.php',
+//        ],
+//
+//        # resolve later with strict_types
+//        DeclareStrictTypesFixer::class => null,
+//        StrictComparisonFixer::class => null,
+        PhpUnitStrictFixer::class => [
+            // compare 2 object contents
+            __DIR__ . '/tests/ValueSchema/Builder',
+            __DIR__ . '/tests/SchemaParserTest.php',
+            __DIR__ . '/tests/OpenApiTranslatorTest.php',
         ],
-        UseFromSameNamespaceSniff::class . '.' . UseFromSameNamespaceSniff::CODE_USE_FROM_SAME_NAMESPACE => [
-            __DIR__ . '/src/Annotation/ArrayValue.php',
-            __DIR__ . '/src/Annotation/HashmapValue.php',
-            __DIR__ . '/src/Annotation/Union.php',
-        ],
-
-        # resolve later with strict_types
-        DeclareStrictTypesFixer::class => null,
-        StrictComparisonFixer::class => null,
-        PhpUnitStrictFixer::class => null,
-        StrictParamFixer::class => null,
-        # breaks code
-        ReferenceThrowableOnlySniff::class . '.' . ReferenceThrowableOnlySniff::CODE_REFERENCED_GENERAL_EXCEPTION => null,
-        Psr4Fixer::class => null,
-        UnusedUsesSniff::class . '.' . UnusedUsesSniff::CODE_MISMATCHING_CASE => [
-            __DIR__ . '/tests/*',
-        ],
+//        StrictParamFixer::class => null,
+//        # breaks code
+//        ReferenceThrowableOnlySniff::class . '.' . ReferenceThrowableOnlySniff::CODE_REFERENCED_GENERAL_EXCEPTION => null,
+//        Psr4Fixer::class => null,
+//        UnusedUsesSniff::class . '.' . UnusedUsesSniff::CODE_MISMATCHING_CASE => [
+//            __DIR__ . '/tests/*',
+//        ],
     ]);
 
     $services = $containerConfigurator->services();
@@ -108,11 +106,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(LineLengthFixer::class);
 
     # imports FQN names
-    $services->set(ReferenceUsedNamesOnlySniff::class)
-        ->property('searchAnnotations', true)
-        ->property('allowFullyQualifiedGlobalFunctions', true)
-        ->property('allowFullyQualifiedGlobalConstants', true)
-        ->property('allowPartialUses', false);
+//    $services->set(ReferenceUsedNamesOnlySniff::class)
+//        ->property('searchAnnotations', true)
+//        ->property('allowFullyQualifiedGlobalFunctions', true)
+//        ->property('allowFullyQualifiedGlobalConstants', true)
+//        ->property('allowPartialUses', false);
 
     # make @var annotation into doc block
     $services->set(PhpdocLineSpanFixer::class);
@@ -126,7 +124,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(ParamReturnAndVarTagMalformsFixer::class);
 
     # spaces
-    $services->set(RemoveSpacingAroundModifierAndConstFixer::class);
+    // $services->set(RemoveSpacingAroundModifierAndConstFixer::class);
 
     # use 4 spaces to indent
     $services->set(IndentationTypeFixer::class);

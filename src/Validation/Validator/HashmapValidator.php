@@ -44,7 +44,7 @@ final class HashmapValidator extends AbstractValidator
         }
 
         foreach ($this->schema->getRequiredProperties() as $requiredProperty) {
-            if (! \property_exists($data, $requiredProperty)) {
+            if (! property_exists($data, $requiredProperty)) {
                 $resultBuilder->addRequiredViolation($breadCrumbPath->withNextBreadCrumb($requiredProperty));
             }
         }

@@ -27,6 +27,7 @@ class ObjectSchemaBuilderTest extends TestCase
         $builder = $builder->withRequiredProperties(['property']);
         $builder = $builder->withDescription('object');
         $builder = $builder->withNullable(true);
+
         $this->assertEquals(
             new ObjectSchema([
                 'property' => new StringSchema(),

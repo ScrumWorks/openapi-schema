@@ -140,7 +140,7 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         ];
         if ($schema->getPropertiesSchemas()) {
             // we use property of `array_map` function that preserve keys
-            $definition['properties'] = \array_map(
+            $definition['properties'] = array_map(
                 fn (ValueSchemaInterface $property) => $this->translateValueSchema($property),
                 $schema->getPropertiesSchemas()
             );

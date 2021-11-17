@@ -64,7 +64,7 @@ class OpenApiSchemaExtension extends CompilerExtension
         $factory = $def->getFactory();
 
         for ($i = 0; $i < \count($factory->arguments); ++$i) {
-            \usort($factory->arguments[$i], function (Reference $a, Reference $b) {
+            usort($factory->arguments[$i], function (Reference $a, Reference $b) {
                 return $this->getServicePriority($a->getValue()) <=> $this->getServicePriority($b->getValue());
             });
         }

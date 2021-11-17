@@ -44,13 +44,17 @@ final class ArrayValidator extends AbstractValidator
         }
 
         $count = \count($data);
-        if (($min = $this->schema->getMinItems()) !== null && $min > $count) {
+
+        $min = $this->schema->getMinItems();
+        if ($min !== null && $min > $count) {
             $resultBuilder->addMinItemsViolation($min, $breadCrumbPath);
         }
-        if (($max = $this->schema->getMaxItems()) !== null && $max < $count) {
+
+        $max = $this->schema->getMaxItems();
+        if ($max !== null && $max < $count) {
             $resultBuilder->addMaxItemsViolation($max, $breadCrumbPath);
         }
-        if (($this->schema->getUniqueItems() ?? false) && $count !== \count(\array_unique($data))) {
+        if (($this->schema->getUniqueItems() ?? false) && $count !== \count(array_unique($data))) {
             $resultBuilder->addUniqueViolation($breadCrumbPath);
         }
 
@@ -73,10 +77,13 @@ final class ArrayValidator extends AbstractValidator
 
         $resultBuilder->addTypeViolation('array', $breadCrumbPath);
 
-        if (($min = $this->schema->getMinItems()) !== null) {
+        $min = $this->schema->getMinItems();
+        if ($min !== null) {
             $resultBuilder->addMinItemsViolation($min, $breadCrumbPath);
         }
-        if (($max = $this->schema->getMaxItems()) !== null) {
+
+        $max = $this->schema->getMaxItems();
+        if ($max !== null) {
             $resultBuilder->addMaxItemsViolation($max, $breadCrumbPath);
         }
         if ($this->schema->getUniqueItems() ?? false) {

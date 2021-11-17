@@ -41,7 +41,7 @@ class SchemaBuilderFactory
 
     public function createForClass(string $class): AbstractSchemaBuilder
     {
-        if (! \class_exists($class) && ! \interface_exists($class)) {
+        if (! class_exists($class) && ! interface_exists($class)) {
             throw new LogicException("Class or interface '${class}' does not exist");
         }
 
@@ -76,7 +76,7 @@ class SchemaBuilderFactory
         } elseif ($variableType instanceof UnionVariableType) {
             $schemaBuilder = $this->createSchemaBuilderFromUnion($variableType);
         } else {
-            throw new LogicException(\sprintf(
+            throw new LogicException(sprintf(
                 "Unprocessable VariableTypeInterface '%s' (class %s)",
                 $variableType->getTypeName(),
                 \get_class($variableType)
@@ -113,7 +113,7 @@ class SchemaBuilderFactory
                 $schemaBuilder = new StringSchemaBuilder();
                 break;
             default:
-                throw new LogicException(\sprintf("Unknown scalar type '%s'", $variableType->getType()));
+                throw new LogicException(sprintf("Unknown scalar type '%s'", $variableType->getType()));
         }
 
         return $schemaBuilder;
@@ -148,7 +148,7 @@ class SchemaBuilderFactory
 
     protected function createSchemaBuilderFromUnion(UnionVariableType $variableType): AbstractSchemaBuilder
     {
-        return new UnionSchemaBuilder(\array_map(
+        return new UnionSchemaBuilder(array_map(
             fn (VariableTypeInterface $type) => $this->createForVariableType($type),
             $variableType->getTypes()
         ));

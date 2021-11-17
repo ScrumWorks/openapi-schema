@@ -55,7 +55,7 @@ final class ValidityViolationFactory implements ValidityViolationFactoryInterfac
         array $choices,
         BreadCrumbPathInterface $breadCrumbPath
     ): ValidityViolationInterface {
-        $choicesString = $choices ? ("'" . \implode("', '", $choices) . "'") : '';
+        $choicesString = $choices ? ("'" . implode("', '", $choices) . "'") : '';
         return new ValidityViolation(1008, 'Value has to be one of [%s].', [$choicesString], $breadCrumbPath);
     }
 

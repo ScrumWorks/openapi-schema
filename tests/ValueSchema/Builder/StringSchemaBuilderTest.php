@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
-class StringSchemaBuilderTest extends TestCase
+final class StringSchemaBuilderTest extends TestCase
 {
     public function testMinimalBuild(): void
     {
