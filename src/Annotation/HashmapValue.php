@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Annotation;
 
+use Attribute;
+
 /**
  * @Annotation
- * @\Doctrine\Common\Annotations\Annotation\Target({"PROPERTY", "ANNOTATION"})
+ * @Target({"PROPERTY", "ANNOTATION"})
  *
  * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
  */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 final class HashmapValue implements ValueInterface
 {
     /**
