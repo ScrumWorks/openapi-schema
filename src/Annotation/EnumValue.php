@@ -6,7 +6,6 @@ namespace ScrumWorks\OpenApiSchema\Annotation;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
-use Doctrine\Common\Annotations\Annotation\Required;
 
 /**
  * @Annotation
