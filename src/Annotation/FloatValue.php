@@ -5,38 +5,23 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Annotation;
 
 use Attribute;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
  * @Annotation
  * @Target({"PROPERTY", "ANNOTATION"})
  *
- * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
+ * @NamedArgumentConstructor()
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 final class FloatValue implements ValueInterface
 {
-    /**
-     * @var float
-     */
-    public ?float $minimum = null;
-
-    /**
-     * @var float
-     */
-    public ?float $maximum = null;
-
-    /**
-     * @var bool
-     */
-    public ?bool $exclusiveMinimum = null;
-
-    /**
-     * @var bool
-     */
-    public ?bool $exclusiveMaximum = null;
-
-    /**
-     * @var float
-     */
-    public ?float $multipleOf = null;
+    public function __construct(
+        public float $minimum,
+        public float $maximum,
+        public bool $exclusiveMinimum,
+        public bool $exclusiveMaximum,
+        public float $multipleOf = 1.0,
+    ) {
+    }
 }
