@@ -16,8 +16,8 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 final class ArrayValue implements ValueInterface
 {
     public function __construct(
-        public int $maxItems,
-        public ValueInterface $itemsSchema,
+        public ValueInterface|null $itemsSchema = null,
+        public int|null $maxItems = null,
         public int|null $minItems = null,
         public bool $uniqueItems = false,
     ) {

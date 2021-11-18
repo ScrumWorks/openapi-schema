@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
 use ScrumWorks\OpenApiSchema\Tests\DiTrait;
 use ScrumWorks\OpenApiSchema\Tests\SchemaParser\Fixture\StringTypeWithFormat;
+use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
@@ -32,11 +33,13 @@ final class SchemaParserTest extends TestCase
         $this->assertInstanceOf(ObjectSchema::class, $entitySchema);
 
         $propertySchema = $entitySchema->getPropertySchema($propertyName);
+
         $this->assertInstanceOf($expectedPropertySchema, $propertySchema);
     }
 
     public function provideData(): Iterator
     {
         yield [StringTypeWithFormat::class, 'date', StringSchema::class];
+        yield [StringTypeWithFormat::class, 'minItems', ArraySchema::class];
     }
 }
