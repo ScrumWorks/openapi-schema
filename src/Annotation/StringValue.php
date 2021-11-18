@@ -5,33 +5,22 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Annotation;
 
 use Attribute;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
  * @Annotation
  * @Target({"PROPERTY", "ANNOTATION"})
  *
- * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
+ * @NamedArgumentConstructor()
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 final class StringValue implements ValueInterface
 {
-    /**
-     * @var int
-     */
-    public ?int $minLength = null;
-
-    /**
-     * @var int
-     */
-    public ?int $maxLength = null;
-
-    /**
-     * @var string
-     */
-    public ?string $format = null;
-
-    /**
-     * @var string
-     */
-    public ?string $pattern = null;
+    public function __construct(
+        public int $minLength,
+        public int|null $maxLength = null,
+        public string|null $format = null,
+        public string|null $pattern = null,
+    ) {
+    }
 }
