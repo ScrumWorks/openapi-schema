@@ -8,7 +8,10 @@ use ReflectionProperty;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
-class SchemaParser implements SchemaParserInterface
+/**
+ * @see \ScrumWorks\OpenApiSchema\Tests\SchemaParser\SchemaParserTest
+ */
+final class SchemaParser implements SchemaParserInterface
 {
     private SchemaBuilderFactory $schemaBuilderFactory;
 

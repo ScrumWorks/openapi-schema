@@ -108,7 +108,7 @@ class TestEntity
     public ?DateTimeInterface $dateTime = null;
 }
 
-class SchemaParserTest extends TestCase
+final class SchemaParserTest extends TestCase
 {
     use DiTrait;
 

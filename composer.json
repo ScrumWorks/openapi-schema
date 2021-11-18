@@ -30,7 +30,8 @@
         "symplify/easy-testing": "^10.0",
         "symplify/easy-ci": "^10.0",
         "symplify/phpstan-extensions": "^10.0",
-        "rector/rector": "dev-main"
+        "rector/rector": "dev-main",
+        "tracy/tracy": "^2.8"
     },
     "autoload": {
         "psr-4": {
