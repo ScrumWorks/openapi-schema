@@ -31,9 +31,6 @@ final class SchemaParserTest extends TestCase
         $this->assertInstanceOf(ObjectSchema::class, $entitySchema);
 
         $datePropertySchema = $entitySchema->getPropertySchema('date');
-
-        dump($datePropertySchema);
-
         $this->assertInstanceOf(StringSchema::class, $datePropertySchema);
     }
 }

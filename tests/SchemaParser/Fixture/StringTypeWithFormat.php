@@ -10,6 +10,7 @@ final class StringTypeWithFormat
 {
     /**
      * @OA\StringValue(format="date")
+     * @var string
      */
     public $date;
 }
