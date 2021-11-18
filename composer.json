@@ -24,10 +24,10 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^0.12.48",
         "phpstan/phpstan-nette": "^0.12.0",
-        "symplify/easy-coding-standard": "^8.3",
-        "symplify/easy-testing": "^8.3",
-        "migrify/template-checker": "^0.3.49",
-        "symplify/phpstan-extensions": "^8.3",
+        "symplify/easy-coding-standard": "^9.0",
+        "symplify/easy-testing": "^9.0",
+        "symplify/easy-ci": "^9.0",
+        "symplify/phpstan-extensions": "^9.0",
         "slevomat/coding-standard": "^6.4"
     },
     "autoload": {
