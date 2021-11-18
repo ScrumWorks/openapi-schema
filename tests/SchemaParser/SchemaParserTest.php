@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\SchemaParser;
 
+use Iterator;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
 use ScrumWorks\OpenApiSchema\Tests\DiTrait;
@@ -23,14 +24,22 @@ final class SchemaParserTest extends TestCase
         $this->schemaParser = $this->getServiceFromContainerByType(SchemaParserInterface::class);
     }
 
-    public function test(): void
+    /**
+     * @dataProvider provideData()
+     */
+    public function test(string $className, string $propertyName, string $expectedPropertySchema): void
     {
-        $entitySchema = $this->schemaParser->getEntitySchema(StringTypeWithFormat::class);
+        $entitySchema = $this->schemaParser->getEntitySchema($className);
 
         $this->assertInstanceOf(ValueSchemaInterface::class, $entitySchema);
         $this->assertInstanceOf(ObjectSchema::class, $entitySchema);
 
-        $datePropertySchema = $entitySchema->getPropertySchema('date');
-        $this->assertInstanceOf(StringSchema::class, $datePropertySchema);
+        $propertySchema = $entitySchema->getPropertySchema($propertyName);
+        $this->assertInstanceOf($expectedPropertySchema, $propertySchema);
+    }
+
+    public function provideData(): Iterator
+    {
+        yield [StringTypeWithFormat::class, 'date', StringSchema::class];
     }
 }
