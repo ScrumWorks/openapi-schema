@@ -30,8 +30,6 @@ final class SchemaParserTest extends TestCase
     public function test(string $className, string $propertyName, string $expectedPropertySchema): void
     {
         $entitySchema = $this->schemaParser->getEntitySchema($className);
-
-        $this->assertInstanceOf(ValueSchemaInterface::class, $entitySchema);
         $this->assertInstanceOf(ObjectSchema::class, $entitySchema);
 
         $propertySchema = $entitySchema->getPropertySchema($propertyName);
