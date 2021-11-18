@@ -11,7 +11,6 @@ use ScrumWorks\OpenApiSchema\Tests\DiTrait;
 use ScrumWorks\OpenApiSchema\Tests\SchemaParser\Fixture\StringTypeWithFormat;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 final class SchemaParserTest extends TestCase
 {

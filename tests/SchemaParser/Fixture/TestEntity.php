@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\SchemaParser\Fixture;
 
+use DateTimeInterface;
 use ScrumWorks\OpenApiSchema\Annotation as OA;
 
 final class TestEntity
@@ -65,5 +66,5 @@ final class TestEntity
     /**
      * @OA\Property(description="Moment")
      */
-    public ?\DateTimeInterface $dateTime = null;
+    public ?DateTimeInterface $dateTime = null;
 }
