@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Annotation;
 
 use Attribute;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Required;
 
 /**
@@ -12,18 +13,16 @@ use Doctrine\Common\Annotations\Annotation\Required;
  * @Target({"PROPERTY", "ANNOTATION"})
  *
  * Doctrine annotations reader uses `@var` annotations and doesn't know nullability
+ * @NamedArgumentConstructor()
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 final class EnumValue implements ValueInterface
 {
     /**
-     * @var string[]
-     * @Required()
+     * @param string[] $enum
      */
-    public array $enum;
-
-    public function __construct($enum)
-    {
-        $this->enum = $enum;
+    public function __construct(
+        public array $enum
+    ) {
     }
 }
