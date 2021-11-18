@@ -9,30 +9,17 @@ use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 final class ObjectSchema extends AbstractValueSchema
 {
     /**
-     * @var array<string, ValueSchemaInterface>
-     */
-    private array $propertiesSchemas;
-
-    /**
-     * @var string[]
-     */
-    private array $requiredProperties;
-
-    /**
      * @param array<string, ValueSchemaInterface> $propertiesSchemas
      * @param string[] $requiredProperties
      */
     public function __construct(
-        array $propertiesSchemas,
-        array $requiredProperties = [],
+        private array $propertiesSchemas,
+        private array $requiredProperties = [],
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null
     ) {
         // TODO: maybe $propertiesSchemas as stdClass?
-
-        $this->propertiesSchemas = $propertiesSchemas;
-        $this->requiredProperties = $requiredProperties;
 
         parent::__construct($nullable, $description, $schemaName);
     }

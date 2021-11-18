@@ -17,7 +17,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 final class StringValue implements ValueInterface
 {
     public function __construct(
-        public int $minLength,
+        public int|null $minLength = null,
         public int|null $maxLength = null,
         public string|null $format = null,
         public string|null $pattern = null,
