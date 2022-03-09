@@ -38,6 +38,6 @@ final class EnumSchemaBuilder extends AbstractSchemaBuilder
             throw new LogicException('Enum has to be set.');
         }
 
-        return new EnumSchema($this->enum, $this->nullable, $this->description, $this->schemaName);
+        return new EnumSchema($this->enum, $this->nullable, $this->description, $this->schemaName, $this->deprecated);
     }
 }

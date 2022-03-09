@@ -12,11 +12,18 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
 
     protected ?string $schemaName;
 
-    public function __construct(bool $nullable = false, ?string $description = null, ?string $schemaName = null)
-    {
+    protected bool $isDeprecated;
+
+    public function __construct(
+        bool $nullable = false,
+        ?string $description = null,
+        ?string $schemaName = null,
+        bool $isDeprecated = false
+    ) {
         $this->nullable = $nullable;
         $this->description = $description;
         $this->schemaName = $schemaName;
+        $this->isDeprecated = $isDeprecated;
         $this->validate();
     }
 
@@ -33,6 +40,11 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
     public function getSchemaName(): ?string
     {
         return $this->schemaName;
+    }
+
+    public function isDeprecated(): bool
+    {
+        return $this->isDeprecated;
     }
 
     abstract protected function validate();

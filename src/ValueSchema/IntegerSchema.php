@@ -26,7 +26,8 @@ final class IntegerSchema extends AbstractValueSchema
         ?int $multipleOf = null,
         bool $nullable = false,
         ?string $description = null,
-        ?string $schemaName = null
+        ?string $schemaName = null,
+        bool $isDeprecated = false
     ) {
         $this->minimum = $minimum;
         $this->maximum = $maximum;
@@ -34,7 +35,7 @@ final class IntegerSchema extends AbstractValueSchema
         $this->exclusiveMaximum = $exclusiveMaximum;
         $this->multipleOf = $multipleOf;
 
-        parent::__construct($nullable, $description, $schemaName);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 
     public function getMinimum(): ?int

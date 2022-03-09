@@ -25,9 +25,10 @@ class UnionSchemaBuilderTest extends TestCase
         $builder->withDiscriminatorPropertyName('discriminatoR');
         $builder->withDescription('desc');
         $builder->withNullable(true);
+        $builder->withDeprecated(true);
 
         $this->assertEquals(
-            new UnionSchema([new ObjectSchema([])], 'discriminatoR', true, 'desc'),
+            new UnionSchema([new ObjectSchema([])], 'discriminatoR', true, 'desc', true),
             $builder->build()
         );
     }

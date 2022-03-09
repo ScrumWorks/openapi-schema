@@ -23,14 +23,15 @@ final class StringSchema extends AbstractValueSchema
         ?string $pattern = null,
         bool $nullable = false,
         ?string $description = null,
-        ?string $schemaName = null
+        ?string $schemaName = null,
+        bool $isDeprecated = false
     ) {
         $this->minLength = $minLength;
         $this->maxLength = $maxLength;
         $this->format = $format;
         $this->pattern = $pattern;
 
-        parent::__construct($nullable, $description, $schemaName);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 
     public function getMinLength(): ?int

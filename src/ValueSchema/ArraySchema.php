@@ -23,14 +23,15 @@ final class ArraySchema extends AbstractValueSchema
         ?bool $uniqueItems = null,
         bool $nullable = false,
         ?string $description = null,
-        ?string $schemaName = null
+        ?string $schemaName = null,
+        bool $isDeprecated = false
     ) {
         $this->itemsSchema = $itemsSchema;
         $this->minItems = $minItems;
         $this->maxItems = $maxItems;
         $this->uniqueItems = $uniqueItems;
 
-        parent::__construct($nullable, $description, $schemaName);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 
     public function getMinItems(): ?int

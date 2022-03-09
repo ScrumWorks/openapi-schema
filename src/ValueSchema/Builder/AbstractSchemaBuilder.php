@@ -14,6 +14,8 @@ abstract class AbstractSchemaBuilder
 
     protected ?string $schemaName = null;
 
+    protected bool $deprecated = false;
+
     /**
      * @return static
      */
@@ -41,6 +43,15 @@ abstract class AbstractSchemaBuilder
         return $this;
     }
 
+    /**
+     * @return static
+     */
+    final public function withDeprecated(bool $deprecated)
+    {
+        $this->deprecated = $deprecated;
+        return $this;
+    }
+
     public function isNullable(): bool
     {
         return $this->nullable;
@@ -54,6 +65,11 @@ abstract class AbstractSchemaBuilder
     public function getSchemaName(): ?string
     {
         return $this->schemaName;
+    }
+
+    public function isDeprecated(): bool
+    {
+        return $this->deprecated;
     }
 
     abstract public function build(): ValueSchemaInterface;

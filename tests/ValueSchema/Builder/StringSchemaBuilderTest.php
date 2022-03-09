@@ -25,6 +25,8 @@ class StringSchemaBuilderTest extends TestCase
         $builder = $builder->withPattern('[a-z]+');
         $builder = $builder->withDescription('string');
         $builder = $builder->withNullable(true);
-        $this->assertEquals(new StringSchema(10, 12, 'email', '[a-z]+', true, 'string'), $builder->build());
+        $builder = $builder->withDeprecated(true);
+
+        $this->assertEquals(new StringSchema(10, 12, 'email', '[a-z]+', true, 'string', null, true), $builder->build());
     }
 }

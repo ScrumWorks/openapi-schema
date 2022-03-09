@@ -27,14 +27,15 @@ final class ObjectSchema extends AbstractValueSchema
         array $requiredProperties = [],
         bool $nullable = false,
         ?string $description = null,
-        ?string $schemaName = null
+        ?string $schemaName = null,
+        bool $isDeprecated = false
     ) {
         // TODO: maybe $propertiesSchemas as stdClass?
 
         $this->propertiesSchemas = $propertiesSchemas;
         $this->requiredProperties = $requiredProperties;
 
-        parent::__construct($nullable, $description, $schemaName);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 
     /**

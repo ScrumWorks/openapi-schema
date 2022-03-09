@@ -103,7 +103,7 @@ class TestEntity
     public $objectUnion;
 
     /**
-     * @OA\Property(description="Moment")
+     * @OA\Property(description="Moment", deprecated=true)
      */
     public ?DateTimeInterface $dateTime = null;
 }
@@ -239,6 +239,7 @@ class SchemaParserTest extends TestCase
         $dateTimeSchema = $entitySchema->getPropertySchema('dateTime');
         $this->assertInstanceOf(StringSchema::class, $dateTimeSchema);
         $this->assertTrue($dateTimeSchema->isNullable());
+        $this->assertTrue($dateTimeSchema->isDeprecated());
         $this->assertSame('Moment', $dateTimeSchema->getDescription());
         $this->assertSame('date-time', $dateTimeSchema->getFormat());
     }
