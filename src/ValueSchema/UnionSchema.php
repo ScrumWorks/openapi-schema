@@ -22,12 +22,13 @@ final class UnionSchema extends AbstractValueSchema
         array $possibleSchemas,
         ?string $discriminatorPropertyName = null,
         bool $nullable = false,
-        ?string $description = null
+        ?string $description = null,
+        bool $isDeprecated = false
     ) {
         $this->possibleSchemas = $possibleSchemas;
         $this->discriminatorPropertyName = $discriminatorPropertyName;
 
-        parent::__construct($nullable, $description);
+        parent::__construct($nullable, $description, null, $isDeprecated);
 
         $this->nullable = $this->nullable || \array_reduce(
             $possibleSchemas,

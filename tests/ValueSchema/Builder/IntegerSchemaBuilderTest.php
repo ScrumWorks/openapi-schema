@@ -26,6 +26,8 @@ class IntegerSchemaBuilderTest extends TestCase
         $builder = $builder->withMultipleOf(2);
         $builder = $builder->withDescription('integer');
         $builder = $builder->withNullable(true);
-        $this->assertEquals(new IntegerSchema(0, 10, true, false, 2, true, 'integer'), $builder->build());
+        $builder = $builder->withDeprecated(true);
+
+        $this->assertEquals(new IntegerSchema(0, 10, true, false, 2, true, 'integer', null, true), $builder->build());
     }
 }

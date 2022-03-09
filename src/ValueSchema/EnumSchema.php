@@ -20,11 +20,12 @@ final class EnumSchema extends AbstractValueSchema
         array $enum,
         bool $nullable = false,
         ?string $description = null,
-        ?string $schemaName = null
+        ?string $schemaName = null,
+        bool $isDeprecated = false
     ) {
         $this->enum = $enum;
 
-        parent::__construct($nullable, $description, $schemaName);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 
     /**

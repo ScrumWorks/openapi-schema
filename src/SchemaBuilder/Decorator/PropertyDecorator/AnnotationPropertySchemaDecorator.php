@@ -77,6 +77,10 @@ final class AnnotationPropertySchemaDecorator extends AbstractAnnotationSchemaDe
             if ($annotation->nullable !== null) {
                 $builder = $builder->withNullable($annotation->nullable);
             }
+
+            if ($annotation->deprecated !== null) {
+                $builder = $builder->withDeprecated($annotation->deprecated);
+            }
         }
 
         return $builder;

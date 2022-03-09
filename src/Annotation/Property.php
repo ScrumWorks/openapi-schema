@@ -26,4 +26,9 @@ final class Property
      * @var bool
      */
     public ?bool $nullable = null;
+
+    /**
+     * @var bool
+     */
+    public ?bool $deprecated = null;
 }

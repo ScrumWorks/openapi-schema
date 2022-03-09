@@ -198,6 +198,9 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         if ($schema->getDescription()) {
             $definition['description'] = $schema->getDescription();
         }
+        if ($schema->isDeprecated()) {
+            $definition['deprecated'] = true;
+        }
         return $definition;
     }
 }

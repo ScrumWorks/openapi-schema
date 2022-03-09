@@ -11,4 +11,6 @@ interface ValueSchemaInterface
     public function getDescription(): ?string;
 
     public function getSchemaName(): ?string;
+
+    public function isDeprecated(): bool;
 }

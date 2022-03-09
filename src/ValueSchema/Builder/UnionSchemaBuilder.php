@@ -62,6 +62,12 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
             $this->possibleSchemaBuilders
         );
 
-        return new UnionSchema($possibleSchemas, $this->discriminatorPropertyName, $this->nullable, $this->description);
+        return new UnionSchema(
+            $possibleSchemas,
+            $this->discriminatorPropertyName,
+            $this->nullable,
+            $this->description,
+            $this->deprecated
+        );
     }
 }

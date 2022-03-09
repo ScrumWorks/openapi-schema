@@ -98,7 +98,8 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
             $this->multipleOf,
             $this->nullable,
             $this->description,
-            $this->schemaName
+            $this->schemaName,
+            $this->deprecated
         );
     }
 }

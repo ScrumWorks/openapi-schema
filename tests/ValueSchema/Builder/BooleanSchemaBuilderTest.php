@@ -21,6 +21,8 @@ class BooleanSchemaBuilderTest extends TestCase
         $builder = new BooleanSchemaBuilder();
         $builder = $builder->withDescription('boolean');
         $builder = $builder->withNullable(true);
-        $this->assertEquals(new BooleanSchema(true, 'boolean'), $builder->build());
+        $builder = $builder->withDeprecated(true);
+
+        $this->assertEquals(new BooleanSchema(true, 'boolean', null, true), $builder->build());
     }
 }

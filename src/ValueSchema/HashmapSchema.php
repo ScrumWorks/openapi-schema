@@ -18,12 +18,13 @@ final class HashmapSchema extends AbstractValueSchema
         array $requiredProperties = [],
         bool $nullable = false,
         ?string $description = null,
-        ?string $schemaName = null
+        ?string $schemaName = null,
+        bool $isDeprecated = false
     ) {
         $this->itemsSchema = $itemsSchema;
         $this->requiredProperties = $requiredProperties;
 
-        parent::__construct($nullable, $description, $schemaName);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 
     public function getItemsSchema(): ValueSchemaInterface
