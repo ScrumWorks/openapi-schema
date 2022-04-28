@@ -9,25 +9,15 @@ use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 final class UnionSchema extends AbstractValueSchema
 {
     /**
-     * @var ValueSchemaInterface[]
-     */
-    private array $possibleSchemas;
-
-    private ?string $discriminatorPropertyName;
-
-    /**
      * @param ValueSchemaInterface[] $possibleSchemas
      */
     public function __construct(
-        array $possibleSchemas,
-        ?string $discriminatorPropertyName = null,
+        private readonly array $possibleSchemas,
+        private readonly ?string $discriminatorPropertyName = null,
         bool $nullable = false,
         ?string $description = null,
         bool $isDeprecated = false
     ) {
-        $this->possibleSchemas = $possibleSchemas;
-        $this->discriminatorPropertyName = $discriminatorPropertyName;
-
         parent::__construct($nullable, $description, null, $isDeprecated);
 
         $this->nullable = $this->nullable || \array_reduce(

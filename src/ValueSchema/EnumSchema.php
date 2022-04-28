@@ -9,22 +9,15 @@ use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 final class EnumSchema extends AbstractValueSchema
 {
     /**
-     * @var string[]
-     */
-    private array $enum;
-
-    /**
      * @param string[] $enum
      */
     public function __construct(
-        array $enum,
+        private readonly array $enum,
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
         bool $isDeprecated = false
     ) {
-        $this->enum = $enum;
-
         parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 

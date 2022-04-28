@@ -8,33 +8,17 @@ use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 
 final class IntegerSchema extends AbstractValueSchema
 {
-    private ?int $minimum;
-
-    private ?int $maximum;
-
-    private ?bool $exclusiveMinimum;
-
-    private ?bool $exclusiveMaximum;
-
-    private ?int $multipleOf;
-
     public function __construct(
-        ?int $minimum = null,
-        ?int $maximum = null,
-        ?bool $exclusiveMinimum = null,
-        ?bool $exclusiveMaximum = null,
-        ?int $multipleOf = null,
+        private readonly ?int $minimum = null,
+        private readonly ?int $maximum = null,
+        private readonly ?bool $exclusiveMinimum = null,
+        private readonly ?bool $exclusiveMaximum = null,
+        private readonly ?int $multipleOf = null,
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
         bool $isDeprecated = false
     ) {
-        $this->minimum = $minimum;
-        $this->maximum = $maximum;
-        $this->exclusiveMinimum = $exclusiveMinimum;
-        $this->exclusiveMaximum = $exclusiveMaximum;
-        $this->multipleOf = $multipleOf;
-
         parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 
