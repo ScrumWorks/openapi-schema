@@ -18,46 +18,31 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
 
     protected ?float $multipleOf = null;
 
-    /**
-     * @return static
-     */
-    public function withMinimum(?float $minimum)
+    public function withMinimum(?float $minimum): self
     {
         $this->minimum = $minimum;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withMaximum(?float $maximum)
+    public function withMaximum(?float $maximum): self
     {
         $this->maximum = $maximum;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withExclusiveMinimum(?bool $exclusiveMinimum)
+    public function withExclusiveMinimum(?bool $exclusiveMinimum): self
     {
         $this->exclusiveMinimum = $exclusiveMinimum;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withExclusiveMaximum(?bool $exclusiveMaximum)
+    public function withExclusiveMaximum(?bool $exclusiveMaximum): self
     {
         $this->exclusiveMaximum = $exclusiveMaximum;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withMultipleOf(?float $multipleOf)
+    public function withMultipleOf(?float $multipleOf): self
     {
         $this->multipleOf = $multipleOf;
         return $this;

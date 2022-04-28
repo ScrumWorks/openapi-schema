@@ -16,37 +16,25 @@ final class StringSchemaBuilder extends AbstractSchemaBuilder
 
     protected ?string $pattern = null;
 
-    /**
-     * @return static
-     */
-    public function withMinLength(?int $minLength)
+    public function withMinLength(?int $minLength): self
     {
         $this->minLength = $minLength;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withMaxLength(?int $maxLength)
+    public function withMaxLength(?int $maxLength): self
     {
         $this->maxLength = $maxLength;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withFormat(?string $format)
+    public function withFormat(?string $format): self
     {
         $this->format = $format;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withPattern(?string $pattern)
+    public function withPattern(?string $pattern): self
     {
         $this->pattern = $pattern;
         return $this;

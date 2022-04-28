@@ -16,19 +16,13 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
      */
     protected array $requiredProperties = [];
 
-    /**
-     * @return static
-     */
-    public function withItemsSchemaBuilder(?AbstractSchemaBuilder $itemsSchemaBuilder)
+    public function withItemsSchemaBuilder(?AbstractSchemaBuilder $itemsSchemaBuilder): self
     {
         $this->itemsSchemaBuilder = $itemsSchemaBuilder;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withRequiredProperties(array $requiredProperties)
+    public function withRequiredProperties(array $requiredProperties): self
     {
         $this->requiredProperties = $requiredProperties;
         return $this;

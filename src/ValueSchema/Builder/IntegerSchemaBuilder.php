@@ -18,46 +18,31 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
 
     protected ?int $multipleOf = null;
 
-    /**
-     * @return static
-     */
-    public function withMinimum(?int $minimum)
+    public function withMinimum(?int $minimum): self
     {
         $this->minimum = $minimum;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withMaximum(?int $maximum)
+    public function withMaximum(?int $maximum): self
     {
         $this->maximum = $maximum;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withExclusiveMinimum(?bool $exclusiveMinimum)
+    public function withExclusiveMinimum(?bool $exclusiveMinimum): self
     {
         $this->exclusiveMinimum = $exclusiveMinimum;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withExclusiveMaximum(?bool $exclusiveMaximum)
+    public function withExclusiveMaximum(?bool $exclusiveMaximum): self
     {
         $this->exclusiveMaximum = $exclusiveMaximum;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withMultipleOf(?int $multipleOf)
+    public function withMultipleOf(?int $multipleOf): self
     {
         $this->multipleOf = $multipleOf;
         return $this;

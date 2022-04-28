@@ -17,37 +17,25 @@ final class ArraySchemaBuilder extends AbstractSchemaBuilder
 
     protected ?bool $uniqueItems = null;
 
-    /**
-     * @return static
-     */
-    public function withItemsSchemaBuilder(?AbstractSchemaBuilder $itemsSchemaBuilder)
+    public function withItemsSchemaBuilder(?AbstractSchemaBuilder $itemsSchemaBuilder): self
     {
         $this->itemsSchemaBuilder = $itemsSchemaBuilder;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withMinItems(?int $minItems)
+    public function withMinItems(?int $minItems): self
     {
         $this->minItems = $minItems;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withMaxItems(?int $maxItems)
+    public function withMaxItems(?int $maxItems): self
     {
         $this->maxItems = $maxItems;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withUniqueItems(?bool $uniqueItems)
+    public function withUniqueItems(?bool $uniqueItems): self
     {
         $this->uniqueItems = $uniqueItems;
         return $this;

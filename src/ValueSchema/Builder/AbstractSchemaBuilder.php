@@ -16,37 +16,25 @@ abstract class AbstractSchemaBuilder
 
     protected bool $deprecated = false;
 
-    /**
-     * @return static
-     */
-    final public function withNullable(bool $nullable)
+    final public function withNullable(bool $nullable): static
     {
         $this->nullable = $nullable;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    final public function withDescription(?string $description)
+    final public function withDescription(?string $description): static
     {
         $this->description = $description;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    final public function withSchemaName(?string $schemaName)
+    final public function withSchemaName(?string $schemaName): static
     {
         $this->schemaName = $schemaName;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    final public function withDeprecated(bool $deprecated)
+    final public function withDeprecated(bool $deprecated): static
     {
         $this->deprecated = $deprecated;
         return $this;
