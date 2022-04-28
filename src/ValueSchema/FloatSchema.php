@@ -14,6 +14,7 @@ final class FloatSchema extends AbstractValueSchema
         private readonly ?bool $exclusiveMinimum = null,
         private readonly ?bool $exclusiveMaximum = null,
         private readonly ?float $multipleOf = null,
+        private readonly ?float $example = null,
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
@@ -45,6 +46,11 @@ final class FloatSchema extends AbstractValueSchema
     public function getMultipleOf(): ?float
     {
         return $this->multipleOf;
+    }
+
+    public function getExample(): ?float
+    {
+        return $this->example;
     }
 
     protected function validate(): void

@@ -16,6 +16,8 @@ final class StringSchemaBuilder extends AbstractSchemaBuilder
 
     protected ?string $pattern = null;
 
+    protected ?string $example = null;
+
     public function withMinLength(?int $minLength): self
     {
         $this->minLength = $minLength;
@@ -40,6 +42,12 @@ final class StringSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function withExample(?string $example): self
+    {
+        $this->example = $example;
+        return $this;
+    }
+
     public function getMinLength(): ?int
     {
         return $this->minLength;
@@ -60,6 +68,11 @@ final class StringSchemaBuilder extends AbstractSchemaBuilder
         return $this->pattern;
     }
 
+    public function getExample(): ?string
+    {
+        return $this->example;
+    }
+
     public function build(): StringSchema
     {
         return new StringSchema(
@@ -67,6 +80,7 @@ final class StringSchemaBuilder extends AbstractSchemaBuilder
             $this->maxLength,
             $this->format,
             $this->pattern,
+            $this->example,
             $this->nullable,
             $this->description,
             $this->schemaName,

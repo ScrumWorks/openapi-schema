@@ -24,10 +24,25 @@ class FloatSchemaBuilderTest extends TestCase
         $builder = $builder->withExclusiveMinimum(true);
         $builder = $builder->withExclusiveMaximum(false);
         $builder = $builder->withMultipleOf(0.1);
+        $builder = $builder->withExample(1.9);
         $builder = $builder->withDescription('float');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
 
-        $this->assertEquals(new FloatSchema(1.1, 2.2, true, false, 0.1, true, 'float', null, true), $builder->build());
+        $this->assertEquals(
+            new FloatSchema(
+                minimum: 1.1,
+                maximum: 2.2,
+                exclusiveMinimum: true,
+                exclusiveMaximum: false,
+                multipleOf: 0.1,
+                example: 1.9,
+                nullable: true,
+                description: 'float',
+                schemaName: null,
+                isDeprecated: true,
+            ),
+            $builder->build(),
+        );
     }
 }

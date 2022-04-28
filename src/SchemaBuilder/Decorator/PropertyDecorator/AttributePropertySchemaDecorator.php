@@ -114,6 +114,9 @@ final class AttributePropertySchemaDecorator extends AbstractAttributeSchemaDeco
             if ($attribute->getMultipleOf() !== null) {
                 $builder = $builder->withMultipleOf($attribute->getMultipleOf());
             }
+            if ($attribute->getExample() !== null) {
+                $builder = $builder->withExample($attribute->getExample());
+            }
         }
 
         return $builder;
@@ -141,6 +144,9 @@ final class AttributePropertySchemaDecorator extends AbstractAttributeSchemaDeco
             }
             if ($attribute->getMultipleOf() !== null) {
                 $builder = $builder->withMultipleOf($attribute->getMultipleOf());
+            }
+            if ($attribute->getExample() !== null) {
+                $builder = $builder->withExample($attribute->getExample());
             }
         }
 
@@ -172,6 +178,9 @@ final class AttributePropertySchemaDecorator extends AbstractAttributeSchemaDeco
             }
             if ($attribute->getPattern() !== null) {
                 $builder = $builder->withPattern($attribute->getPattern());
+            }
+            if ($attribute->getExample() !== null) {
+                $builder = $builder->withExample($attribute->getExample());
             }
         }
 

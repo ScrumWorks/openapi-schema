@@ -12,6 +12,7 @@ final class StringValue implements ValueInterface
         private readonly ?int $maxLength = null,
         private readonly ?string $format = null,
         private readonly ?string $pattern = null,
+        private readonly ?string $example = null,
     ) {
     }
 
@@ -33,5 +34,10 @@ final class StringValue implements ValueInterface
     public function getPattern(): ?string
     {
         return $this->pattern;
+    }
+
+    public function getExample(): ?string
+    {
+        return $this->example;
     }
 }

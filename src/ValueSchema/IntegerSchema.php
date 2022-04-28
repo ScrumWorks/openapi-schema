@@ -14,6 +14,7 @@ final class IntegerSchema extends AbstractValueSchema
         private readonly ?bool $exclusiveMinimum = null,
         private readonly ?bool $exclusiveMaximum = null,
         private readonly ?int $multipleOf = null,
+        private readonly ?int $example = null,
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
@@ -45,6 +46,11 @@ final class IntegerSchema extends AbstractValueSchema
     public function getMultipleOf(): ?int
     {
         return $this->multipleOf;
+    }
+
+    public function getExample(): ?int
+    {
+        return $this->example;
     }
 
     protected function validate(): void

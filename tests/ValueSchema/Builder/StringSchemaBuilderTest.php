@@ -19,14 +19,28 @@ class StringSchemaBuilderTest extends TestCase
     public function testFullBuild(): void
     {
         $builder = new StringSchemaBuilder();
-        $builder = $builder->withMinLength(10);
+        $builder = $builder->withMinLength(3);
         $builder = $builder->withMaxLength(12);
         $builder = $builder->withFormat('email');
         $builder = $builder->withPattern('[a-z]+');
+        $builder = $builder->withExample('example');
         $builder = $builder->withDescription('string');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
 
-        $this->assertEquals(new StringSchema(10, 12, 'email', '[a-z]+', true, 'string', null, true), $builder->build());
+        $this->assertEquals(
+            new StringSchema(
+                minLength: 3,
+                maxLength: 12,
+                format: 'email',
+                pattern: '[a-z]+',
+                example: 'example',
+                nullable: true,
+                description: 'string',
+                schemaName: null,
+                isDeprecated: true,
+            ),
+            $builder->build(),
+        );
     }
 }

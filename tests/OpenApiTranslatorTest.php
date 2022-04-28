@@ -47,7 +47,12 @@ class OpenApiTranslatorTest extends TestCase
         return [
             'mixed:minimal' => [new MixedSchema(), []],
             'mixed:full' => [
-                new MixedSchema(true, 'mixed', null, true),
+                new MixedSchema(
+                    nullable: true,
+                    description: 'mixed',
+                    schemaName: null,
+                    isDeprecated: true,
+                ),
                 [
                     'nullable' => true,
                     'description' => 'mixed',
@@ -67,7 +72,18 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'integer:full' => [
-                new IntegerSchema(0, 10, false, true, 2, false, 'integer', null, true),
+                new IntegerSchema(
+                    minimum: 0,
+                    maximum: 10,
+                    exclusiveMinimum: false,
+                    exclusiveMaximum: true,
+                    multipleOf: 2,
+                    example: 12345,
+                    nullable: false,
+                    description: 'integer',
+                    schemaName: null,
+                    isDeprecated: true,
+                ),
                 [
                     'type' => 'integer',
                     'minimum' => 0,
@@ -75,6 +91,7 @@ class OpenApiTranslatorTest extends TestCase
                     'exclusiveMinimum' => false,
                     'exclusiveMaximum' => true,
                     'multipleOf' => 2,
+                    'example' => 12345,
                     'description' => 'integer',
                     'deprecated' => true,
                 ],
@@ -93,7 +110,18 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'float:full' => [
-                new FloatSchema(2.2, 2.8, true, false, 0.2, true, 'float', null, true),
+                new FloatSchema(
+                    minimum: 2.2,
+                    maximum: 2.8,
+                    exclusiveMinimum: true,
+                    exclusiveMaximum: false,
+                    multipleOf: 0.2,
+                    example: 12.345,
+                    nullable: true,
+                    description: 'float',
+                    schemaName: null,
+                    isDeprecated: true,
+                ),
                 [
                     'type' => 'number',
                     'format' => 'float',
@@ -102,6 +130,7 @@ class OpenApiTranslatorTest extends TestCase
                     'exclusiveMinimum' => true,
                     'exclusiveMaximum' => false,
                     'multipleOf' => 0.2,
+                    'example' => 12.345,
                     'description' => 'float',
                     'nullable' => true,
                     'deprecated' => true,
@@ -120,7 +149,12 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'boolean:full' => [
-                new BooleanSchema(true, 'boolean', null, true),
+                new BooleanSchema(
+                    nullable: true,
+                    description: 'boolean',
+                    schemaName: null,
+                    isDeprecated: true,
+                ),
                 [
                     'type' => 'boolean',
                     'description' => 'boolean',
@@ -141,13 +175,24 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'string:full' => [
-                new StringSchema(2, 10, 'email', '[a-z]+', true, 'string', null, true),
+                new StringSchema(
+                    minLength: 2,
+                    maxLength: 10,
+                    format: 'email',
+                    pattern: '[a-z]+',
+                    example: 'example string',
+                    nullable: true,
+                    description: 'string',
+                    schemaName: null,
+                    isDeprecated: true,
+                ),
                 [
                     'type' => 'string',
                     'minLength' => 2,
                     'maxLength' => 10,
                     'format' => 'email',
                     'pattern' => '[a-z]+',
+                    'example' => 'example string',
                     'description' => 'string',
                     'nullable' => true,
                     'deprecated' => true,
@@ -175,7 +220,13 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'enum:full' => [
-                new EnumSchema(['value', 'value2'], false, 'enum', null, true),
+                new EnumSchema(
+                    enum: ['value', 'value2'],
+                    nullable: false,
+                    description: 'enum',
+                    schemaName: null,
+                    isDeprecated: true,
+                ),
                 [
                     'type' => 'string',
                     'enum' => ['value', 'value2'],
@@ -206,7 +257,16 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'array:full' => [
-                new ArraySchema(new StringSchema(), 1, 3, true, false, 'array', null, true),
+                new ArraySchema(
+                    itemsSchema: new StringSchema(),
+                    minItems: 1,
+                    maxItems: 3,
+                    uniqueItems: true,
+                    nullable: false,
+                    description: 'array',
+                    schemaName: null,
+                    isDeprecated: true,
+                ),
                 [
                     'type' => 'array',
                     'items' => [
@@ -238,7 +298,7 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'hashmap:minimal' => [
-                new HashmapSchema(new StringSchema(null, null, null, null, true)),
+                new HashmapSchema(new StringSchema(nullable: true)),
                 [
                     'type' => 'object',
                     'additionalProperties' => [
@@ -255,7 +315,14 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'hashmap:full' => [
-                new HashmapSchema(new IntegerSchema(), ['property'], false, 'hashmap', null, true),
+                new HashmapSchema(
+                    itemsSchema: new IntegerSchema(),
+                    requiredProperties: ['property'],
+                    nullable: false,
+                    description: 'hashmap',
+                    schemaName: null,
+                    isDeprecated: true,
+                ),
                 [
                     'type' => 'object',
                     'properties' => [

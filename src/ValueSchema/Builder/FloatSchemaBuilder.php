@@ -18,6 +18,8 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
 
     protected ?float $multipleOf = null;
 
+    protected ?float $example = null;
+
     public function withMinimum(?float $minimum): self
     {
         $this->minimum = $minimum;
@@ -48,6 +50,12 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function withExample(?float $example): self
+    {
+        $this->example = $example;
+        return $this;
+    }
+
     public function getMinimum(): ?float
     {
         return $this->minimum;
@@ -73,6 +81,11 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
         return $this->multipleOf;
     }
 
+    public function getExample(): ?float
+    {
+        return $this->example;
+    }
+
     public function build(): FloatSchema
     {
         return new FloatSchema(
@@ -81,10 +94,11 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
             $this->exclusiveMinimum,
             $this->exclusiveMaximum,
             $this->multipleOf,
+            $this->example,
             $this->nullable,
             $this->description,
             $this->schemaName,
-            $this->deprecated
+            $this->deprecated,
         );
     }
 }
