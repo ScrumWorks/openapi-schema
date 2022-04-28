@@ -13,6 +13,7 @@ final class StringSchema extends AbstractValueSchema
         private readonly ?int $maxLength = null,
         private readonly ?string $format = null,
         private readonly ?string $pattern = null,
+        private readonly ?string $example = null,
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
@@ -39,6 +40,11 @@ final class StringSchema extends AbstractValueSchema
     public function getPattern(): ?string
     {
         return $this->pattern;
+    }
+
+    public function getExample(): ?string
+    {
+        return $this->example;
     }
 
     protected function validate(): void

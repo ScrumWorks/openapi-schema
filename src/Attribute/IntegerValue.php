@@ -13,6 +13,7 @@ final class IntegerValue implements ValueInterface
         private readonly ?bool $exclusiveMinimum = null,
         private readonly ?bool $exclusiveMaximum = null,
         private readonly ?int $multipleOf = null,
+        private readonly ?int $example = null,
     ) {
     }
 
@@ -39,5 +40,10 @@ final class IntegerValue implements ValueInterface
     public function getMultipleOf(): ?int
     {
         return $this->multipleOf;
+    }
+
+    public function getExample(): ?int
+    {
+        return $this->example;
     }
 }

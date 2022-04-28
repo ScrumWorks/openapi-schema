@@ -18,6 +18,8 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
 
     protected ?int $multipleOf = null;
 
+    protected ?int $example = null;
+
     public function withMinimum(?int $minimum): self
     {
         $this->minimum = $minimum;
@@ -48,6 +50,12 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    public function withExample(?int $example): self
+    {
+        $this->example = $example;
+        return $this;
+    }
+
     public function getMinimum(): ?int
     {
         return $this->minimum;
@@ -73,6 +81,11 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
         return $this->multipleOf;
     }
 
+    public function getExample(): ?int
+    {
+        return $this->example;
+    }
+
     public function build(): IntegerSchema
     {
         return new IntegerSchema(
@@ -81,6 +94,7 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
             $this->exclusiveMinimum,
             $this->exclusiveMaximum,
             $this->multipleOf,
+            $this->example,
             $this->nullable,
             $this->description,
             $this->schemaName,

@@ -13,6 +13,7 @@ final class FloatValue implements ValueInterface
         private readonly ?bool $exclusiveMinimum = null,
         private readonly ?bool $exclusiveMaximum = null,
         private readonly ?float $multipleOf = null,
+        private readonly ?float $example = null,
     ) {
     }
 
@@ -39,5 +40,10 @@ final class FloatValue implements ValueInterface
     public function getMultipleOf(): ?float
     {
         return $this->multipleOf;
+    }
+
+    public function getExample(): ?float
+    {
+        return $this->example;
     }
 }

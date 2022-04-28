@@ -58,6 +58,9 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         if ($schema->getPattern() !== null) {
             $definition['pattern'] = $schema->getPattern();
         }
+        if ($schema->getExample() !== null) {
+            $definition['example'] = $schema->getExample();
+        }
         return $definition;
     }
 
@@ -80,6 +83,9 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         }
         if ($schema->getMultipleOf() !== null) {
             $definition['multipleOf'] = $schema->getMultipleOf();
+        }
+        if ($schema->getExample() !== null) {
+            $definition['example'] = $schema->getExample();
         }
         return $definition;
     }
@@ -104,6 +110,9 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         }
         if ($schema->getMultipleOf() !== null) {
             $definition['multipleOf'] = $schema->getMultipleOf();
+        }
+        if ($schema->getExample() !== null) {
+            $definition['example'] = $schema->getExample();
         }
         return $definition;
     }
