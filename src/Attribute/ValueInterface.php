@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ScrumWorks\OpenApiSchema\Annotation;
+namespace ScrumWorks\OpenApiSchema\Attribute;
 
 interface ValueInterface
 {

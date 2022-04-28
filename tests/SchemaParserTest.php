@@ -6,7 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Tests;
 
 use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
-use ScrumWorks\OpenApiSchema\Annotation as OA;
+use ScrumWorks\OpenApiSchema\Attribute as OA;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
@@ -18,29 +18,21 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 
-/**
- * @OA\ComponentSchema(schemaName="subEntity")
- */
+#[OA\ComponentSchema(schemaName: "subEntity")]
 class TestSubEntity
 {
-    /**
-     * @OA\IntegerValue(minimum=25)
-     * @OA\Property(description="sub...")
-     */
+    #[OA\IntegerValue(minimum: 25)]
+    #[OA\Property(description: "sub...")]
     public int $subInteger;
 }
 
-/**
- * @OA\ComponentSchema(schemaName="AEnt")
- */
+#[OA\ComponentSchema(schemaName: "AEnt")]
 class AEntity
 {
     public string $type;
 }
 
-/**
- * @OA\ComponentSchema(schemaName="BEnt")
- */
+#[OA\ComponentSchema(schemaName: "BEnt")]
 class BEntity
 {
     public string $type;
@@ -48,63 +40,48 @@ class BEntity
 
 class TestEntity
 {
-    /**
-     * @OA\IntegerValue(minimum=1, maximum=5, exclusiveMaximum=true)
-     * @OA\Property(required=false, description="Important integer")
-     */
+    #[OA\IntegerValue(minimum: 1, maximum: 5, exclusiveMaximum: true)]
+    #[OA\Property(description: "Important integer", required: false)]
     public int $integer;
 
-    /**
-     * @OA\FloatValue(minimum=10.3, maximum=50.5, exclusiveMinimum=true, exclusiveMaximum=false)
-     * @OA\Property(required=true, description="Important float")
-     */
+    #[OA\FloatValue(minimum: 10.3, maximum: 50.5, exclusiveMinimum: true, exclusiveMaximum: false)]
+    #[OA\Property(description: "Important float", required: true)]
     public float $float = 13.3;
 
-    /**
-     * @OA\EnumValue(enum={"a","b"})
-     */
+    #[OA\EnumValue(enum: ["a","b"])]
     public ?string $enum = null;
 
-    /**
-     * @OA\StringValue(minLength=10, maxLength=100, format="date", pattern="[0-9]+")
-     */
+    #[OA\StringValue(minLength: 10, maxLength: 100, format: "date", pattern: "[0-9]+")]
     public ?string $string;
 
     /**
      * @var int[]
-     * @OA\ArrayValue(minItems=3, maxItems=7, uniqueItems=true, itemsSchema=@OA\IntegerValue(minimum=3))
-     * @OA\Property(required=true)
      */
+    #[OA\ArrayValue(minItems: 3, maxItems: 7, uniqueItems: true, itemsSchema: new OA\IntegerValue(minimum: 3))]
+    #[OA\Property(required: true)]
     public array $array;
 
     /**
      * @var array<string,int[]>
-     * @OA\HashmapValue(
-     *     requiredProperties={"reqKey"},
-     *     itemsSchema=@OA\ArrayValue(maxItems=10, itemsSchema=@OA\IntegerValue(multipleOf=2))
-     * )
      */
+    #[OA\HashmapValue(
+        requiredProperties: ["reqKey"],
+        itemsSchema: new OA\ArrayValue(maxItems: 10, itemsSchema: new OA\IntegerValue(multipleOf: 2)),
+    )]
     public array $hashmap = [];
 
     public TestSubEntity $class;
 
     /**
      * @var int|string|null
-     *
-     * @OA\Union(types={ @OA\IntegerValue(minimum=2), @OA\StringValue(minLength=10) })
      */
+    #[OA\Union(types: [new OA\IntegerValue(minimum: 2), new OA\StringValue(minLength: 10)])]
     public $scalarUnion;
 
-    /**
-     * @var AEntity|BEntity
-     *
-     * @OA\Union(discriminator="type", mapping={ "a": "AEnt", "b": "BEnt" })
-     */
-    public $objectUnion;
+    #[OA\Union(discriminator: "type", mapping: ["a" => "AEnt", "b" => "BEnt"])]
+    public AEntity|BEntity $objectUnion;
 
-    /**
-     * @OA\Property(description="Moment", deprecated=true)
-     */
+    #[OA\Property(description: "Moment", deprecated: true)]
     public ?DateTimeInterface $dateTime = null;
 }
 
@@ -134,7 +111,7 @@ class SchemaParserTest extends TestCase
         $this->assertFalse($entitySchema->isNullable());
         $this->assertNull($entitySchema->getDescription());
         $this->assertNull($entitySchema->getSchemaName());
-        $this->assertSame(['float', 'string', 'array', 'class'], $entitySchema->getRequiredProperties());
+        $this->assertSame(['float', 'string', 'array', 'class', 'objectUnion'], $entitySchema->getRequiredProperties());
 
         /** @var IntegerSchema $integerSchema */
         $integerSchema = $entitySchema->getPropertySchema('integer');

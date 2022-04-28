@@ -11,24 +11,23 @@
         }
     ],
     "require": {
-        "doctrine/annotations": "^1.11",
         "ext-json": "*",
         "nette/di": "^3.0",
         "nette/utils": "^3.1",
-        "php": ">=7.4",
+        "php": ">=8.1",
         "scrumworks/property-reader": "^0.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.4.2",
-        "php-parallel-lint/php-parallel-lint": "^1.2",
+        "phpunit/phpunit": "^9.5",
+        "php-parallel-lint/php-parallel-lint": "^1.3",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^0.12.48",
-        "phpstan/phpstan-nette": "^0.12.0",
-        "symplify/easy-coding-standard": "^9.0",
-        "symplify/easy-testing": "^9.0",
-        "symplify/easy-ci": "^9.0",
-        "symplify/phpstan-extensions": "^9.0",
-        "slevomat/coding-standard": "^6.4"
+        "phpstan/phpstan": "^1.6",
+        "phpstan/phpstan-nette": "^1.0",
+        "symplify/easy-coding-standard": "^10.2",
+        "symplify/easy-testing": "^10.2",
+        "symplify/easy-ci": "^10.2",
+        "symplify/phpstan-extensions": "^10.2",
+        "slevomat/coding-standard": "^7.1"
     },
     "autoload": {
         "psr-4": {
@@ -49,5 +48,11 @@
         "phpstan" : "php -d memory_limit=2048M vendor/bin/phpstan.phar analyse --ansi --error-format symplify",
         "phpunit": "php vendor/bin/phpunit -c ./phpunit.xml",
         "test": ["@lint", "@check-cs", "@phpstan", "@phpunit"]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
     }
 }

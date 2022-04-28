@@ -6,13 +6,13 @@ namespace ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator;
 
 use ReflectionClass;
 use ReflectionProperty;
-use ScrumWorks\OpenApiSchema\Annotation as OA;
-use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\AbstractAnnotationSchemaDecorator;
+use ScrumWorks\OpenApiSchema\Attribute as OA;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\AbstractAttributeSchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassSchemaDecoratorInterface;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\AbstractSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 
-final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecorator implements ClassSchemaDecoratorInterface
+final class AttributeClassSchemaDecorator extends AbstractAttributeSchemaDecorator implements ClassSchemaDecoratorInterface
 {
     public function decorateClassSchemaBuilder(
         AbstractSchemaBuilder $builder,
@@ -33,11 +33,10 @@ final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecor
             }
         }
 
-        $classAnnotations = $this->getClassAnnotations($classReflection);
-        /** @var ?OA\ComponentSchema $componentSchema */
-        $componentSchema = $this->findAnnotation($classAnnotations, OA\ComponentSchema::class, true);
-        if ($componentSchema && $componentSchema->schemaName) {
-            $builder = $builder->withSchemaName($componentSchema->schemaName);
+        $classAttributes = $this->getClassAttributes($classReflection);
+        $componentSchema = $this->findAttribute($classAttributes, OA\ComponentSchema::class, true);
+        if ($componentSchema && $componentSchema->getSchemaName()) {
+            $builder = $builder->withSchemaName($componentSchema->getSchemaName());
         }
 
         return $builder->withRequiredProperties($requiredProperties);
@@ -45,11 +44,10 @@ final class AnnotationClassSchemaDecorator extends AbstractAnnotationSchemaDecor
 
     private function isPropertyRequired(ReflectionProperty $propertyReflection, array $objectDefaultValues): bool
     {
-        $annotations = $this->getPropertyAnnotations($propertyReflection);
-        /** @var ?OA\Property $annotation */
-        $annotation = $this->findAnnotation($annotations, OA\Property::class, false);
-        if ($annotation && $annotation->required !== null) {
-            return $annotation->required;
+        $attributes = $this->getPropertyAttributes($propertyReflection);
+        $attribute = $this->findAttribute($attributes, OA\Property::class, false);
+        if ($attribute && $attribute->getRequired() !== null) {
+            return $attribute->getRequired();
         }
         return ! \array_key_exists($propertyReflection->getName(), $objectDefaultValues);
     }

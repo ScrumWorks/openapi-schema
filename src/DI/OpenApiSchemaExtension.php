@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\DI;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\Definition;
 use Nette\DI\Definitions\Reference;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\PhpGenerator\ClassType;
 use ScrumWorks\OpenApiSchema\OpenApiTranslator;
-use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator\AnnotationClassSchemaDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator\AttributeClassSchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\ClassDecorator\DateTimeClassSchemaDecorator;
-use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertyDecorator\AnnotationPropertySchemaDecorator;
+use ScrumWorks\OpenApiSchema\SchemaBuilder\Decorator\PropertyDecorator\AttributePropertySchemaDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderDecorator;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
 use ScrumWorks\OpenApiSchema\SchemaParser;
@@ -37,13 +36,12 @@ class OpenApiSchemaExtension extends CompilerExtension
 
         $this->addService('dateTimeClassSchemaDecorator', DateTimeClassSchemaDecorator::class)
             ->addTag(self::TAG_PRIORITY, 90);
-        $this->addService('annotationClassSchemaDecorator', AnnotationClassSchemaDecorator::class)
+        $this->addService('attributeClassSchemaDecorator', AttributeClassSchemaDecorator::class)
             ->addTag(self::TAG_PRIORITY, 100);
-        $this->addService('annotationPropertySchemaDecorator', AnnotationPropertySchemaDecorator::class)
+        $this->addService('attributePropertySchemaDecorator', AttributePropertySchemaDecorator::class)
             ->addTag(self::TAG_PRIORITY, 100);
         $this->addService(self::SERVICE_NAME_SCHEMA_BUILDER_DECORATOR, SchemaBuilderDecorator::class);
 
-        $this->addService('annotationReader', AnnotationReader::class);
         $this->addService('variableTypeUnifyService', VariableTypeUnifyService::class);
         $this->addService('propertyTypeReader', PropertyTypeReader::class);
         $this->addService('schemaBuilderFactory', SchemaBuilderFactory::class);

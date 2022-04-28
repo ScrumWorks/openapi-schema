@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\Validation\_Support;
 
 use PHPUnit\Framework\Assert;
-use ScrumWorks\OpenApiSchema\Validation\Result\ValidityViolation;
 use ScrumWorks\OpenApiSchema\Validation\ValidityViolationInterface;
 
 trait AssertViolationTrait
@@ -17,8 +16,8 @@ trait AssertViolationTrait
     public function assertViolations(array $expectedViolations, array $actualViolations): void
     {
         $differentViolationCountMsg = \implode("\n", \array_map(
-            static fn (ValidityViolation $actualViolation) => $actualViolation->getMessageTemplate(),
-            $actualViolations
+            static fn (ValidityViolationInterface $actualViolation): string => $actualViolation->getMessageTemplate(),
+            $actualViolations,
         ));
         Assert::assertCount(\count($expectedViolations), $actualViolations, $differentViolationCountMsg);
 
