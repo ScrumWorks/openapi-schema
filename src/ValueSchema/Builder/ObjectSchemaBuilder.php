@@ -20,9 +20,8 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
 
     /**
      * @param array<string, AbstractSchemaBuilder> $propertiesSchemaBuilders
-     * @return static
      */
-    public function withPropertiesSchemaBuilders(array $propertiesSchemaBuilders)
+    public function withPropertiesSchemaBuilders(array $propertiesSchemaBuilders): self
     {
         $this->propertiesSchemaBuilders = $propertiesSchemaBuilders;
         return $this;
@@ -30,9 +29,8 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
 
     /**
      * @param string[] $requiredProperties
-     * @return static
      */
-    public function withRequiredProperties(array $requiredProperties)
+    public function withRequiredProperties(array $requiredProperties): self
     {
         $this->requiredProperties = $requiredProperties;
         return $this;

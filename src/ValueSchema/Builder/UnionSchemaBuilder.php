@@ -25,18 +25,14 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
 
     /**
      * @param AbstractSchemaBuilder[] $possibleSchemaBuilders
-     * @return static
      */
-    public function withPossibleSchemaBuilders(array $possibleSchemaBuilders)
+    public function withPossibleSchemaBuilders(array $possibleSchemaBuilders): self
     {
         $this->possibleSchemaBuilders = $possibleSchemaBuilders;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function withDiscriminatorPropertyName(?string $discriminatorPropertyName)
+    public function withDiscriminatorPropertyName(?string $discriminatorPropertyName): self
     {
         $this->discriminatorPropertyName = $discriminatorPropertyName;
         return $this;

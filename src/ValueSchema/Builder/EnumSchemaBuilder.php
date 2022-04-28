@@ -16,9 +16,8 @@ final class EnumSchemaBuilder extends AbstractSchemaBuilder
 
     /**
      * @param string[] $enum
-     * @return static
      */
-    public function withEnum(array $enum)
+    public function withEnum(array $enum): self
     {
         $this->enum = $enum;
         return $this;
