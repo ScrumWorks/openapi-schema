@@ -8,33 +8,17 @@ use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 
 final class FloatSchema extends AbstractValueSchema
 {
-    private ?float $minimum;
-
-    private ?float $maximum;
-
-    private ?bool $exclusiveMinimum;
-
-    private ?bool $exclusiveMaximum;
-
-    private ?float $multipleOf;
-
     public function __construct(
-        ?float $minimum = null,
-        ?float $maximum = null,
-        ?bool $exclusiveMinimum = null,
-        ?bool $exclusiveMaximum = null,
-        ?float $multipleOf = null,
+        private readonly ?float $minimum = null,
+        private readonly ?float $maximum = null,
+        private readonly ?bool $exclusiveMinimum = null,
+        private readonly ?bool $exclusiveMaximum = null,
+        private readonly ?float $multipleOf = null,
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
         bool $isDeprecated = false
     ) {
-        $this->minimum = $minimum;
-        $this->maximum = $maximum;
-        $this->exclusiveMinimum = $exclusiveMinimum;
-        $this->exclusiveMaximum = $exclusiveMaximum;
-        $this->multipleOf = $multipleOf;
-
         parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 

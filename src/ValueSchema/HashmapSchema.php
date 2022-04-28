@@ -6,24 +6,17 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
 final class HashmapSchema extends AbstractValueSchema
 {
-    private ValueSchemaInterface $itemsSchema;
-
     /**
-     * @var string[]
+     * @param string[] $requiredProperties
      */
-    private array $requiredProperties;
-
     public function __construct(
-        ValueSchemaInterface $itemsSchema,
-        array $requiredProperties = [],
+        private readonly ValueSchemaInterface $itemsSchema,
+        private readonly array $requiredProperties = [],
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
         bool $isDeprecated = false
     ) {
-        $this->itemsSchema = $itemsSchema;
-        $this->requiredProperties = $requiredProperties;
-
         parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 

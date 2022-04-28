@@ -8,29 +8,16 @@ use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 
 final class StringSchema extends AbstractValueSchema
 {
-    private ?int $minLength;
-
-    private ?int $maxLength;
-
-    private ?string $format;
-
-    private ?string $pattern;
-
     public function __construct(
-        ?int $minLength = null,
-        ?int $maxLength = null,
-        ?string $format = null,
-        ?string $pattern = null,
+        private readonly ?int $minLength = null,
+        private readonly ?int $maxLength = null,
+        private readonly ?string $format = null,
+        private readonly ?string $pattern = null,
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
         bool $isDeprecated = false
     ) {
-        $this->minLength = $minLength;
-        $this->maxLength = $maxLength;
-        $this->format = $format;
-        $this->pattern = $pattern;
-
         parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 

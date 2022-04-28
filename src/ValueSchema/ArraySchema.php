@@ -8,29 +8,16 @@ use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 
 final class ArraySchema extends AbstractValueSchema
 {
-    private ValueSchemaInterface $itemsSchema;
-
-    private ?int $minItems;
-
-    private ?int $maxItems;
-
-    private ?bool $uniqueItems;
-
     public function __construct(
-        ValueSchemaInterface $itemsSchema,
-        ?int $minItems = null,
-        ?int $maxItems = null,
-        ?bool $uniqueItems = null,
+        private readonly ValueSchemaInterface $itemsSchema,
+        private readonly ?int $minItems = null,
+        private readonly ?int $maxItems = null,
+        private readonly ?bool $uniqueItems = null,
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
         bool $isDeprecated = false
     ) {
-        $this->itemsSchema = $itemsSchema;
-        $this->minItems = $minItems;
-        $this->maxItems = $maxItems;
-        $this->uniqueItems = $uniqueItems;
-
         parent::__construct($nullable, $description, $schemaName, $isDeprecated);
     }
 
