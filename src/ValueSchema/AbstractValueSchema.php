@@ -35,5 +35,5 @@ abstract class AbstractValueSchema implements ValueSchemaInterface
         return $this->isDeprecated;
     }
 
-    abstract protected function validate();
+    abstract protected function validate(): void;
 }
