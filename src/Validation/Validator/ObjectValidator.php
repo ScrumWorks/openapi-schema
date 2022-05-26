@@ -58,7 +58,8 @@ final class ObjectValidator extends AbstractValidator
                 $propertyValidationResult = $this->valueValidator->validate(
                     $propertySchemas[$propertyName],
                     $propertyData,
-                    $breadCrumbPath->withNextBreadCrumb($propertyName))
+                    $breadCrumbPath->withNextBreadCrumb($propertyName)
+                )
                 ;
                 $resultBuilder->mergeResult($propertyValidationResult);
             }

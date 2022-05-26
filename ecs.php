@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff;
 use PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer;
 use PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer;
 use PhpCsFixer\Fixer\Import\GlobalNamespaceImportFixer;
@@ -28,117 +29,81 @@ use SlevomatCodingStandard\Sniffs\PHP\UselessParenthesesSniff;
 use SlevomatCodingStandard\Sniffs\PHP\UselessSemicolonSniff;
 use SlevomatCodingStandard\Sniffs\Variables\DuplicateAssignmentToVariableSniff;
 use SlevomatCodingStandard\Sniffs\Variables\UselessVariableSniff;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
 use Symplify\CodingStandard\Fixer\Commenting\ParamReturnAndVarTagMalformsFixer;
 use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
+use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 # see https://github.com/symplify/easy-coding-standard
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
-
-    $parameters->set('paths', [
+return static function (ECSConfig $ecsConfig): void {
+    $ecsConfig->paths([
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ]);
 
-    $parameters->set('sets', [
+    $ecsConfig->sets([
         # pick anything from https://github.com/symplify/easy-coding-standard#use-prepared-checker-sets
         SetList::PSR_12,
         SetList::COMMON,
         SetList::CLEAN_CODE,
-        SetList::ARRAY,
         SetList::STRICT,
         SetList::SYMPLIFY,
-        SetList::CONTROL_STRUCTURES,
     ]);
 
-    $parameters->set('skip', [
-        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME_WITHOUT_NAMESPACE => null,
-        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_PARTIAL_USE => null,
+    $ecsConfig->skip([
+        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME_WITHOUT_NAMESPACE,
+        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_PARTIAL_USE,
+        ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME,
+
+        AssignmentInConditionSniff::class . '.Found',
+        MethodChainingNewlineFixer::class,
 
         # resolve later with strict_types
-        DeclareStrictTypesFixer::class => null,
-        StrictComparisonFixer::class => null,
-        PhpUnitStrictFixer::class => null,
-        StrictParamFixer::class => null,
+        // DeclareStrictTypesFixer::class,
+        StrictComparisonFixer::class,
+        PhpUnitStrictFixer::class,
+        StrictParamFixer::class,
         # breaks code
-        ReferenceThrowableOnlySniff::class . '.' . ReferenceThrowableOnlySniff::CODE_REFERENCED_GENERAL_EXCEPTION => null,
+        ReferenceThrowableOnlySniff::class . '.' . ReferenceThrowableOnlySniff::CODE_REFERENCED_GENERAL_EXCEPTION,
         UnusedUsesSniff::class . '.' . UnusedUsesSniff::CODE_MISMATCHING_CASE => [
+
             __DIR__ . '/tests/*',
         ],
     ]);
 
-    $services = $containerConfigurator->services();
 
-    $services->set(MethodChainingIndentationFixer::class);
-
-    $services->set(GeneralPhpdocAnnotationRemoveFixer::class)
-        ->call('configure', [[
-            'annotations' => ['author', 'package', 'group', 'autor', 'covers']
-        ]]);
-
-    # add preslash to every native function, to speedup process, e.g. \count()
-    $services->set(NativeFunctionInvocationFixer::class);
-
-    # limit line length to 120 chars
-    $services->set(LineLengthFixer::class);
+    $ecsConfig->ruleWithConfiguration(GeneralPhpdocAnnotationRemoveFixer::class, [
+        'annotations' => ['author', 'package', 'group', 'autor', 'covers']
+    ]);
 
     # imports FQN names
-    $services->set(ReferenceUsedNamesOnlySniff::class)
-        ->property('searchAnnotations', true)
-        ->property('allowFullyQualifiedGlobalFunctions', true)
-        ->property('allowFullyQualifiedGlobalConstants', true)
-        ->property('allowPartialUses', false);
+    $ecsConfig->ruleWithConfiguration(ReferenceUsedNamesOnlySniff::class, [
+        'searchAnnotations' => true,
+        'allowFullyQualifiedGlobalFunctions' => true,
+        'allowFullyQualifiedGlobalConstants' => true,
+        'allowPartialUses' => false
+    ]);
 
-    # make @var annotation into doc block
-    $services->set(PhpdocLineSpanFixer::class);
-
-    $services->set(MethodChainingIndentationFixer::class);
-
-    # array - item per line
-    $services->set(StandaloneLineInMultilineArrayFixer::class);
-
-    # make @param, @return and @var format united
-    $services->set(ParamReturnAndVarTagMalformsFixer::class);
-
-    # use 4 spaces to indent
-    $services->set(IndentationTypeFixer::class);
-
-    # native functions should be casted in lowercase
-    $services->set(NativeFunctionInvocationFixer::class)
-        ->call('configure', [[
-            'include' => [NativeFunctionInvocationFixer::SET_ALL]
-        ]]);
-
-    # import namespaces
-    $services->set(FullyQualifiedStrictTypesFixer::class);
-
-    $services->set(GlobalNamespaceImportFixer::class);
-
-    # slevomat rules from ruleset.xml
-    $services->set(UseFromSameNamespaceSniff::class);
-
-    $services->set(DuplicateAssignmentToVariableSniff::class);
-
-    $services->set(OptimizedFunctionsWithoutUnpackingSniff::class);
-
-    $services->set(UselessSemicolonSniff::class);
-
-    $services->set(DeadCatchSniff::class);
-
-    $services->set(UselessVariableSniff::class);
-
-    $services->set(UselessParenthesesSniff::class);
-
-    $services->set(DisallowLateStaticBindingForConstantsSniff::class);
-
-    $services->set(UselessLateStaticBindingSniff::class);
-
-    $services->set(RequireNullCoalesceOperatorSniff::class);
-
-    $services->set(StaticClosureSniff::class);
-
-    $services->set(DisallowImplicitArrayCreationSniff::class);
+    $ecsConfig->rules([
+        PhpdocLineSpanFixer::class,
+        LineLengthFixer::class,
+        StandaloneLineInMultilineArrayFixer::class,
+        ParamReturnAndVarTagMalformsFixer::class,
+        IndentationTypeFixer::class,
+        FullyQualifiedStrictTypesFixer::class,
+        UseFromSameNamespaceSniff::class,
+        DuplicateAssignmentToVariableSniff::class,
+        OptimizedFunctionsWithoutUnpackingSniff::class,
+        UselessSemicolonSniff::class,
+        DeadCatchSniff::class,
+        UselessVariableSniff::class,
+        UselessParenthesesSniff::class,
+        DisallowLateStaticBindingForConstantsSniff::class,
+        UselessLateStaticBindingSniff::class,
+        RequireNullCoalesceOperatorSniff::class,
+        StaticClosureSniff::class,
+        DisallowImplicitArrayCreationSniff::class,
+    ]);
 };

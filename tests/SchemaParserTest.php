@@ -18,21 +18,21 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 
-#[OA\ComponentSchema(schemaName: "subEntity")]
+#[OA\ComponentSchema(schemaName: 'subEntity')]
 class TestSubEntity
 {
     #[OA\IntegerValue(minimum: 25)]
-    #[OA\Property(description: "sub...")]
+    #[OA\Property(description: 'sub...')]
     public int $subInteger;
 }
 
-#[OA\ComponentSchema(schemaName: "AEnt")]
+#[OA\ComponentSchema(schemaName: 'AEnt')]
 class AEntity
 {
     public string $type;
 }
 
-#[OA\ComponentSchema(schemaName: "BEnt")]
+#[OA\ComponentSchema(schemaName: 'BEnt')]
 class BEntity
 {
     public string $type;
@@ -41,17 +41,17 @@ class BEntity
 class TestEntity
 {
     #[OA\IntegerValue(minimum: 1, maximum: 5, exclusiveMaximum: true)]
-    #[OA\Property(description: "Important integer", required: false)]
+    #[OA\Property(description: 'Important integer', required: false)]
     public int $integer;
 
     #[OA\FloatValue(minimum: 10.3, maximum: 50.5, exclusiveMinimum: true, exclusiveMaximum: false)]
-    #[OA\Property(description: "Important float", required: true)]
+    #[OA\Property(description: 'Important float', required: true)]
     public float $float = 13.3;
 
-    #[OA\EnumValue(enum: ["a","b"])]
+    #[OA\EnumValue(enum: ['a', 'b'])]
     public ?string $enum = null;
 
-    #[OA\StringValue(minLength: 10, maxLength: 100, format: "date", pattern: "[0-9]+")]
+    #[OA\StringValue(minLength: 10, maxLength: 100, format: 'date', pattern: '[0-9]+')]
     public ?string $string;
 
     /**
@@ -65,7 +65,7 @@ class TestEntity
      * @var array<string,int[]>
      */
     #[OA\HashmapValue(
-        requiredProperties: ["reqKey"],
+        requiredProperties: ['reqKey'],
         itemsSchema: new OA\ArrayValue(maxItems: 10, itemsSchema: new OA\IntegerValue(multipleOf: 2)),
     )]
     public array $hashmap = [];
@@ -78,10 +78,13 @@ class TestEntity
     #[OA\Union(types: [new OA\IntegerValue(minimum: 2), new OA\StringValue(minLength: 10)])]
     public $scalarUnion;
 
-    #[OA\Union(discriminator: "type", mapping: ["a" => "AEnt", "b" => "BEnt"])]
+    #[OA\Union(discriminator: 'type', mapping: [
+        'a' => 'AEnt',
+        'b' => 'BEnt',
+    ])]
     public AEntity|BEntity $objectUnion;
 
-    #[OA\Property(description: "Moment", deprecated: true)]
+    #[OA\Property(description: 'Moment', deprecated: true)]
     public ?DateTimeInterface $dateTime = null;
 }
 
