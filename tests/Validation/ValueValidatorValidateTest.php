@@ -120,7 +120,10 @@ class ValueValidatorValidateTest extends TestCase
             'float:int' => [new FloatSchema(), 1, []],
             'float:null' => [new FloatSchema(), null, [[1001, 'Unexpected NULL value.', [], '']]],
             'float:type' => [new FloatSchema(), '1.0', [[1002, "Type '%s' expected.", ['number'], '']]],
-            'float:min' => [new FloatSchema(minimum: 1.0), 0.5, [[1009, 'Value has to be bigger or equal then %s.', ['1'], '']]],
+            'float:min' => [
+                new FloatSchema(minimum: 1.0),
+                0.5,
+                [[1009, 'Value has to be bigger or equal then %s.', ['1'], '']], ],
             'float:ex-min' => [
                 new FloatSchema(minimum: 1.0, exclusiveMinimum: true),
                 0.5,
@@ -155,12 +158,18 @@ class ValueValidatorValidateTest extends TestCase
             'int:valid-multipleOf' => [new IntegerSchema(multipleOf: 2), 4, []],
             'int:null' => [new IntegerSchema(), null, [[1001, 'Unexpected NULL value.', [], '']]],
             'int:type' => [new IntegerSchema(), 1.0, [[1002, "Type '%s' expected.", ['integer'], '']]],
-            'int:min' => [new IntegerSchema(minimum: 3), 2, [[1009, 'Value has to be bigger or equal then %s.', ['3'], '']]],
+            'int:min' => [
+                new IntegerSchema(minimum: 3),
+                2,
+                [[1009, 'Value has to be bigger or equal then %s.', ['3'], '']], ],
             'int:ex-min' => [
                 new IntegerSchema(minimum: 3, exclusiveMinimum: true),
                 2,
                 [[1010, 'Value has to be bigger then %s.', ['3'], '']], ],
-            'int:max' => [new IntegerSchema(maximum: 1), 5, [[1011, 'Value has to be less or equal then %s.', ['1'], '']]],
+            'int:max' => [
+                new IntegerSchema(maximum: 1),
+                5,
+                [[1011, 'Value has to be less or equal then %s.', ['1'], '']], ],
             'int:ex-max' => [
                 new IntegerSchema(maximum: 1, exclusiveMaximum: true),
                 5,
@@ -277,11 +286,7 @@ class ValueValidatorValidateTest extends TestCase
             'string:valid-minLength' => [new StringSchema(minLength: 1), 'aa', []],
             'string:valid-maxLength-equal' => [new StringSchema(maxLength: 3), 'aaa', []],
             'string:valid-maxLength' => [new StringSchema(maxLength: 3), 'aa', []],
-            'string:valid-format' => [
-                new StringSchema(format: 'date-time'),
-                '2020-01-02T12:30:44.09+00:30',
-                [],
-            ],
+            'string:valid-format' => [new StringSchema(format: 'date-time'), '2020-01-02T12:30:44.09+00:30', []],
             'string:valid-format-not-supported' => [new StringSchema(format: 'unknown-format'), 'string', []],
             'string:valid-pattern' => [new StringSchema(pattern: '[0-9]+'), '2020', []],
             'string:null' => [new StringSchema(), null, [[1001, 'Unexpected NULL value.', [], '']]],

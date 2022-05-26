@@ -58,6 +58,7 @@ abstract class AbstractValidator
 
     /**
      * Returns FALSE if validation should not continue
+     *
      * @param mixed $data
      */
     protected function validateNullable(
