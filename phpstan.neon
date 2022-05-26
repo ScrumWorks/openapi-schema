@@ -1,5 +1,5 @@
 parameters:
-    level: 5
+    level: 6
 
     paths:
         - src
@@ -9,6 +9,7 @@ parameters:
     reportUnmatchedIgnoredErrors: false
 
     checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
 
     scanFiles:
         - vendor/autoload.php
