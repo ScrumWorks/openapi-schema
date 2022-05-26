@@ -1,0 +1,41 @@
+name: Code Analysis
+
+on:
+    push: null
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    code_analysis:
+        strategy:
+            fail-fast: false
+            matrix:
+                actions:
+                    -
+                        name: 'PHPStan'
+                        run: composer phpstan
+
+                    -
+                        name: 'Coding Standard'
+                        run: composer check-cs
+
+                    -
+                        name: 'Lint PHP Code'
+                        run: vendor/bin/parallel-lint src tests
+
+        name: ${{ matrix.actions.name }}
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            -
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.1'
+
+            - uses: "ramsey/composer-install@v1"
+
+            - run: ${{ matrix.actions.run }}
