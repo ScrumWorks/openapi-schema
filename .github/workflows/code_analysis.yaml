@@ -24,6 +24,14 @@ jobs:
                         name: 'Lint PHP Code'
                         run: vendor/bin/parallel-lint src tests
 
+                    -
+                        name: 'Tests'
+                        run: vendor/bin/phpunit
+
+                    -
+                        name: 'Validate composer.json'
+                        run: composer validate
+
         name: ${{ matrix.actions.name }}
 
         runs-on: ubuntu-latest
