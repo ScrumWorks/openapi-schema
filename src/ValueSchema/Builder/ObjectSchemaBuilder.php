@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 
 final class ObjectSchemaBuilder extends AbstractSchemaBuilder
@@ -54,10 +55,14 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
 
     public function build(): ObjectSchema
     {
-        $propertySchemas = \array_map(
-            static fn (AbstractSchemaBuilder $builder) => $builder->build(),
-            $this->propertiesSchemaBuilders
-        );
+        $propertySchemas = [];
+        foreach ($this->propertiesSchemaBuilders as $propertyName => $builder) {
+            try {
+                $propertySchemas[$propertyName] = $builder->build();
+            } catch (\Throwable $error) {
+                throw new LogicException("property `{$propertyName}`: {$error->getMessage()}", previous: $error);
+            }
+        }
 
         return new ObjectSchema(
             $propertySchemas,

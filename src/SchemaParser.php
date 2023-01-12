@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema;
 
 use ReflectionProperty;
+use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\SchemaBuilder\SchemaBuilderFactory;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
@@ -19,11 +20,20 @@ class SchemaParser implements SchemaParserInterface
 
     public function getEntitySchema(string $class): ValueSchemaInterface
     {
-        return $this->schemaBuilderFactory->createForClass($class)->build();
+        try {
+            return $this->schemaBuilderFactory->createForClass($class)->build();
+        } catch (\Throwable $error) {
+            throw new LogicException("{$class}: {$error->getMessage()}", previous: $error);
+        }
     }
 
     public function getPropertySchema(ReflectionProperty $propertyReflection): ValueSchemaInterface
     {
-        return $this->schemaBuilderFactory->createForProperty($propertyReflection)->build();
+        try {
+            return $this->schemaBuilderFactory->createForProperty($propertyReflection)->build();
+        } catch (\Throwable $error) {
+            $propertyIdentifier = "{$propertyReflection->getDeclaringClass()->getName()}::{$propertyReflection->getName()}";
+            throw new LogicException("{$propertyIdentifier}: {$error->getMessage()}", previous: $error);
+        }
     }
 }
