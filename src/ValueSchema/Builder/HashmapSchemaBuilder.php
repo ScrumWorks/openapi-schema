@@ -47,8 +47,14 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
             throw new LogicException("'itemsSchemaBuilder' has to be set.");
         }
 
+        try {
+            $itemsSchema = $this->itemsSchemaBuilder->build();
+        } catch (\Throwable $error) {
+            throw new LogicException("items: {$error->getMessage()}", previous: $error);
+        }
+
         return new HashmapSchema(
-            $this->itemsSchemaBuilder->build(),
+            $itemsSchema,
             $this->requiredProperties,
             $this->nullable,
             $this->description,

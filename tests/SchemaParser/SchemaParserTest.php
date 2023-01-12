@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\SchemaParserInterface;
 use ScrumWorks\OpenApiSchema\Tests\DiTrait;
+use ScrumWorks\OpenApiSchema\Tests\SchemaParser\Fixture\InvalidEntity;
 use ScrumWorks\OpenApiSchema\Tests\SchemaParser\Fixture\TestEntity;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
@@ -34,6 +35,15 @@ class SchemaParserTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage("Class or interface 'abc-not-existing' does not exist");
         $this->schemaParser->getEntitySchema('abc-not-existing');
+    }
+
+    public function testValidationFailed(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            InvalidEntity::class . ': property `subEntity`: items: property `emptyEnum`: Enum has to be set.'
+        );
+        $this->schemaParser->getEntitySchema(InvalidEntity::class);
     }
 
     public function testEntity(): void

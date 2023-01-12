@@ -67,8 +67,14 @@ final class ArraySchemaBuilder extends AbstractSchemaBuilder
             throw new LogicException("'itemsSchemaBuilder' has to be set.");
         }
 
+        try {
+            $itemsSchema = $this->itemsSchemaBuilder->build();
+        } catch (\Throwable $error) {
+            throw new LogicException("items: {$error->getMessage()}", previous: $error);
+        }
+
         return new ArraySchema(
-            $this->itemsSchemaBuilder->build(),
+            $itemsSchema,
             $this->minItems,
             $this->maxItems,
             $this->uniqueItems,
