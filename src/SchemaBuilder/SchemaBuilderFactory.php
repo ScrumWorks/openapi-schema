@@ -42,7 +42,7 @@ class SchemaBuilderFactory
     public function createForClass(string $class): AbstractSchemaBuilder
     {
         if (! \class_exists($class) && ! \interface_exists($class)) {
-            throw new LogicException("Class or interface '${class}' does not exist");
+            throw new LogicException("Class or interface '{$class}' does not exist");
         }
 
         $classReflection = new ReflectionClass($class);
