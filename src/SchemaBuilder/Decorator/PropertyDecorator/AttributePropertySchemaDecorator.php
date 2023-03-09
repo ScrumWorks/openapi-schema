@@ -32,7 +32,7 @@ final class AttributePropertySchemaDecorator extends AbstractAttributeSchemaDeco
         } catch (LogicException $exception) {
             $propertyIdentification = "{$propertyReflection->getDeclaringClass()->getName()}::{$propertyReflection->getName()}";
             throw new LogicException(
-                "Property ${propertyIdentification} attribute problem: " . $exception->getMessage(),
+                "Property {$propertyIdentification} attribute problem: " . $exception->getMessage(),
                 $exception->getCode(),
                 $exception
             );
@@ -284,7 +284,7 @@ final class AttributePropertySchemaDecorator extends AbstractAttributeSchemaDeco
                         || ! isset($possibleSchemaBuilder->getPropertiesSchemaBuilders()[$discriminator])
                     ) {
                         throw new LogicException(
-                            "All types have to be objects and contain discriminator property '${discriminator}'."
+                            "All types have to be objects and contain discriminator property '{$discriminator}'."
                         );
                     }
                 }

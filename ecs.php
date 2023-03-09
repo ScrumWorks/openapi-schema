@@ -7,6 +7,7 @@ use PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocLineSpanFixer;
 use PhpCsFixer\Fixer\Strict\StrictParamFixer;
+use PhpCsFixer\Fixer\StringNotation\SimpleToComplexStringVariableFixer;
 use PhpCsFixer\Fixer\Whitespace\IndentationTypeFixer;
 use SlevomatCodingStandard\Sniffs\Arrays\DisallowImplicitArrayCreationSniff;
 use SlevomatCodingStandard\Sniffs\Classes\DisallowLateStaticBindingForConstantsSniff;
@@ -78,5 +79,6 @@ return static function (ECSConfig $ecsConfig): void {
         RequireNullCoalesceOperatorSniff::class,
         StaticClosureSniff::class,
         DisallowImplicitArrayCreationSniff::class,
+        SimpleToComplexStringVariableFixer::class,
     ]);
 };

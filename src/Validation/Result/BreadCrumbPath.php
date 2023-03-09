@@ -28,7 +28,7 @@ final class BreadCrumbPath implements BreadCrumbPathInterface
     public function withIndex(int $index): self
     {
         $breadCrumbPath = clone $this;
-        $breadCrumbPath->breadCrumbs[] = (string) \array_pop($breadCrumbPath->breadCrumbs) . "[${index}]";
+        $breadCrumbPath->breadCrumbs[] = (string) \array_pop($breadCrumbPath->breadCrumbs) . "[{$index}]";
         return $breadCrumbPath;
     }
 }
