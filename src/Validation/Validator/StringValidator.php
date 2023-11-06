@@ -57,7 +57,7 @@ final class StringValidator extends AbstractValidator
         }
         if (($pattern = $this->schema->getPattern()) !== null) {
             $escapedPattern = \str_replace('~', '\\~', $pattern);
-            if (! Strings::match($data, "~{$escapedPattern}~")) {
+            if (! Strings::match($data, "~{$escapedPattern}~D")) {
                 $resultBuilder->addPatternViolation($pattern, $breadCrumbPath);
             }
         }
