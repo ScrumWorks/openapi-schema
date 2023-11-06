@@ -4,8 +4,6 @@ namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Tests\DiTrait;
-use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
-use ScrumWorks\OpenApiSchema\Validation\BreadCrumbPathInterface;
 use ScrumWorks\OpenApiSchema\Validation\Result\BreadCrumbPathFactory;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
 use ScrumWorks\OpenApiSchema\Validation\Validator\StringValidator;
@@ -17,17 +15,7 @@ class StringValidatorTest extends TestCase
 
     public function test(): void
     {
-        $stringSchema = new StringSchema(
-            null,
-            null,
-            null,
-            '^[a-zA-Z0-9-_]+$',
-            null,
-            false,
-            null,
-            null,
-            false
-        );
+        $stringSchema = new StringSchema(pattern: '^[a-zA-Z0-9-_]+$');
 
         $validator = new StringValidator(
             $this->getServiceFromContainerByType(BreadCrumbPathFactory::class),
