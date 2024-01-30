@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\AssertViolationTrait;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
@@ -24,9 +25,8 @@ class ValueValidatorExamplesTest extends TestCase
     use AssertViolationTrait;
     use CreateValidatorTrait;
 
+    #[DataProvider(methodName: 'dpTest')]
     /**
-     * @dataProvider dpTest
-     *
      * @param array<int, array<mixed>> $expectedViolations
      */
     public function test(ValueSchemaInterface $schema, array $expectedViolations): void
@@ -36,7 +36,7 @@ class ValueValidatorExamplesTest extends TestCase
         $this->assertViolations($expectedViolations, $actualViolations);
     }
 
-    public function dpTest(): array
+    public static function dpTest(): array
     {
         return [
             'array' => [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\OpenApiTranslator;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
@@ -26,23 +27,21 @@ class OpenApiTranslatorTest extends TestCase
         $this->translator = new OpenApiTranslator();
     }
 
-    /**
-     * @dataProvider dpMixedArray
-     * @dataProvider dpIntegerArray
-     * @dataProvider dpFloatArray
-     * @dataProvider dpBooleanArray
-     * @dataProvider dpStringArray
-     * @dataProvider dpEnumArray
-     * @dataProvider dpArrayArray
-     * @dataProvider dpHashmapArray
-     * @dataProvider dpObjectArray
-     */
+    #[DataProvider(methodName: 'dpMixedArray')]
+    #[DataProvider(methodName: 'dpIntegerArray')]
+    #[DataProvider(methodName: 'dpFloatArray')]
+    #[DataProvider(methodName: 'dpBooleanArray')]
+    #[DataProvider(methodName: 'dpStringArray')]
+    #[DataProvider(methodName: 'dpEnumArray')]
+    #[DataProvider(methodName: 'dpArrayArray')]
+    #[DataProvider(methodName: 'dpHashmapArray')]
+    #[DataProvider(methodName: 'dpObjectArray')]
     public function test(ValueSchemaInterface $schema, array $expected): void
     {
         $this->assertEquals($expected, $this->translator->translateValueSchema($schema));
     }
 
-    public function dpMixedArray(): array
+    public static function dpMixedArray(): array
     {
         return [
             'mixed:minimal' => [new MixedSchema(), []],
@@ -57,7 +56,7 @@ class OpenApiTranslatorTest extends TestCase
         ];
     }
 
-    public function dpIntegerArray(): array
+    public static function dpIntegerArray(): array
     {
         return [
             'integer:minimal' => [
@@ -94,7 +93,7 @@ class OpenApiTranslatorTest extends TestCase
         ];
     }
 
-    public function dpFloatArray(): array
+    public static function dpFloatArray(): array
     {
         return [
             'float:minimal' => [
@@ -134,7 +133,7 @@ class OpenApiTranslatorTest extends TestCase
         ];
     }
 
-    public function dpBooleanArray(): array
+    public static function dpBooleanArray(): array
     {
         return [
             'boolean:minimal' => [
@@ -155,7 +154,7 @@ class OpenApiTranslatorTest extends TestCase
         ];
     }
 
-    public function dpStringArray(): array
+    public static function dpStringArray(): array
     {
         return [
             'string:minimal' => [
@@ -191,7 +190,7 @@ class OpenApiTranslatorTest extends TestCase
         ];
     }
 
-    public function dpEnumArray(): array
+    public static function dpEnumArray(): array
     {
         return [
             'enum:minimal' => [
@@ -227,7 +226,7 @@ class OpenApiTranslatorTest extends TestCase
         ];
     }
 
-    public function dpArrayArray(): array
+    public static function dpArrayArray(): array
     {
         return [
             'array:simple' => [
@@ -284,7 +283,7 @@ class OpenApiTranslatorTest extends TestCase
         ];
     }
 
-    public function dpHashmapArray(): array
+    public static function dpHashmapArray(): array
     {
         return [
             'hashmap:minimal' => [
@@ -331,7 +330,7 @@ class OpenApiTranslatorTest extends TestCase
         ];
     }
 
-    public function dpObjectArray(): array
+    public static function dpObjectArray(): array
     {
         return [
             'object:minimal' => [

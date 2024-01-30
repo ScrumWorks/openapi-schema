@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema;
 
 use Iterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
 use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
@@ -36,16 +37,14 @@ class UnionSchemaTest extends TestCase
         new UnionSchema([new BooleanSchema()], 'dis');
     }
 
-    /**
-     * @dataProvider dpTestNullable
-     */
+    #[DataProvider(methodName: 'dpTestNullable')]
     public function testNullable(bool $isPossibleSchemaNullable, bool $isUnionSchemaNullable, bool $result): void
     {
         $schema = new UnionSchema([new BooleanSchema($isPossibleSchemaNullable)], null, $isUnionSchemaNullable);
         $this->assertSame($result, $schema->isNullable());
     }
 
-    public function dpTestNullable(): Iterator
+    public static function dpTestNullable(): Iterator
     {
         yield [true, true, true];
         yield [true, false, true];
