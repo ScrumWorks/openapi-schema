@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\AssertViolationTrait;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
@@ -25,21 +26,20 @@ class ValueValidatorValidateTest extends TestCase
     use CreateValidatorTrait;
 
     /**
-     * @dataProvider dpTestArray
-     * @dataProvider dpTestBoolean
-     * @dataProvider dpTestEnum
-     * @dataProvider dpTestFloat
-     * @dataProvider dpTestInteger
-     * @dataProvider dpTestObject
-     * @dataProvider dpTestHashmap
-     * @dataProvider dpTestString
-     * @dataProvider dpTestMixed
-     * @dataProvider dpTestUnion
-     * @dataProvider dpTestCombined
-     *
      * @param mixed $data
      * @param array<int, array<mixed>> $expectedViolations
      */
+    #[DataProvider(methodName: 'dpTestArray')]
+    #[DataProvider(methodName: 'dpTestBoolean')]
+    #[DataProvider(methodName: 'dpTestEnum')]
+    #[DataProvider(methodName: 'dpTestFloat')]
+    #[DataProvider(methodName: 'dpTestInteger')]
+    #[DataProvider(methodName: 'dpTestObject')]
+    #[DataProvider(methodName: 'dpTestHashmap')]
+    #[DataProvider(methodName: 'dpTestString')]
+    #[DataProvider(methodName: 'dpTestMixed')]
+    #[DataProvider(methodName: 'dpTestUnion')]
+    #[DataProvider(methodName: 'dpTestCombined')]
     public function test(ValueSchemaInterface $schema, $data, array $expectedViolations): void
     {
         $result = $this->createValueValidator()->validate($schema, $data);
@@ -49,7 +49,7 @@ class ValueValidatorValidateTest extends TestCase
         $this->assertSame(empty($expectedViolations), $result->isValid(), 'isValid is different');
     }
 
-    public function dpTestArray(): array
+    public static function dpTestArray(): array
     {
         return [
             'array:valid' => [new ArraySchema(new IntegerSchema()), [1, 2, 3], []],
@@ -83,7 +83,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestBoolean(): array
+    public static function dpTestBoolean(): array
     {
         return [
             'bool:valid' => [new BooleanSchema(), true, []],
@@ -93,7 +93,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestEnum(): array
+    public static function dpTestEnum(): array
     {
         return [
             'enum:valid' => [new EnumSchema(['a', 'b', 'c']), 'b', []],
@@ -107,7 +107,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestFloat(): array
+    public static function dpTestFloat(): array
     {
         return [
             'float:valid' => [new FloatSchema(), 1.0, []],
@@ -145,7 +145,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestInteger(): array
+    public static function dpTestInteger(): array
     {
         return [
             // int
@@ -182,7 +182,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestObject(): array
+    public static function dpTestObject(): array
     {
         return [
             'object:valid' => [
@@ -239,7 +239,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestHashmap(): array
+    public static function dpTestHashmap(): array
     {
         return [
             'hashmap:valid' => [
@@ -276,7 +276,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestString(): array
+    public static function dpTestString(): array
     {
         return [
             // string
@@ -317,7 +317,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestMixed(): array
+    public static function dpTestMixed(): array
     {
         return [
             'mixed:valid-string' => [new MixedSchema(), 'hello', []],
@@ -329,7 +329,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestUnion(): array
+    public static function dpTestUnion(): array
     {
         return [
             'union:valid' => [new UnionSchema([new IntegerSchema(), new StringSchema()]), 'foo', []],
@@ -408,7 +408,7 @@ class ValueValidatorValidateTest extends TestCase
         ];
     }
 
-    public function dpTestCombined(): array
+    public static function dpTestCombined(): array
     {
         return [
             // multiple

@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\Validation;
 
 use Iterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Validation\Validator\Format\DateTimeValidator;
 use ScrumWorks\OpenApiSchema\Validation\Validator\Format\DateValidator;
 
 class FormatValidatorTest extends TestCase
 {
-    /**
-     * @dataProvider dpTestDateTime
-     */
+    #[DataProvider(methodName: 'dpTestDateTime')]
     public function testDateTime(bool $expectedResult, string $string): void
     {
         $validator = new DateTimeValidator();
         $this->assertSame($expectedResult, $validator->hasValidFormat($string));
     }
 
-    public function dpTestDateTime(): Iterator
+    public static function dpTestDateTime(): Iterator
     {
         yield [false, ''];
         yield [false, 'substring 2020-02-03T03:05:06 not match'];
@@ -42,16 +41,14 @@ class FormatValidatorTest extends TestCase
         yield [true, '2020-02-03T03:05:06.000133+00:00'];
     }
 
-    /**
-     * @dataProvider dpTestDate
-     */
+    #[DataProvider(methodName: 'dpTestDate')]
     public function testDate(bool $expectedResult, string $string): void
     {
         $validator = new DateValidator();
         $this->assertSame($expectedResult, $validator->hasValidFormat($string));
     }
 
-    public function dpTestDate(): Iterator
+    public static function dpTestDate(): Iterator
     {
         yield [false, ''];
         yield [false, 'substring 2020-02-03 not match'];
