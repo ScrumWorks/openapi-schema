@@ -8,9 +8,6 @@ parameters:
     # to allow installing with various phsptan versions without reporting old errors here
     reportUnmatchedIgnoredErrors: false
 
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
-
     scanFiles:
         - vendor/autoload.php
 
@@ -18,3 +15,9 @@ parameters:
 
     parallel:
         processTimeout: 300.0
+
+    ignoreErrors:
+        -
+            identifier: missingType.generics
+        -
+            identifier: missingType.iterableValue
