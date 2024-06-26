@@ -23,10 +23,12 @@ final class AttributeClassSchemaDecorator extends AbstractAttributeSchemaDecorat
         }
 
         $objectDefaultValues = $classReflection->getDefaultProperties();
+        $propertiesSchemaBuilders = $builder->getPropertiesSchemaBuilders();
         $requiredProperties = [];
         foreach ($classReflection->getProperties() as $propertyReflection) {
             if (
                 $propertyReflection->isPublic()
+                && isset($propertiesSchemaBuilders[$propertyReflection->getName()])
                 && $this->isPropertyRequired($propertyReflection, $objectDefaultValues)
             ) {
                 $requiredProperties[] = $propertyReflection->getName();
