@@ -46,7 +46,7 @@ class OpenApiTranslatorTest extends TestCase
         return [
             'mixed:minimal' => [new MixedSchema(), []],
             'mixed:full' => [
-                new MixedSchema(nullable: true, description: 'mixed', schemaName: null, isDeprecated: true,),
+                new MixedSchema(nullable: true, description: 'mixed', schemaName: null, isDeprecated: true),
                 [
                     'nullable' => true,
                     'description' => 'mixed',
@@ -143,7 +143,7 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'boolean:full' => [
-                new BooleanSchema(nullable: true, description: 'boolean', schemaName: null, isDeprecated: true,),
+                new BooleanSchema(nullable: true, description: 'boolean', schemaName: null, isDeprecated: true),
                 [
                     'type' => 'boolean',
                     'description' => 'boolean',
