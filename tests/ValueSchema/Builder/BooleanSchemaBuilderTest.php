@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 
 use PHPUnit\Framework\TestCase;
-use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\BooleanSchemaBuilder;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\BooleanSchemaData;
 
 class BooleanSchemaBuilderTest extends TestCase
 {
     public function testMinimalBuild(): void
     {
         $builder = new BooleanSchemaBuilder();
-        $this->assertEquals(new BooleanSchema(), $builder->build());
+        $this->assertEquals(new BooleanSchemaData(), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -23,6 +23,6 @@ class BooleanSchemaBuilderTest extends TestCase
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
 
-        $this->assertEquals(new BooleanSchema(true, 'boolean', null, true), $builder->build());
+        $this->assertEquals(new BooleanSchemaData(true, 'boolean', null, true), $builder->build());
     }
 }

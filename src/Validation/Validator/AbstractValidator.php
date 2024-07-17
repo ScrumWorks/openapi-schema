@@ -10,7 +10,7 @@ use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilder;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
 use ScrumWorks\OpenApiSchema\Validation\ValidationResultInterface;
 use ScrumWorks\OpenApiSchema\Validation\ValidityViolationInterface;
-use ScrumWorks\OpenApiSchema\ValueSchema\AbstractValueSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 abstract class AbstractValidator
 {
@@ -18,12 +18,12 @@ abstract class AbstractValidator
 
     private ValidationResultBuilderFactory $validationResultBuilderFactory;
 
-    private AbstractValueSchema $schema;
+    private ValueSchemaInterface $schema;
 
     public function __construct(
         BreadCrumbPathFactoryInterface $breadCrumbPathFactory,
         ValidationResultBuilderFactory $validationResultBuilderFactory,
-        AbstractValueSchema $schema
+        ValueSchemaInterface $schema,
     ) {
         $this->breadCrumbPathFactory = $breadCrumbPathFactory;
         $this->validationResultBuilderFactory = $validationResultBuilderFactory;

@@ -6,14 +6,14 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\FloatSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\FloatSchemaData;
 
 class FloatSchemaBuilderTest extends TestCase
 {
     public function testMinimalBuild(): void
     {
         $builder = new FloatSchemaBuilder();
-        $this->assertEquals(new FloatSchema(), $builder->build());
+        $this->assertEquals(new FloatSchemaData(), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -30,7 +30,7 @@ class FloatSchemaBuilderTest extends TestCase
         $builder = $builder->withDeprecated(true);
 
         $this->assertEquals(
-            new FloatSchema(
+            new FloatSchemaData(
                 minimum: 1.1,
                 maximum: 2.2,
                 exclusiveMinimum: true,

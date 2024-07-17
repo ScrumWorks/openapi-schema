@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\IntegerSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 
 final class IntegerSchemaBuilder extends AbstractSchemaBuilder
@@ -88,7 +89,7 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
 
     public function build(): IntegerSchema
     {
-        return new IntegerSchema(
+        return new IntegerSchemaData(
             $this->minimum,
             $this->maximum,
             $this->exclusiveMinimum,

@@ -9,7 +9,7 @@ use ScrumWorks\OpenApiSchema\Tests\DiTrait;
 use ScrumWorks\OpenApiSchema\Validation\Result\BreadCrumbPathFactory;
 use ScrumWorks\OpenApiSchema\Validation\Result\ValidationResultBuilderFactory;
 use ScrumWorks\OpenApiSchema\Validation\Validator\StringValidator;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 
 class StringValidatorTest extends TestCase
 {
@@ -17,7 +17,7 @@ class StringValidatorTest extends TestCase
 
     public function test(): void
     {
-        $stringSchema = new StringSchema(pattern: '^[a-zA-Z0-9-_]+$');
+        $stringSchema = new StringSchemaData(pattern: '^[a-zA-Z0-9-_]+$');
 
         $validator = new StringValidator(
             $this->getServiceFromContainerByType(BreadCrumbPathFactory::class),

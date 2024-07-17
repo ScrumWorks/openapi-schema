@@ -6,7 +6,7 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 
 class StringSchemaTest extends TestCase
 {
@@ -14,20 +14,20 @@ class StringSchemaTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Invalid value -1 for argument 'minLength'");
-        new StringSchema(-1);
+        new StringSchemaData(-1);
     }
 
     public function testInvalidMaxLength(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Invalid value -1 for argument 'maxLength'");
-        new StringSchema(null, -1);
+        new StringSchemaData(null, -1);
     }
 
     public function testExceedingMaxLength(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Invalid value 90 for argument 'maxLength'");
-        new StringSchema(100, 90);
+        new StringSchemaData(100, 90);
     }
 }

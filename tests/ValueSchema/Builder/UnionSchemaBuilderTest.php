@@ -7,15 +7,15 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\UnionSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ObjectSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\UnionSchemaData;
 
 class UnionSchemaBuilderTest extends TestCase
 {
     public function testMinimalBuild(): void
     {
         $builder = new UnionSchemaBuilder([new ObjectSchemaBuilder()]);
-        $this->assertEquals(new UnionSchema([new ObjectSchema([])]), $builder->build());
+        $this->assertEquals(new UnionSchemaData([new ObjectSchemaData([])]), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -28,7 +28,7 @@ class UnionSchemaBuilderTest extends TestCase
         $builder->withDeprecated(true);
 
         $this->assertEquals(
-            new UnionSchema([new ObjectSchema([])], 'discriminatoR', true, 'desc', true),
+            new UnionSchemaData([new ObjectSchemaData([])], 'discriminatoR', true, 'desc', true),
             $builder->build()
         );
     }

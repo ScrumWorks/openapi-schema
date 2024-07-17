@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\UnionSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
 
 final class UnionSchemaBuilder extends AbstractSchemaBuilder
@@ -58,7 +59,7 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
             $this->possibleSchemaBuilders
         );
 
-        return new UnionSchema(
+        return new UnionSchemaData(
             $possibleSchemas,
             $this->discriminatorPropertyName,
             $this->nullable,

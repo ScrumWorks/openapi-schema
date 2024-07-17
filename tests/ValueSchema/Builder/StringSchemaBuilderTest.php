@@ -6,14 +6,14 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 
 class StringSchemaBuilderTest extends TestCase
 {
     public function testMinimalBuild(): void
     {
         $builder = new StringSchemaBuilder();
-        $this->assertEquals(new StringSchema(), $builder->build());
+        $this->assertEquals(new StringSchemaData(), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -29,7 +29,7 @@ class StringSchemaBuilderTest extends TestCase
         $builder = $builder->withDeprecated(true);
 
         $this->assertEquals(
-            new StringSchema(
+            new StringSchemaData(
                 minLength: 3,
                 maxLength: 12,
                 format: 'email',
