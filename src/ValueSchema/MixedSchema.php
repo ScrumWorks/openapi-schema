@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema;
 
-final class MixedSchema extends AbstractValueSchema
+interface MixedSchema extends ValueSchemaInterface
 {
-    protected function validate(): void
-    {
-    }
 }

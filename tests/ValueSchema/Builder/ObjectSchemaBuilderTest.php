@@ -7,15 +7,15 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ObjectSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ObjectSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 
 class ObjectSchemaBuilderTest extends TestCase
 {
     public function testMinimalBuild(): void
     {
         $builder = new ObjectSchemaBuilder();
-        $this->assertEquals(new ObjectSchema([]), $builder->build());
+        $this->assertEquals(new ObjectSchemaData([]), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -30,8 +30,8 @@ class ObjectSchemaBuilderTest extends TestCase
         $builder = $builder->withDeprecated(true);
 
         $this->assertEquals(
-            new ObjectSchema([
-                'property' => new StringSchema(),
+            new ObjectSchemaData([
+                'property' => new StringSchemaData(),
             ], ['property'], true, 'object', null, true),
             $builder->build()
         );

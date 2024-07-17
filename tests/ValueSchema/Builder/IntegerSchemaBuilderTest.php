@@ -6,14 +6,14 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\IntegerSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\IntegerSchemaData;
 
 class IntegerSchemaBuilderTest extends TestCase
 {
     public function testMinimalBuild(): void
     {
         $builder = new IntegerSchemaBuilder();
-        $this->assertEquals(new IntegerSchema(), $builder->build());
+        $this->assertEquals(new IntegerSchemaData(), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -30,7 +30,7 @@ class IntegerSchemaBuilderTest extends TestCase
         $builder = $builder->withDeprecated(true);
 
         $this->assertEquals(
-            new IntegerSchema(
+            new IntegerSchemaData(
                 minimum: 0,
                 maximum: 10,
                 exclusiveMinimum: true,

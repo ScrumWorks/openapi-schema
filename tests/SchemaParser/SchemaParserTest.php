@@ -11,6 +11,9 @@ use ScrumWorks\OpenApiSchema\Tests\DiTrait;
 use ScrumWorks\OpenApiSchema\Tests\SchemaParser\Fixture\InvalidEntity;
 use ScrumWorks\OpenApiSchema\Tests\SchemaParser\Fixture\TestEntity;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\IntegerSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ObjectSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
@@ -139,7 +142,10 @@ class SchemaParserTest extends TestCase
         $scalarUnionSchema = $entitySchema->getPropertySchema('scalarUnion');
         $this->assertInstanceOf(UnionSchema::class, $scalarUnionSchema);
         $this->assertTrue($scalarUnionSchema->isNullable());
-        $this->assertEquals([new IntegerSchema(2), new StringSchema(10)], $scalarUnionSchema->getPossibleSchemas());
+        $this->assertEquals(
+            [new IntegerSchemaData(2), new StringSchemaData(10)],
+            $scalarUnionSchema->getPossibleSchemas(),
+        );
 
         /** @var UnionSchema $objectUnionSchema */
         $objectUnionSchema = $entitySchema->getPropertySchema('objectUnion');
@@ -147,11 +153,11 @@ class SchemaParserTest extends TestCase
         $this->assertFalse($objectUnionSchema->isNullable());
         $this->assertSame('type', $objectUnionSchema->getDiscriminatorPropertyName());
         $this->assertEquals([
-            'a' => new ObjectSchema([
-                'type' => new StringSchema(),
+            'a' => new ObjectSchemaData([
+                'type' => new StringSchemaData(),
             ], ['type'], false, null, 'AEnt'),
-            'b' => new ObjectSchema([
-                'type' => new StringSchema(),
+            'b' => new ObjectSchemaData([
+                'type' => new StringSchemaData(),
             ], ['type'], false, null, 'BEnt'),
         ], $objectUnionSchema->getPossibleSchemas());
 

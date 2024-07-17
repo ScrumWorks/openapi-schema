@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\HashmapSchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\HashmapSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 
 class HashmapSchemaBuilderTest extends TestCase
 {
@@ -17,7 +17,7 @@ class HashmapSchemaBuilderTest extends TestCase
     {
         $builder = new HashmapSchemaBuilder();
         $builder = $builder->withItemsSchemaBuilder(new StringSchemaBuilder());
-        $this->assertEquals(new HashmapSchema(new StringSchema()), $builder->build());
+        $this->assertEquals(new HashmapSchemaData(new StringSchemaData()), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -30,7 +30,7 @@ class HashmapSchemaBuilderTest extends TestCase
         $builder = $builder->withDeprecated(true);
 
         $this->assertEquals(
-            new HashmapSchema(new StringSchema(), ['property'], true, 'hashmap', null, true),
+            new HashmapSchemaData(new StringSchemaData(), ['property'], true, 'hashmap', null, true),
             $builder->build()
         );
     }

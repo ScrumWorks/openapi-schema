@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\HashmapSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
 
 final class HashmapSchemaBuilder extends AbstractSchemaBuilder
@@ -53,7 +54,7 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
             throw new LogicException("items: {$error->getMessage()}", previous: $error);
         }
 
-        return new HashmapSchema(
+        return new HashmapSchemaData(
             $itemsSchema,
             $this->requiredProperties,
             $this->nullable,

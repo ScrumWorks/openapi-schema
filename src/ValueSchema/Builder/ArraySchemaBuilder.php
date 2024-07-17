@@ -6,6 +6,7 @@ namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ArraySchemaData;
 
 final class ArraySchemaBuilder extends AbstractSchemaBuilder
 {
@@ -73,7 +74,7 @@ final class ArraySchemaBuilder extends AbstractSchemaBuilder
             throw new LogicException("items: {$error->getMessage()}", previous: $error);
         }
 
-        return new ArraySchema(
+        return new ArraySchemaData(
             $itemsSchema,
             $this->minItems,
             $this->maxItems,

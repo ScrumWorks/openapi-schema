@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
 final class StringSchemaBuilder extends AbstractSchemaBuilder
@@ -75,7 +76,7 @@ final class StringSchemaBuilder extends AbstractSchemaBuilder
 
     public function build(): StringSchema
     {
-        return new StringSchema(
+        return new StringSchemaData(
             $this->minLength,
             $this->maxLength,
             $this->format,

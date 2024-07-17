@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\EnumSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 
 final class EnumSchemaBuilder extends AbstractSchemaBuilder
@@ -37,6 +38,12 @@ final class EnumSchemaBuilder extends AbstractSchemaBuilder
             throw new LogicException('Enum has to be set.');
         }
 
-        return new EnumSchema($this->enum, $this->nullable, $this->description, $this->schemaName, $this->deprecated);
+        return new EnumSchemaData(
+            $this->enum,
+            $this->nullable,
+            $this->description,
+            $this->schemaName,
+            $this->deprecated,
+        );
     }
 }

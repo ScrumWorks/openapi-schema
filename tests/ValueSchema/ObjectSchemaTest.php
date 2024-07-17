@@ -6,8 +6,8 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
-use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ObjectSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 
 class ObjectSchemaTest extends TestCase
 {
@@ -16,8 +16,8 @@ class ObjectSchemaTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Property key '1' must be string");
         // @phpstan-ignore-next-line
-        new ObjectSchema([
-            1 => new StringSchema(),
+        new ObjectSchemaData([
+            1 => new StringSchemaData(),
         ]);
     }
 
@@ -28,7 +28,7 @@ class ObjectSchemaTest extends TestCase
             "Invalid schema (must be instance of ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface)"
         );
         // @phpstan-ignore-next-line
-        new ObjectSchema([
+        new ObjectSchemaData([
             'test' => 'test',
         ]);
     }
@@ -37,9 +37,9 @@ class ObjectSchemaTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Required properties are not listed in schema (int, bool)');
-        new ObjectSchema(
+        new ObjectSchemaData(
             [
-                'string' => new StringSchema(),
+                'string' => new StringSchemaData(),
             ],
             ['string', 'int', 'bool']
         );
@@ -49,7 +49,7 @@ class ObjectSchemaTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Property 'not-exists' doesn't exists");
-        $schema = new ObjectSchema([]);
+        $schema = new ObjectSchemaData([]);
         $schema->getPropertySchema('not-exists');
     }
 }

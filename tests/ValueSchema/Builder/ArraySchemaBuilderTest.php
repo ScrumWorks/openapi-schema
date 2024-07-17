@@ -6,10 +6,10 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
-use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\ArraySchemaBuilder;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\StringSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ArraySchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 
 class ArraySchemaBuilderTest extends TestCase
 {
@@ -17,7 +17,7 @@ class ArraySchemaBuilderTest extends TestCase
     {
         $builder = new ArraySchemaBuilder();
         $builder = $builder->withItemsSchemaBuilder(new StringSchemaBuilder());
-        $this->assertEquals(new ArraySchema(new StringSchema()), $builder->build());
+        $this->assertEquals(new ArraySchemaData(new StringSchemaData()), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -32,7 +32,7 @@ class ArraySchemaBuilderTest extends TestCase
         $builder = $builder->withDeprecated(true);
 
         $this->assertEquals(
-            new ArraySchema(new StringSchema(), 2, 3, true, true, 'array', null, true),
+            new ArraySchemaData(new StringSchemaData(), 2, 3, true, true, 'array', null, true),
             $builder->build()
         );
     }

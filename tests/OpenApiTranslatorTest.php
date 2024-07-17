@@ -7,15 +7,15 @@ namespace ScrumWorks\OpenApiSchema\Tests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\OpenApiTranslator;
-use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ArraySchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\BooleanSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\EnumSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\FloatSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\HashmapSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\IntegerSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\MixedSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ObjectSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 class OpenApiTranslatorTest extends TestCase
@@ -44,9 +44,9 @@ class OpenApiTranslatorTest extends TestCase
     public static function dpMixedArray(): array
     {
         return [
-            'mixed:minimal' => [new MixedSchema(), []],
+            'mixed:minimal' => [new MixedSchemaData(), []],
             'mixed:full' => [
-                new MixedSchema(nullable: true, description: 'mixed', schemaName: null, isDeprecated: true),
+                new MixedSchemaData(nullable: true, description: 'mixed', schemaName: null, isDeprecated: true),
                 [
                     'nullable' => true,
                     'description' => 'mixed',
@@ -60,13 +60,13 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'integer:minimal' => [
-                new IntegerSchema(),
+                new IntegerSchemaData(),
                 [
                     'type' => 'integer',
                 ],
             ],
             'integer:full' => [
-                new IntegerSchema(
+                new IntegerSchemaData(
                     minimum: 0,
                     maximum: 10,
                     exclusiveMinimum: false,
@@ -97,14 +97,14 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'float:minimal' => [
-                new FloatSchema(),
+                new FloatSchemaData(),
                 [
                     'type' => 'number',
                     'format' => 'float',
                 ],
             ],
             'float:full' => [
-                new FloatSchema(
+                new FloatSchemaData(
                     minimum: 2.2,
                     maximum: 2.8,
                     exclusiveMinimum: true,
@@ -137,13 +137,13 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'boolean:minimal' => [
-                new BooleanSchema(),
+                new BooleanSchemaData(),
                 [
                     'type' => 'boolean',
                 ],
             ],
             'boolean:full' => [
-                new BooleanSchema(nullable: true, description: 'boolean', schemaName: null, isDeprecated: true),
+                new BooleanSchemaData(nullable: true, description: 'boolean', schemaName: null, isDeprecated: true),
                 [
                     'type' => 'boolean',
                     'description' => 'boolean',
@@ -158,13 +158,13 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'string:minimal' => [
-                new StringSchema(),
+                new StringSchemaData(),
                 [
                     'type' => 'string',
                 ],
             ],
             'string:full' => [
-                new StringSchema(
+                new StringSchemaData(
                     minLength: 2,
                     maxLength: 10,
                     format: 'email',
@@ -194,14 +194,14 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'enum:minimal' => [
-                new EnumSchema(['value']),
+                new EnumSchemaData(['value']),
                 [
                     'type' => 'string',
                     'enum' => ['value'],
                 ],
             ],
             'enum:nullable' => [
-                new EnumSchema(['value'], true),
+                new EnumSchemaData(['value'], true),
                 [
                     'type' => 'string',
                     'enum' => ['value', null],
@@ -209,7 +209,7 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'enum:full' => [
-                new EnumSchema(
+                new EnumSchemaData(
                     enum: ['value', 'value2'],
                     nullable: false,
                     description: 'enum',
@@ -230,7 +230,7 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'array:simple' => [
-                new ArraySchema(new StringSchema()),
+                new ArraySchemaData(new StringSchemaData()),
                 [
                     'type' => 'array',
                     'items' => [
@@ -239,15 +239,15 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'array:mixed' => [
-                new ArraySchema(new MixedSchema()),
+                new ArraySchemaData(new MixedSchemaData()),
                 [
                     'type' => 'array',
                     'items' => [],
                 ],
             ],
             'array:full' => [
-                new ArraySchema(
-                    itemsSchema: new StringSchema(),
+                new ArraySchemaData(
+                    itemsSchema: new StringSchemaData(),
                     minItems: 1,
                     maxItems: 3,
                     uniqueItems: true,
@@ -269,7 +269,7 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'array:nested' => [
-                new ArraySchema(new ArraySchema(new IntegerSchema())),
+                new ArraySchemaData(new ArraySchemaData(new IntegerSchemaData())),
                 [
                     'type' => 'array',
                     'items' => [
@@ -287,7 +287,7 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'hashmap:minimal' => [
-                new HashmapSchema(new StringSchema(nullable: true)),
+                new HashmapSchemaData(new StringSchemaData(nullable: true)),
                 [
                     'type' => 'object',
                     'additionalProperties' => [
@@ -297,15 +297,15 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'hashmap:free-form' => [
-                new HashmapSchema(new MixedSchema()),
+                new HashmapSchemaData(new MixedSchemaData()),
                 [
                     'type' => 'object',
                     'additionalProperties' => true,
                 ],
             ],
             'hashmap:full' => [
-                new HashmapSchema(
-                    itemsSchema: new IntegerSchema(),
+                new HashmapSchemaData(
+                    itemsSchema: new IntegerSchemaData(),
                     requiredProperties: ['property'],
                     nullable: false,
                     description: 'hashmap',
@@ -334,8 +334,8 @@ class OpenApiTranslatorTest extends TestCase
     {
         return [
             'object:minimal' => [
-                new ObjectSchema([
-                    'name' => new StringSchema(),
+                new ObjectSchemaData([
+                    'name' => new StringSchemaData(),
                 ]),
                 [
                     'type' => 'object',
@@ -347,16 +347,16 @@ class OpenApiTranslatorTest extends TestCase
                 ],
             ],
             'object:free-form' => [
-                new ObjectSchema([]),
+                new ObjectSchemaData([]),
                 [
                     'type' => 'object',
                     'additionalProperties' => true,
                 ],
             ],
             'object:full' => [
-                new ObjectSchema([
-                    'name' => new StringSchema(),
-                    'age' => new IntegerSchema(),
+                new ObjectSchemaData([
+                    'name' => new StringSchemaData(),
+                    'age' => new IntegerSchemaData(),
                 ], ['name'], false, 'object', null, true),
                 [
                     'type' => 'object',

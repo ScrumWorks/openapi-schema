@@ -7,7 +7,7 @@ namespace ScrumWorks\OpenApiSchema\Tests\ValueSchema\Builder;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
 use ScrumWorks\OpenApiSchema\ValueSchema\Builder\EnumSchemaBuilder;
-use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\EnumSchemaData;
 
 class EnumSchemaBuilderTest extends TestCase
 {
@@ -15,7 +15,7 @@ class EnumSchemaBuilderTest extends TestCase
     {
         $builder = new EnumSchemaBuilder();
         $builder = $builder->withEnum(['a', 'b']);
-        $this->assertEquals(new EnumSchema(['a', 'b']), $builder->build());
+        $this->assertEquals(new EnumSchemaData(['a', 'b']), $builder->build());
     }
 
     public function testFullBuild(): void
@@ -26,7 +26,7 @@ class EnumSchemaBuilderTest extends TestCase
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
 
-        $this->assertEquals(new EnumSchema(['a', 'b'], true, 'enum', null, true), $builder->build());
+        $this->assertEquals(new EnumSchemaData(['a', 'b'], true, 'enum', null, true), $builder->build());
     }
 
     public function testMissingData(): void

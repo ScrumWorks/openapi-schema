@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\FloatSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
 
 final class FloatSchemaBuilder extends AbstractSchemaBuilder
@@ -88,7 +89,7 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
 
     public function build(): FloatSchema
     {
-        return new FloatSchema(
+        return new FloatSchemaData(
             $this->minimum,
             $this->maximum,
             $this->exclusiveMinimum,

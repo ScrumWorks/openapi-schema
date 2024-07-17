@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ScrumWorks\OpenApiSchema\ValueSchema;
+namespace ScrumWorks\OpenApiSchema\ValueSchema\Data;
+
+use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 abstract class AbstractValueSchema implements ValueSchemaInterface
 {

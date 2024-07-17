@@ -8,8 +8,8 @@ use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Exception\InvalidArgumentException;
-use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\BooleanSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\UnionSchemaData;
 
 class UnionSchemaTest extends TestCase
 {
@@ -17,7 +17,7 @@ class UnionSchemaTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('At least one possible schema needed.');
-        new UnionSchema([]);
+        new UnionSchemaData([]);
     }
 
     public function testInvalidPossibleSchemaType(): void
@@ -27,20 +27,20 @@ class UnionSchemaTest extends TestCase
             "Invalid schema (must be instance of ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface)"
         );
         // @phpstan-ignore-next-line
-        new UnionSchema([-1]);
+        new UnionSchemaData([-1]);
     }
 
     public function testInvalidSchemaWithDiscriminator(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Discriminator can be specified only for object schemas.');
-        new UnionSchema([new BooleanSchema()], 'dis');
+        new UnionSchemaData([new BooleanSchemaData()], 'dis');
     }
 
     #[DataProvider(methodName: 'dpTestNullable')]
     public function testNullable(bool $isPossibleSchemaNullable, bool $isUnionSchemaNullable, bool $result): void
     {
-        $schema = new UnionSchema([new BooleanSchema($isPossibleSchemaNullable)], null, $isUnionSchemaNullable);
+        $schema = new UnionSchemaData([new BooleanSchemaData($isPossibleSchemaNullable)], null, $isUnionSchemaNullable);
         $this->assertSame($result, $schema->isNullable());
     }
 

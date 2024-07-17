@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\ValueSchema\Builder;
 
 use ScrumWorks\OpenApiSchema\Exception\LogicException;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ObjectSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
 
 final class ObjectSchemaBuilder extends AbstractSchemaBuilder
@@ -64,7 +65,7 @@ final class ObjectSchemaBuilder extends AbstractSchemaBuilder
             }
         }
 
-        return new ObjectSchema(
+        return new ObjectSchemaData(
             $propertySchemas,
             $this->requiredProperties,
             $this->nullable,

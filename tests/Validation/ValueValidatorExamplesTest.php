@@ -8,16 +8,16 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\AssertViolationTrait;
 use ScrumWorks\OpenApiSchema\Tests\Validation\_Support\CreateValidatorTrait;
-use ScrumWorks\OpenApiSchema\ValueSchema\ArraySchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\BooleanSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\HashmapSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\MixedSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\ObjectSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
-use ScrumWorks\OpenApiSchema\ValueSchema\UnionSchema;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ArraySchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\BooleanSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\EnumSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\FloatSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\HashmapSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\IntegerSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\MixedSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\ObjectSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\StringSchemaData;
+use ScrumWorks\OpenApiSchema\ValueSchema\Data\UnionSchemaData;
 use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 class ValueValidatorExamplesTest extends TestCase
@@ -40,7 +40,7 @@ class ValueValidatorExamplesTest extends TestCase
     {
         return [
             'array' => [
-                new ArraySchema(new IntegerSchema(), 1, 4, true),
+                new ArraySchemaData(new IntegerSchemaData(), 1, 4, true),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
                     [1002, "Type '%s' expected.", ['array'], ''],
@@ -52,11 +52,11 @@ class ValueValidatorExamplesTest extends TestCase
                 ],
             ],
             'bool' => [
-                new BooleanSchema(),
+                new BooleanSchemaData(),
                 [[1001, 'Unexpected NULL value.', [], ''], [1002, "Type '%s' expected.", ['boolean'], '']],
             ],
             'enum' => [
-                new EnumSchema(['a', 'b']),
+                new EnumSchemaData(['a', 'b']),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
                     [1002, "Type '%s' expected.", ['string'], ''],
@@ -64,7 +64,7 @@ class ValueValidatorExamplesTest extends TestCase
                 ],
             ],
             'float' => [
-                new FloatSchema(0, 100, true, false, 2),
+                new FloatSchemaData(0, 100, true, false, 2),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
                     [1002, "Type '%s' expected.", ['number'], ''],
@@ -74,7 +74,7 @@ class ValueValidatorExamplesTest extends TestCase
                 ],
             ],
             'int' => [
-                new IntegerSchema(1, 100, false, true, 20),
+                new IntegerSchemaData(1, 100, false, true, 20),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
                     [1002, "Type '%s' expected.", ['integer'], ''],
@@ -84,9 +84,9 @@ class ValueValidatorExamplesTest extends TestCase
                 ],
             ],
             'object' => [
-                new ObjectSchema([
-                    'a' => new BooleanSchema(true),
-                    'b' => new IntegerSchema(),
+                new ObjectSchemaData([
+                    'a' => new BooleanSchemaData(true),
+                    'b' => new IntegerSchemaData(),
                 ], ['a']),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
@@ -99,7 +99,7 @@ class ValueValidatorExamplesTest extends TestCase
                 ],
             ],
             'hashmap' => [
-                new HashmapSchema(new IntegerSchema(), ['req']),
+                new HashmapSchemaData(new IntegerSchemaData(), ['req']),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
                     [1002, "Type '%s' expected.", ['object'], ''],
@@ -109,7 +109,7 @@ class ValueValidatorExamplesTest extends TestCase
                 ],
             ],
             'string' => [
-                new StringSchema(1, 10, 'date', '[0-9]+'),
+                new StringSchemaData(1, 10, 'date', '[0-9]+'),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
                     [1002, "Type '%s' expected.", ['string'], ''],
@@ -119,11 +119,11 @@ class ValueValidatorExamplesTest extends TestCase
                     [1016, "Value doesn't have format '%s'.", ['date'], ''],
                 ],
             ],
-            'mixed' => [new MixedSchema(), [[1001, 'Unexpected NULL value.', [], '']]],
+            'mixed' => [new MixedSchemaData(), [[1001, 'Unexpected NULL value.', [], '']]],
             'union-with-discriminator' => [
-                new UnionSchema([
-                    'a' => new ObjectSchema([]),
-                    'b' => new ObjectSchema([]),
+                new UnionSchemaData([
+                    'a' => new ObjectSchemaData([]),
+                    'b' => new ObjectSchemaData([]),
                 ], 'type'),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
@@ -134,7 +134,7 @@ class ValueValidatorExamplesTest extends TestCase
                 ],
             ],
             'union-without-discriminator' => [
-                new UnionSchema([new ObjectSchema([]), new ObjectSchema([])]),
+                new UnionSchemaData([new ObjectSchemaData([]), new ObjectSchemaData([])]),
                 [
                     [1001, 'Unexpected NULL value.', [], ''],
                     [1018, "Value doesn't match any schema.", [], ''],
