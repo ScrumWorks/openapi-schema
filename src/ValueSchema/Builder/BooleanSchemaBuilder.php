@@ -11,6 +11,12 @@ final class BooleanSchemaBuilder extends AbstractSchemaBuilder
 {
     public function build(): BooleanSchema
     {
-        return new BooleanSchemaData($this->nullable, $this->description, $this->schemaName, $this->deprecated);
+        return new BooleanSchemaData(
+            $this->nullable,
+            $this->description,
+            $this->schemaName,
+            $this->deprecated,
+            $this->metaData,
+        );
     }
 }

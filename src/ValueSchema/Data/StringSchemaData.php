@@ -9,6 +9,9 @@ use ScrumWorks\OpenApiSchema\ValueSchema\StringSchema;
 
 final class StringSchemaData extends AbstractValueSchema implements StringSchema
 {
+    /**
+     * @param array<string, mixed> $metaData
+     */
     public function __construct(
         private readonly ?int $minLength = null,
         private readonly ?int $maxLength = null,
@@ -18,9 +21,10 @@ final class StringSchemaData extends AbstractValueSchema implements StringSchema
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
-        bool $isDeprecated = false
+        bool $isDeprecated = false,
+        array $metaData = [],
     ) {
-        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated, $metaData);
     }
 
     public function getMinLength(): ?int

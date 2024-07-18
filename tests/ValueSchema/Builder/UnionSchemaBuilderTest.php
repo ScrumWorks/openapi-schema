@@ -26,9 +26,14 @@ class UnionSchemaBuilderTest extends TestCase
         $builder->withDescription('desc');
         $builder->withNullable(true);
         $builder->withDeprecated(true);
+        $builder = $builder->withMetaData([
+            'a' => 1,
+        ]);
 
         $this->assertEquals(
-            new UnionSchemaData([new ObjectSchemaData([])], 'discriminatoR', true, 'desc', true),
+            new UnionSchemaData([new ObjectSchemaData([])], 'discriminatoR', true, 'desc', true, [
+                'a' => 1,
+            ]),
             $builder->build()
         );
     }

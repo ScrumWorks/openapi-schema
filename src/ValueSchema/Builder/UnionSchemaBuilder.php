@@ -64,7 +64,8 @@ final class UnionSchemaBuilder extends AbstractSchemaBuilder
             $this->discriminatorPropertyName,
             $this->nullable,
             $this->description,
-            $this->deprecated
+            $this->deprecated,
+            $this->metaData,
         );
     }
 }

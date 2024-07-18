@@ -9,6 +9,9 @@ use ScrumWorks\OpenApiSchema\ValueSchema\IntegerSchema;
 
 final class IntegerSchemaData extends AbstractValueSchema implements IntegerSchema
 {
+    /**
+     * @param array<string, mixed> $metaData
+     */
     public function __construct(
         private readonly ?int $minimum = null,
         private readonly ?int $maximum = null,
@@ -19,9 +22,10 @@ final class IntegerSchemaData extends AbstractValueSchema implements IntegerSche
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
-        bool $isDeprecated = false
+        bool $isDeprecated = false,
+        array $metaData = [],
     ) {
-        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated, $metaData);
     }
 
     public function getMinimum(): ?int

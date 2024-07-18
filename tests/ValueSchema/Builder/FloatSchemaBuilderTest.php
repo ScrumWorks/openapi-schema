@@ -28,6 +28,9 @@ class FloatSchemaBuilderTest extends TestCase
         $builder = $builder->withDescription('float');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
+        $builder = $builder->withMetaData([
+            'a' => 1,
+        ]);
 
         $this->assertEquals(
             new FloatSchemaData(
@@ -41,6 +44,9 @@ class FloatSchemaBuilderTest extends TestCase
                 description: 'float',
                 schemaName: null,
                 isDeprecated: true,
+                metaData: [
+                    'a' => 1,
+                ]
             ),
             $builder->build(),
         );

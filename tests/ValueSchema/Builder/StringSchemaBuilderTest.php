@@ -27,6 +27,9 @@ class StringSchemaBuilderTest extends TestCase
         $builder = $builder->withDescription('string');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
+        $builder = $builder->withMetaData([
+            'a' => 1,
+        ]);
 
         $this->assertEquals(
             new StringSchemaData(
@@ -39,6 +42,9 @@ class StringSchemaBuilderTest extends TestCase
                 description: 'string',
                 schemaName: null,
                 isDeprecated: true,
+                metaData: [
+                    'a' => 1,
+                ],
             ),
             $builder->build(),
         );

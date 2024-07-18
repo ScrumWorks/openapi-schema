@@ -11,6 +11,12 @@ final class MixedSchemaBuilder extends AbstractSchemaBuilder
 {
     public function build(): MixedSchema
     {
-        return new MixedSchemaData($this->nullable, $this->description, $this->schemaName, $this->deprecated);
+        return new MixedSchemaData(
+            $this->nullable,
+            $this->description,
+            $this->schemaName,
+            $this->deprecated,
+            $this->metaData,
+        );
     }
 }

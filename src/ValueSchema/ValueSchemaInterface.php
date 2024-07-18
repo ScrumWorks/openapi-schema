@@ -13,4 +13,9 @@ interface ValueSchemaInterface
     public function getSchemaName(): ?string;
 
     public function isDeprecated(): bool;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getMetaData(): array;
 }

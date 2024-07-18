@@ -44,6 +44,7 @@ final class EnumSchemaBuilder extends AbstractSchemaBuilder
             $this->description,
             $this->schemaName,
             $this->deprecated,
+            $this->metaData,
         );
     }
 }

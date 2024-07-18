@@ -100,6 +100,7 @@ final class FloatSchemaBuilder extends AbstractSchemaBuilder
             $this->description,
             $this->schemaName,
             $this->deprecated,
+            $this->metaData,
         );
     }
 }

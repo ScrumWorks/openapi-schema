@@ -30,9 +30,14 @@ class ArraySchemaBuilderTest extends TestCase
         $builder = $builder->withDescription('array');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
+        $builder = $builder->withMetaData([
+            'a' => 1,
+        ]);
 
         $this->assertEquals(
-            new ArraySchemaData(new StringSchemaData(), 2, 3, true, true, 'array', null, true),
+            new ArraySchemaData(new StringSchemaData(), 2, 3, true, true, 'array', null, true, [
+                'a' => 1,
+            ]),
             $builder->build()
         );
     }

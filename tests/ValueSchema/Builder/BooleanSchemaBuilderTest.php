@@ -22,7 +22,12 @@ class BooleanSchemaBuilderTest extends TestCase
         $builder = $builder->withDescription('boolean');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
+        $builder = $builder->withMetaData([
+            'a' => 1,
+        ]);
 
-        $this->assertEquals(new BooleanSchemaData(true, 'boolean', null, true), $builder->build());
+        $this->assertEquals(new BooleanSchemaData(true, 'boolean', null, true, [
+            'a' => 1,
+        ]), $builder->build());
     }
 }
