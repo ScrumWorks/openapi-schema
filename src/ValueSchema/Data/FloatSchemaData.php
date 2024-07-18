@@ -9,6 +9,9 @@ use ScrumWorks\OpenApiSchema\ValueSchema\FloatSchema;
 
 final class FloatSchemaData extends AbstractValueSchema implements FloatSchema
 {
+    /**
+     * @param array<string, mixed> $metaData
+     */
     public function __construct(
         private readonly ?float $minimum = null,
         private readonly ?float $maximum = null,
@@ -19,9 +22,10 @@ final class FloatSchemaData extends AbstractValueSchema implements FloatSchema
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
-        bool $isDeprecated = false
+        bool $isDeprecated = false,
+        array $metaData = [],
     ) {
-        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated, $metaData);
     }
 
     public function getMinimum(): ?float

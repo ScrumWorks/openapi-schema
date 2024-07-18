@@ -28,6 +28,9 @@ class IntegerSchemaBuilderTest extends TestCase
         $builder = $builder->withDescription('integer');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
+        $builder = $builder->withMetaData([
+            'a' => 1,
+        ]);
 
         $this->assertEquals(
             new IntegerSchemaData(
@@ -41,6 +44,9 @@ class IntegerSchemaBuilderTest extends TestCase
                 description: 'integer',
                 schemaName: null,
                 isDeprecated: true,
+                metaData: [
+                    'a' => 1,
+                ]
             ),
             $builder->build(),
         );

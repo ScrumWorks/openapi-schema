@@ -25,8 +25,13 @@ class EnumSchemaBuilderTest extends TestCase
         $builder = $builder->withDescription('enum');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
+        $builder = $builder->withMetaData([
+            'a' => 1,
+        ]);
 
-        $this->assertEquals(new EnumSchemaData(['a', 'b'], true, 'enum', null, true), $builder->build());
+        $this->assertEquals(new EnumSchemaData(['a', 'b'], true, 'enum', null, true, [
+            'a' => 1,
+        ]), $builder->build());
     }
 
     public function testMissingData(): void

@@ -13,6 +13,7 @@ final class ObjectSchemaData extends AbstractValueSchema implements ObjectSchema
     /**
      * @param array<string, ValueSchemaInterface> $propertiesSchemas
      * @param string[] $requiredProperties
+     * @param array<string, mixed> $metaData
      */
     public function __construct(
         private readonly array $propertiesSchemas,
@@ -20,9 +21,10 @@ final class ObjectSchemaData extends AbstractValueSchema implements ObjectSchema
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
-        bool $isDeprecated = false
+        bool $isDeprecated = false,
+        array $metaData = [],
     ) {
-        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated, $metaData);
     }
 
     /**

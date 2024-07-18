@@ -16,6 +16,11 @@ abstract class AbstractSchemaBuilder
 
     protected bool $deprecated = false;
 
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $metaData = [];
+
     final public function withNullable(bool $nullable): static
     {
         $this->nullable = $nullable;
@@ -40,6 +45,15 @@ abstract class AbstractSchemaBuilder
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $metaData
+     */
+    final public function withMetaData(array $metaData): static
+    {
+        $this->metaData = $metaData;
+        return $this;
+    }
+
     public function isNullable(): bool
     {
         return $this->nullable;
@@ -58,6 +72,14 @@ abstract class AbstractSchemaBuilder
     public function isDeprecated(): bool
     {
         return $this->deprecated;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getMetaData(): array
+    {
+        return $this->metaData;
     }
 
     abstract public function build(): ValueSchemaInterface;

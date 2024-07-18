@@ -11,6 +11,7 @@ final class HashmapSchemaData extends AbstractValueSchema implements HashmapSche
 {
     /**
      * @param string[] $requiredProperties
+     * @param array<string, mixed> $metaData
      */
     public function __construct(
         private readonly ValueSchemaInterface $itemsSchema,
@@ -18,9 +19,10 @@ final class HashmapSchemaData extends AbstractValueSchema implements HashmapSche
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
-        bool $isDeprecated = false
+        bool $isDeprecated = false,
+        array $metaData = [],
     ) {
-        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated, $metaData);
     }
 
     public function getItemsSchema(): ValueSchemaInterface

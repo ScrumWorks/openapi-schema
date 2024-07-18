@@ -13,15 +13,17 @@ final class UnionSchemaData extends AbstractValueSchema implements UnionSchema
 {
     /**
      * @param ValueSchemaInterface[] $possibleSchemas
+     * @param array<string, mixed> $metaData
      */
     public function __construct(
         private readonly array $possibleSchemas,
         private readonly ?string $discriminatorPropertyName = null,
         bool $nullable = false,
         ?string $description = null,
-        bool $isDeprecated = false
+        bool $isDeprecated = false,
+        array $metaData = [],
     ) {
-        parent::__construct($nullable, $description, null, $isDeprecated);
+        parent::__construct($nullable, $description, null, $isDeprecated, $metaData);
 
         $this->nullable = $this->nullable || \array_reduce(
             $possibleSchemas,

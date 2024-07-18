@@ -60,7 +60,8 @@ final class HashmapSchemaBuilder extends AbstractSchemaBuilder
             $this->nullable,
             $this->description,
             $this->schemaName,
-            $this->deprecated
+            $this->deprecated,
+            $this->metaData,
         );
     }
 }

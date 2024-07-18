@@ -10,6 +10,9 @@ use ScrumWorks\OpenApiSchema\ValueSchema\ValueSchemaInterface;
 
 final class ArraySchemaData extends AbstractValueSchema implements ArraySchema
 {
+    /**
+     * @param array<string, mixed> $metaData
+     */
     public function __construct(
         private readonly ValueSchemaInterface $itemsSchema,
         private readonly ?int $minItems = null,
@@ -18,9 +21,10 @@ final class ArraySchemaData extends AbstractValueSchema implements ArraySchema
         bool $nullable = false,
         ?string $description = null,
         ?string $schemaName = null,
-        bool $isDeprecated = false
+        bool $isDeprecated = false,
+        array $metaData = [],
     ) {
-        parent::__construct($nullable, $description, $schemaName, $isDeprecated);
+        parent::__construct($nullable, $description, $schemaName, $isDeprecated, $metaData);
     }
 
     public function getMinItems(): ?int
