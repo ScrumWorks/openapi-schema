@@ -21,6 +21,10 @@ use ScrumWorks\PropertyReader\PropertyTypeReaderInterface;
 use ScrumWorks\PropertyReader\VariableType\ArrayVariableType;
 use ScrumWorks\PropertyReader\VariableType\ClassVariableType;
 use ScrumWorks\PropertyReader\VariableType\MixedVariableType;
+use ScrumWorks\PropertyReader\VariableType\Scalar\BooleanVariableType;
+use ScrumWorks\PropertyReader\VariableType\Scalar\FloatVariableType;
+use ScrumWorks\PropertyReader\VariableType\Scalar\IntegerVariableType;
+use ScrumWorks\PropertyReader\VariableType\Scalar\StringVariableType;
 use ScrumWorks\PropertyReader\VariableType\ScalarVariableType;
 use ScrumWorks\PropertyReader\VariableType\UnionVariableType;
 use ScrumWorks\PropertyReader\VariableType\VariableTypeInterface;
@@ -99,24 +103,21 @@ class SchemaBuilderFactory
 
     protected function createSchemaBuilderFromScalar(ScalarVariableType $variableType): AbstractSchemaBuilder
     {
-        switch ($variableType->getType()) {
-            case ScalarVariableType::TYPE_INTEGER:
-                $schemaBuilder = new IntegerSchemaBuilder();
-                break;
-            case ScalarVariableType::TYPE_FLOAT:
-                $schemaBuilder = new FloatSchemaBuilder();
-                break;
-            case ScalarVariableType::TYPE_BOOLEAN:
-                $schemaBuilder = new BooleanSchemaBuilder();
-                break;
-            case ScalarVariableType::TYPE_STRING:
-                $schemaBuilder = new StringSchemaBuilder();
-                break;
-            default:
-                throw new LogicException(\sprintf("Unknown scalar type '%s'", $variableType->getType()));
+        if ($variableType instanceof IntegerVariableType) {
+            return new IntegerSchemaBuilder();
+        } elseif ($variableType instanceof FloatVariableType) {
+            return new FloatSchemaBuilder();
+        } elseif ($variableType instanceof BooleanVariableType) {
+            return new BooleanSchemaBuilder();
+        } elseif ($variableType instanceof StringVariableType) {
+            $schemaBuilder = new StringSchemaBuilder();
+            if (! $variableType->canBeEmpty()) {
+                $schemaBuilder->withMinLength(1);
+            }
+            return $schemaBuilder;
         }
 
-        return $schemaBuilder;
+        throw new LogicException(\sprintf("Unknown scalar type '%s'", $variableType->getTypeName()));
     }
 
     protected function createSchemaBuilderFromArray(ArrayVariableType $variableType): AbstractSchemaBuilder
