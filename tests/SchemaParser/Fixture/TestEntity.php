@@ -24,6 +24,11 @@ class TestEntity
     public ?string $string;
 
     /**
+     * @var non-empty-string
+     */
+    public string $nonEmptyString;
+
+    /**
      * @var int[]
      */
     #[OA\ArrayValue(minItems: 3, maxItems: 7, uniqueItems: true, itemsSchema: new OA\IntegerValue(minimum: 3))]
