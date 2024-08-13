@@ -57,7 +57,10 @@ class SchemaParserTest extends TestCase
         $this->assertFalse($entitySchema->isNullable());
         $this->assertNull($entitySchema->getDescription());
         $this->assertNull($entitySchema->getSchemaName());
-        $this->assertSame(['float', 'string', 'array', 'class', 'objectUnion'], $entitySchema->getRequiredProperties());
+        $this->assertSame(
+            ['float', 'string', 'nonEmptyString', 'array', 'class', 'objectUnion'],
+            $entitySchema->getRequiredProperties()
+        );
 
         /** @var IntegerSchema $integerSchema */
         $integerSchema = $entitySchema->getPropertySchema('integer');
@@ -97,6 +100,12 @@ class SchemaParserTest extends TestCase
         $this->assertSame(100, $stringSchema->getMaxLength());
         $this->assertSame('date', $stringSchema->getFormat());
         $this->assertSame('[0-9]+', $stringSchema->getPattern());
+
+        /** @var StringSchema $nonEmptyStringSchema */
+        $nonEmptyStringSchema = $entitySchema->getPropertySchema('nonEmptyString');
+        $this->assertInstanceOf(StringSchema::class, $nonEmptyStringSchema);
+        $this->assertFalse($nonEmptyStringSchema->isNullable());
+        $this->assertSame(1, $nonEmptyStringSchema->getMinLength());
 
         /** @var ArraySchema $arraySchema */
         $arraySchema = $entitySchema->getPropertySchema('array');
