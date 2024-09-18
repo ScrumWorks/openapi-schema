@@ -172,7 +172,7 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
             $enum[] = null;
         }
         return [
-            'type' => 'string',
+            'type' => is_int($enum[0]) ? 'int' : 'string',
             'enum' => $enum,
         ];
     }

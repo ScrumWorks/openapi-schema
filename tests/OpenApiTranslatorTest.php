@@ -223,6 +223,13 @@ class OpenApiTranslatorTest extends TestCase
                     'deprecated' => true,
                 ],
             ],
+            'enum:int' => [
+                new EnumSchemaData([1, 2, 3]),
+                [
+                    'type' => 'int',
+                    'enum' => [1, 2, 3],
+                ],
+            ],
         ];
     }
 

@@ -10,7 +10,7 @@ use ScrumWorks\OpenApiSchema\ValueSchema\EnumSchema;
 final class EnumSchemaData extends AbstractValueSchema implements EnumSchema
 {
     /**
-     * @param string[] $enum
+     * @param string[]|int[] $enum
      * @param array<string, mixed> $metaData
      */
     public function __construct(
@@ -25,7 +25,7 @@ final class EnumSchemaData extends AbstractValueSchema implements EnumSchema
     }
 
     /**
-     * @return string[]
+     * @return string[]|int[]
      */
     public function getEnum(): array
     {
@@ -36,13 +36,6 @@ final class EnumSchemaData extends AbstractValueSchema implements EnumSchema
     {
         if (! $this->enum) {
             throw new InvalidArgumentException('Minimal one enum item is required');
-        }
-
-        // TODO: maybe change this later for also support int, etc
-        foreach ($this->enum as $enum) {
-            if (! \is_string($enum)) {
-                throw new InvalidArgumentException('Only strings are allowed for enum properties');
-            }
         }
     }
 }
