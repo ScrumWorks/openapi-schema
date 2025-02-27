@@ -55,6 +55,11 @@ final class ArrayValidator extends AbstractValidator
         }
 
         $itemsSchema = $this->schema->getItemsSchema();
+
+        if (! $this->validateDataIndex($data, $resultBuilder, $breadCrumbPath)) {
+            return;
+        }
+
         foreach ($data as $itemIndex => $itemData) {
             $propertyValidationResult = $this->valueValidator->validate(
                 $itemsSchema,
@@ -89,5 +94,27 @@ final class ArrayValidator extends AbstractValidator
                 $breadCrumbPath->withIndex(0)
             )
         );
+    }
+
+    private function validateDataIndex(
+        array $data,
+        ValidationResultBuilder $resultBuilder,
+        BreadCrumbPathInterface $breadCrumbPath
+    ): bool {
+        $expectedIndex = 0;
+        foreach ($data as $itemIndex => $itemData) {
+            if (! is_int($itemIndex)) {
+                $resultBuilder->addTypeViolation('array', $breadCrumbPath);
+                return false;
+            }
+            if ($itemIndex !== $expectedIndex) {
+                $resultBuilder->addSequenceViolation($breadCrumbPath);
+                return false;
+            }
+
+            $expectedIndex++;
+        }
+
+        return true;
     }
 }
