@@ -131,11 +131,6 @@ class ValidationResultBuilder
         return $this->addViolation($this->validityViolationFactory->createOneOfAmbiguousViolation($breadCrumbPath));
     }
 
-    public function addSequenceViolation(BreadCrumbPathInterface $breadCrumbPath): self
-    {
-        return $this->addViolation($this->validityViolationFactory->createSequenceViolation($breadCrumbPath));
-    }
-
     public function mergeResult(ValidationResultInterface $validationResult): self
     {
         return $this->mergeViolations($validationResult->getViolations());

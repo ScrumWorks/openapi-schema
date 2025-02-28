@@ -108,7 +108,7 @@ final class ArrayValidator extends AbstractValidator
                 return false;
             }
             if ($itemIndex !== $expectedIndex) {
-                $resultBuilder->addSequenceViolation($breadCrumbPath);
+                $resultBuilder->addTypeViolation('array', $breadCrumbPath);
                 return false;
             }
 
