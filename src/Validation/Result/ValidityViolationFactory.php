@@ -135,9 +135,4 @@ final class ValidityViolationFactory implements ValidityViolationFactoryInterfac
     {
         return new ValidityViolation(1019, 'Value matches more then one schema.', [], $breadCrumbPath);
     }
-
-    public function createSequenceViolation(BreadCrumbPathInterface $breadCrumbPath): ValidityViolationInterface
-    {
-        return new ValidityViolation(1020, 'Sequence violation.', [], $breadCrumbPath);
-    }
 }

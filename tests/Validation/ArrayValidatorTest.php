@@ -32,19 +32,17 @@ final class ArrayValidatorTest extends TestCase
             1 => 'qwe',
         ])->getViolations());
 
-        $violations = $validator->validate([
+        $violationsIndexType = $validator->validate([
             'asd' => 'qwe',
         ])->getViolations();
-        self::assertEquals(1002, reset($violations)->getViolationCode());
+        self::assertCount(1, $violationsIndexType);
+        self::assertEquals(1002, reset($violationsIndexType)->getViolationCode());
 
-        self::assertCount(1, $validator->validate([
-            'asd' => 'qwe',
-        ])->getViolations());
-        $violations = $validator->validate([
+        $violationsIndexSequence = $validator->validate([
             1 => 'asd',
             3 => 'qwe',
         ])->getViolations();
-        self::assertCount(1, $violations);
-        self::assertEquals(1020, reset($violations)->getViolationCode());
+        self::assertCount(1, $violationsIndexSequence);
+        self::assertEquals(1002, reset($violationsIndexSequence)->getViolationCode());
     }
 }
