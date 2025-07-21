@@ -104,14 +104,21 @@ class SchemaBuilderFactory
     protected function createSchemaBuilderFromScalar(ScalarVariableType $variableType): AbstractSchemaBuilder
     {
         if ($variableType instanceof IntegerVariableType) {
-            return new IntegerSchemaBuilder();
+            $variableType->getTypeExtension() !== 'non-zero-int'
+                || throw new LogicException("{$variableType->getTypeExtension()} not supported.");
+
+            $schemaBuilder = new IntegerSchemaBuilder();
+            $schemaBuilder->withMinimum($variableType->getMinValue());
+            $schemaBuilder->withMaximum($variableType->getMaxValue());
+
+            return $schemaBuilder;
         } elseif ($variableType instanceof FloatVariableType) {
             return new FloatSchemaBuilder();
         } elseif ($variableType instanceof BooleanVariableType) {
             return new BooleanSchemaBuilder();
         } elseif ($variableType instanceof StringVariableType) {
             $schemaBuilder = new StringSchemaBuilder();
-            if (! $variableType->canBeEmpty()) {
+            if ($variableType->getTypeExtension() === 'non-empty-string') {
                 $schemaBuilder->withMinLength(1);
             }
             return $schemaBuilder;
@@ -124,7 +131,14 @@ class SchemaBuilderFactory
     {
         if ($variableType->getKeyType() === null) {
             $schemaBuilder = new ArraySchemaBuilder();
+
+            if (\in_array($variableType->getTypeExtension(), ['non-empty-list', 'non-empty-array'])) {
+                $schemaBuilder->withMinItems(1);
+            }
         } else {
+            $variableType->getTypeExtension() !== 'non-empty-array'
+                || throw new LogicException("{$variableType->getTypeExtension()} not supported for hashmap.");
+
             $schemaBuilder = new HashmapSchemaBuilder();
         }
 

@@ -13,6 +13,21 @@ class TestEntity
     #[OA\Property(description: 'Important integer', required: false)]
     public int $integer;
 
+    /**
+     * @var int<-3, 100>
+     */
+    public int $intRange;
+
+    /**
+     * @var non-empty-list<int>
+     */
+    public array $nonEmptyList = [1];
+
+    /**
+     * @var non-empty-array<string>
+     */
+    public array $nonEmptyArray = ['a'];
+
     #[OA\FloatValue(minimum: 10.3, maximum: 50.5, exclusiveMinimum: true, exclusiveMaximum: false)]
     #[OA\Property(description: 'Important float', required: true)]
     public float $float = 13.3;

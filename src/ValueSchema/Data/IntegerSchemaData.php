@@ -60,12 +60,6 @@ final class IntegerSchemaData extends AbstractValueSchema implements IntegerSche
 
     protected function validate(): void
     {
-        if ($this->minimum !== null && $this->minimum < 0) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'minimum'", $this->minimum));
-        }
-        if ($this->maximum !== null && $this->maximum < 0) {
-            throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maximum'", $this->maximum));
-        }
         if ($this->minimum !== null && $this->maximum !== null && $this->maximum < $this->minimum) {
             throw new InvalidArgumentException(\sprintf("Invalid value %d for argument 'maximum'", $this->maximum));
         }

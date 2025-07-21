@@ -58,7 +58,7 @@ class SchemaParserTest extends TestCase
         $this->assertNull($entitySchema->getDescription());
         $this->assertNull($entitySchema->getSchemaName());
         $this->assertSame(
-            ['float', 'string', 'nonEmptyString', 'array', 'class', 'objectUnion'],
+            ['intRange', 'float', 'string', 'nonEmptyString', 'array', 'class', 'objectUnion'],
             $entitySchema->getRequiredProperties()
         );
 
@@ -72,6 +72,26 @@ class SchemaParserTest extends TestCase
         $this->assertNull($integerSchema->getExclusiveMinimum());
         $this->assertTrue($integerSchema->getExclusiveMaximum());
         $this->assertNull($integerSchema->getMultipleOf());
+
+        /** @var IntegerSchema $intRangeSchema */
+        $intRangeSchema = $entitySchema->getPropertySchema('intRange');
+        $this->assertInstanceOf(IntegerSchema::class, $intRangeSchema);
+        $this->assertFalse($intRangeSchema->isNullable());
+        $this->assertSame(-3, $intRangeSchema->getMinimum());
+        $this->assertSame(100, $intRangeSchema->getMaximum());
+
+        /** @var ArraySchema $nonEmptyListSchema */
+        $nonEmptyListSchema = $entitySchema->getPropertySchema('nonEmptyList');
+        $this->assertInstanceOf(ArraySchema::class, $nonEmptyListSchema);
+        $this->assertInstanceOf(IntegerSchema::class, $nonEmptyListSchema->getItemsSchema());
+        $this->assertFalse($nonEmptyListSchema->isNullable());
+        $this->assertSame(1, $nonEmptyListSchema->getMinItems());
+
+        /** @var ArraySchema $nonEmptyArraySchema */
+        $nonEmptyArraySchema = $entitySchema->getPropertySchema('nonEmptyArray');
+        $this->assertInstanceOf(ArraySchema::class, $nonEmptyArraySchema);
+        $this->assertInstanceOf(StringSchema::class, $nonEmptyArraySchema->getItemsSchema());
+        $this->assertFalse($nonEmptyArraySchema->isNullable());
 
         /** @var FloatSchema $floatSchema */
         $floatSchema = $entitySchema->getPropertySchema('float');
