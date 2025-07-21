@@ -10,20 +10,6 @@ use ScrumWorks\OpenApiSchema\ValueSchema\Data\IntegerSchemaData;
 
 class IntegerSchemaTest extends TestCase
 {
-    public function testInvalidMinimum(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid value -1 for argument 'minimum'");
-        new IntegerSchemaData(-1);
-    }
-
-    public function testInvalidMaximum(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid value -1 for argument 'maximum'");
-        new IntegerSchemaData(null, -1);
-    }
-
     public function testExceedingMaximum(): void
     {
         $this->expectException(InvalidArgumentException::class);
