@@ -92,7 +92,7 @@ class SchemaParserTest extends TestCase
         $this->assertInstanceOf(ArraySchema::class, $nonEmptyArraySchema);
         $this->assertInstanceOf(StringSchema::class, $nonEmptyArraySchema->getItemsSchema());
         $this->assertFalse($nonEmptyArraySchema->isNullable());
-
+        $this->assertSame(1, $nonEmptyArraySchema->getMinItems());
         /** @var FloatSchema $floatSchema */
         $floatSchema = $entitySchema->getPropertySchema('float');
         $this->assertInstanceOf(FloatSchema::class, $floatSchema);
