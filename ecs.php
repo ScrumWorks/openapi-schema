@@ -8,7 +8,6 @@ use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocLineSpanFixer;
 use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use PhpCsFixer\Fixer\StringNotation\SimpleToComplexStringVariableFixer;
-use PhpCsFixer\Fixer\Whitespace\IndentationTypeFixer;
 use SlevomatCodingStandard\Sniffs\Arrays\DisallowImplicitArrayCreationSniff;
 use SlevomatCodingStandard\Sniffs\Classes\DisallowLateStaticBindingForConstantsSniff;
 use SlevomatCodingStandard\Sniffs\Classes\UselessLateStaticBindingSniff;
@@ -22,50 +21,53 @@ use SlevomatCodingStandard\Sniffs\PHP\UselessParenthesesSniff;
 use SlevomatCodingStandard\Sniffs\PHP\UselessSemicolonSniff;
 use SlevomatCodingStandard\Sniffs\Variables\DuplicateAssignmentToVariableSniff;
 use SlevomatCodingStandard\Sniffs\Variables\UselessVariableSniff;
+use Symplify\CodingStandard\Fixer\Annotation\RemoveMethodNameDuplicateDescriptionFixer;
+use Symplify\CodingStandard\Fixer\Annotation\RemovePHPStormAnnotationFixer;
+use Symplify\CodingStandard\Fixer\Annotation\RemovePropertyVariableNameDescriptionFixer;
+use Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer;
+use Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
-use Symplify\CodingStandard\Fixer\Commenting\ParamReturnAndVarTagMalformsFixer;
+use Symplify\CodingStandard\Fixer\Commenting\RemoveUselessDefaultCommentFixer;
 use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
-use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
+use Symplify\CodingStandard\Fixer\Spacing\SpaceAfterCommaHereNowDocFixer;
+use Symplify\CodingStandard\Fixer\Spacing\StandaloneLinePromotedPropertyFixer;
+use Symplify\CodingStandard\Fixer\Strict\BlankLineAfterStrictTypesFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
-use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-# see https://github.com/symplify/easy-coding-standard
-return static function (ECSConfig $ecsConfig): void {
-    $ecsConfig->paths([__DIR__ . '/ecs.php', __DIR__ . '/src', __DIR__ . '/tests']);
-
-    $ecsConfig->sets([
-        # pick anything from https://github.com/symplify/easy-coding-standard#use-prepared-checker-sets
-        SetList::PSR_12,
-        SetList::COMMON,
-        SetList::CLEAN_CODE,
-        SetList::SYMPLIFY,
-    ]);
-
-    $ecsConfig->skip([
+# see https://github.com/easy-coding-standard/easy-coding-standard
+return ECSConfig::configure()
+    ->withPaths([__DIR__ . '/ecs.php', __DIR__ . '/src', __DIR__ . '/tests'])
+    ->withPreparedSets(psr12: true, common: true, cleanCode: true)
+    ->withSkip([
         ReferenceUsedNamesOnlySniff::class . '.' . ReferenceUsedNamesOnlySniff::CODE_REFERENCE_VIA_FULLY_QUALIFIED_NAME,
         AssignmentInConditionSniff::class . '.Found',
-        MethodChainingNewlineFixer::class,
         StrictParamFixer::class,
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(GeneralPhpdocAnnotationRemoveFixer::class, [
+    ])
+    ->withConfiguredRule(GeneralPhpdocAnnotationRemoveFixer::class, [
         'annotations' => ['author', 'package', 'group', 'autor', 'covers'],
-    ]);
-
+    ])
     # imports FQN names
-    $ecsConfig->ruleWithConfiguration(ReferenceUsedNamesOnlySniff::class, [
+    ->withConfiguredRule(ReferenceUsedNamesOnlySniff::class, [
         'searchAnnotations' => true,
         'allowFullyQualifiedGlobalFunctions' => true,
         'allowFullyQualifiedGlobalConstants' => true,
         'allowPartialUses' => true,
-    ]);
-
-    $ecsConfig->rules([
-        PhpdocLineSpanFixer::class,
+    ])
+    ->withRules([
+        # former "symplify" set (dropped in ECS 13), minus the skipped MethodChainingNewlineFixer
+        RemovePHPStormAnnotationFixer::class,
+        RemoveUselessDefaultCommentFixer::class,
+        RemoveMethodNameDuplicateDescriptionFixer::class,
+        RemovePropertyVariableNameDescriptionFixer::class,
+        ArrayListItemNewlineFixer::class,
+        ArrayOpenerAndCloserNewlineFixer::class,
+        StandaloneLinePromotedPropertyFixer::class,
+        SpaceAfterCommaHereNowDocFixer::class,
+        BlankLineAfterStrictTypesFixer::class,
         LineLengthFixer::class,
+
+        PhpdocLineSpanFixer::class,
         StandaloneLineInMultilineArrayFixer::class,
-        ParamReturnAndVarTagMalformsFixer::class,
-        IndentationTypeFixer::class,
         FullyQualifiedStrictTypesFixer::class,
         UseFromSameNamespaceSniff::class,
         DuplicateAssignmentToVariableSniff::class,
@@ -81,4 +83,3 @@ return static function (ECSConfig $ecsConfig): void {
         DisallowImplicitArrayCreationSniff::class,
         SimpleToComplexStringVariableFixer::class,
     ]);
-};

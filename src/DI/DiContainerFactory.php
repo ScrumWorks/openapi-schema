@@ -23,8 +23,10 @@ class DiContainerFactory
     public function createContainer(): Container
     {
         $containerLoader = new ContainerLoader($this->tempDir, $this->autoRebuild);
-        $containerClass = $containerLoader->load(static function (Compiler $compiler): void {
+        $containerClass = $containerLoader->load(static function (Compiler $compiler): ?string {
             $compiler->addExtension('openApiSchema', new OpenApiSchemaExtension());
+
+            return null;
         });
 
         return new $containerClass();

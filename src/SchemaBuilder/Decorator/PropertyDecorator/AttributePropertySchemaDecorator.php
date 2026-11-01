@@ -240,9 +240,7 @@ final class AttributePropertySchemaDecorator extends AbstractAttributeSchemaDeco
         array $attributes,
     ): AbstractSchemaBuilder {
         if ($attribute = $this->findAttribute($attributes, OA\HashmapValue::class)) {
-            if ($attribute->getRequiredProperties() !== null) {
-                $builder = $builder->withRequiredProperties($attribute->getRequiredProperties());
-            }
+            $builder = $builder->withRequiredProperties($attribute->getRequiredProperties());
             if ($attribute->getItemsSchema() !== null && ($itemsBuilder = $builder->getItemsSchemaBuilder())) {
                 $itemsBuilder = $this->decoratePropertySchemaBuilderFromAttributes(
                     $itemsBuilder,

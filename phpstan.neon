@@ -13,6 +13,9 @@ parameters:
 
     inferPrivatePropertyTypeFromConstructor: true
 
+    # schema data validate() guards PHPDoc-only types (e.g. string[] in a native array) for callers without static analysis
+    treatPhpDocTypesAsCertain: false
+
     parallel:
         processTimeout: 300.0
 

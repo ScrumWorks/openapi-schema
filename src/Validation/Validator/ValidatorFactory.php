@@ -48,54 +48,63 @@ class ValidatorFactory
                 $schema,
                 $valueSchemaValidator,
             );
-        } elseif ($schema instanceof BooleanSchema) {
+        }
+        if ($schema instanceof BooleanSchema) {
             return new BooleanValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
             );
-        } elseif ($schema instanceof EnumSchema) {
+        }
+        if ($schema instanceof EnumSchema) {
             return new EnumValidator($this->breadCrumbPathFactory, $this->validationResultBuilderFactory, $schema);
-        } elseif ($schema instanceof FloatSchema) {
+        }
+        if ($schema instanceof FloatSchema) {
             return new FloatValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
             );
-        } elseif ($schema instanceof HashmapSchema) {
+        }
+        if ($schema instanceof HashmapSchema) {
             return new HashmapValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
                 $valueSchemaValidator,
             );
-        } elseif ($schema instanceof IntegerSchema) {
+        }
+        if ($schema instanceof IntegerSchema) {
             return new IntegerValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
             );
-        } elseif ($schema instanceof ObjectSchema) {
+        }
+        if ($schema instanceof ObjectSchema) {
             return new ObjectValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
                 $valueSchemaValidator,
             );
-        } elseif ($schema instanceof StringSchema) {
+        }
+        if ($schema instanceof StringSchema) {
             return new StringValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
                 $this->createFormatValidators(),
             );
-        } elseif ($schema instanceof MixedSchema) {
+        }
+        if ($schema instanceof MixedSchema) {
             return new MixedValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,
                 $schema,
             );
-        } elseif ($schema instanceof UnionSchema) {
+        }
+        if ($schema instanceof UnionSchema) {
             return new UnionValidator(
                 $this->breadCrumbPathFactory,
                 $this->validationResultBuilderFactory,

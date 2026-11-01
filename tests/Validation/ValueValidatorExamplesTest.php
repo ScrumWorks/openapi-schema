@@ -25,7 +25,7 @@ class ValueValidatorExamplesTest extends TestCase
     use AssertViolationTrait;
     use CreateValidatorTrait;
 
-    #[DataProvider(methodName: 'dpTest')]
+    #[DataProvider('dpTest')]
     /**
      * @param array<int, array<mixed>> $expectedViolations
      */
