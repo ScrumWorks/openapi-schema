@@ -25,6 +25,7 @@ class IntegerSchemaBuilderTest extends TestCase
         $builder = $builder->withExclusiveMaximum(false);
         $builder = $builder->withMultipleOf(2);
         $builder = $builder->withExample(8);
+        $builder = $builder->withEnum([2, 4, 8]);
         $builder = $builder->withDescription('integer');
         $builder = $builder->withNullable(true);
         $builder = $builder->withDeprecated(true);
@@ -46,7 +47,8 @@ class IntegerSchemaBuilderTest extends TestCase
                 isDeprecated: true,
                 metaData: [
                     'a' => 1,
-                ]
+                ],
+                enum: [2, 4, 8],
             ),
             $builder->build(),
         );

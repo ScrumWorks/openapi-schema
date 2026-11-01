@@ -59,7 +59,7 @@ class ValidationResultBuilder
     }
 
     /**
-     * @param string[] $choices
+     * @param array<string|int> $choices
      */
     public function addEnumViolation(array $choices, BreadCrumbPathInterface $breadCrumbPath): self
     {

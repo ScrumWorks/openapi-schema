@@ -30,7 +30,7 @@ interface ValidityViolationFactoryInterface
     public function createUniqueViolation(BreadCrumbPathInterface $breadCrumbPath): ValidityViolationInterface;
 
     /**
-     * @param string[] $choices
+     * @param array<string|int> $choices
      */
     public function createEnumViolation(
         array $choices,

@@ -117,6 +117,9 @@ final class AttributePropertySchemaDecorator extends AbstractAttributeSchemaDeco
             if ($attribute->getExample() !== null) {
                 $builder = $builder->withExample($attribute->getExample());
             }
+            if ($attribute->getEnum() !== null) {
+                $builder = $builder->withEnum($attribute->getEnum());
+            }
         }
 
         return $builder;

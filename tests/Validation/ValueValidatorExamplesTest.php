@@ -83,6 +83,14 @@ class ValueValidatorExamplesTest extends TestCase
                     [1013, 'Value has to be divisible by %s.', ['20'], ''],
                 ],
             ],
+            'int:enum' => [
+                new IntegerSchemaData(enum: [1, 2]),
+                [
+                    [1001, 'Unexpected NULL value.', [], ''],
+                    [1002, "Type '%s' expected.", ['integer'], ''],
+                    [1008, 'Value has to be one of [%s].', ["'1', '2'"], ''],
+                ],
+            ],
             'object' => [
                 new ObjectSchemaData([
                     'a' => new BooleanSchemaData(true),

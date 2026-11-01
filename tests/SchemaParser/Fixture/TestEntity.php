@@ -18,6 +18,9 @@ class TestEntity
      */
     public int $intRange;
 
+    #[OA\IntegerValue(enum: [1, 2, 3])]
+    public ?int $intEnum = null;
+
     /**
      * @var non-empty-list<int>
      */

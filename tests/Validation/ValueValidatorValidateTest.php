@@ -182,6 +182,13 @@ class ValueValidatorValidateTest extends TestCase
                 5,
                 [[1013, 'Value has to be divisible by %s.', ['2'], '']],
             ],
+            'int:valid-enum' => [new IntegerSchemaData(enum: [1, 2]), 2, []],
+            'int:valid-enum-null' => [new IntegerSchemaData(nullable: true, enum: [1, 2]), null, []],
+            'int:enum' => [
+                new IntegerSchemaData(enum: [1, 2]),
+                3,
+                [[1008, 'Value has to be one of [%s].', ["'1', '2'"], '']],
+            ],
         ];
     }
 
