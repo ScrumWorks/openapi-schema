@@ -17,4 +17,9 @@ interface IntegerSchema extends ValueSchemaInterface
     public function getMultipleOf(): ?int;
 
     public function getExample(): ?int;
+
+    /**
+     * @return int[]|null
+     */
+    public function getEnum(): ?array;
 }

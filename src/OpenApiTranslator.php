@@ -87,6 +87,13 @@ class OpenApiTranslator implements OpenApiTranslatorInterface
         if ($schema->getExample() !== null) {
             $definition['example'] = $schema->getExample();
         }
+        $enum = $schema->getEnum();
+        if ($enum !== null) {
+            if ($schema->isNullable()) {
+                $enum[] = null;
+            }
+            $definition['enum'] = $enum;
+        }
         return $definition;
     }
 

@@ -7,6 +7,9 @@ namespace ScrumWorks\OpenApiSchema\Attribute;
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class IntegerValue implements ValueInterface
 {
+    /**
+     * @param int[]|null $enum
+     */
     public function __construct(
         private readonly ?int $minimum = null,
         private readonly ?int $maximum = null,
@@ -14,6 +17,7 @@ final class IntegerValue implements ValueInterface
         private readonly ?bool $exclusiveMaximum = null,
         private readonly ?int $multipleOf = null,
         private readonly ?int $example = null,
+        private readonly ?array $enum = null,
     ) {
     }
 
@@ -45,5 +49,13 @@ final class IntegerValue implements ValueInterface
     public function getExample(): ?int
     {
         return $this->example;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getEnum(): ?array
+    {
+        return $this->enum;
     }
 }

@@ -90,6 +90,21 @@ class OpenApiTranslatorTest extends TestCase
                     'deprecated' => true,
                 ],
             ],
+            'integer:enum' => [
+                new IntegerSchemaData(enum: [1, 2]),
+                [
+                    'type' => 'integer',
+                    'enum' => [1, 2],
+                ],
+            ],
+            'integer:enum-nullable' => [
+                new IntegerSchemaData(nullable: true, enum: [1, 2]),
+                [
+                    'type' => 'integer',
+                    'enum' => [1, 2, null],
+                    'nullable' => true,
+                ],
+            ],
         ];
     }
 

@@ -48,6 +48,11 @@ final class IntegerValidator extends AbstractNumberValidator
             $this->schema->getMultipleOf(),
             $breadCrumbPath,
         );
+
+        $enum = $this->schema->getEnum();
+        if ($enum !== null && ! \in_array($data, $enum, true)) {
+            $resultBuilder->addEnumViolation($enum, $breadCrumbPath);
+        }
     }
 
     protected function collectPossibleViolationExamples(
@@ -66,5 +71,9 @@ final class IntegerValidator extends AbstractNumberValidator
             $this->schema->getMultipleOf(),
             $breadCrumbPath,
         );
+        $enum = $this->schema->getEnum();
+        if ($enum !== null) {
+            $resultBuilder->addEnumViolation($enum, $breadCrumbPath);
+        }
     }
 }

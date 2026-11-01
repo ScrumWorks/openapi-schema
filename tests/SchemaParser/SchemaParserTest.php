@@ -72,6 +72,13 @@ class SchemaParserTest extends TestCase
         $this->assertNull($integerSchema->getExclusiveMinimum());
         $this->assertTrue($integerSchema->getExclusiveMaximum());
         $this->assertNull($integerSchema->getMultipleOf());
+        $this->assertNull($integerSchema->getEnum());
+
+        /** @var IntegerSchema $intEnumSchema */
+        $intEnumSchema = $entitySchema->getPropertySchema('intEnum');
+        $this->assertInstanceOf(IntegerSchema::class, $intEnumSchema);
+        $this->assertTrue($intEnumSchema->isNullable());
+        $this->assertSame([1, 2, 3], $intEnumSchema->getEnum());
 
         /** @var IntegerSchema $intRangeSchema */
         $intRangeSchema = $entitySchema->getPropertySchema('intRange');

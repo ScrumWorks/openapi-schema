@@ -21,6 +21,11 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
 
     protected ?int $example = null;
 
+    /**
+     * @var int[]|null
+     */
+    protected ?array $enum = null;
+
     public function withMinimum(?int $minimum): self
     {
         $this->minimum = $minimum;
@@ -57,6 +62,15 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
         return $this;
     }
 
+    /**
+     * @param int[]|null $enum
+     */
+    public function withEnum(?array $enum): self
+    {
+        $this->enum = $enum;
+        return $this;
+    }
+
     public function getMinimum(): ?int
     {
         return $this->minimum;
@@ -87,6 +101,14 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
         return $this->example;
     }
 
+    /**
+     * @return int[]|null
+     */
+    public function getEnum(): ?array
+    {
+        return $this->enum;
+    }
+
     public function build(): IntegerSchema
     {
         return new IntegerSchemaData(
@@ -101,6 +123,7 @@ final class IntegerSchemaBuilder extends AbstractSchemaBuilder
             $this->schemaName,
             $this->deprecated,
             $this->metaData,
+            $this->enum,
         );
     }
 }
