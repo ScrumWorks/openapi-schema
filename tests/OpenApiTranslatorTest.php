@@ -27,15 +27,15 @@ class OpenApiTranslatorTest extends TestCase
         $this->translator = new OpenApiTranslator();
     }
 
-    #[DataProvider(methodName: 'dpMixedArray')]
-    #[DataProvider(methodName: 'dpIntegerArray')]
-    #[DataProvider(methodName: 'dpFloatArray')]
-    #[DataProvider(methodName: 'dpBooleanArray')]
-    #[DataProvider(methodName: 'dpStringArray')]
-    #[DataProvider(methodName: 'dpEnumArray')]
-    #[DataProvider(methodName: 'dpArrayArray')]
-    #[DataProvider(methodName: 'dpHashmapArray')]
-    #[DataProvider(methodName: 'dpObjectArray')]
+    #[DataProvider('dpMixedArray')]
+    #[DataProvider('dpIntegerArray')]
+    #[DataProvider('dpFloatArray')]
+    #[DataProvider('dpBooleanArray')]
+    #[DataProvider('dpStringArray')]
+    #[DataProvider('dpEnumArray')]
+    #[DataProvider('dpArrayArray')]
+    #[DataProvider('dpHashmapArray')]
+    #[DataProvider('dpObjectArray')]
     public function test(ValueSchemaInterface $schema, array $expected): void
     {
         $this->assertEquals($expected, $this->translator->translateValueSchema($schema));

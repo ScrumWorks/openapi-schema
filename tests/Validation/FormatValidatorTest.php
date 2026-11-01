@@ -12,7 +12,7 @@ use ScrumWorks\OpenApiSchema\Validation\Validator\Format\DateValidator;
 
 class FormatValidatorTest extends TestCase
 {
-    #[DataProvider(methodName: 'dpTestDateTime')]
+    #[DataProvider('dpTestDateTime')]
     public function testDateTime(bool $expectedResult, string $string): void
     {
         $validator = new DateTimeValidator();
@@ -41,7 +41,7 @@ class FormatValidatorTest extends TestCase
         yield [true, '2020-02-03T03:05:06.000133+00:00'];
     }
 
-    #[DataProvider(methodName: 'dpTestDate')]
+    #[DataProvider('dpTestDate')]
     public function testDate(bool $expectedResult, string $string): void
     {
         $validator = new DateValidator();

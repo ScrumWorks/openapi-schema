@@ -37,7 +37,7 @@ class UnionSchemaTest extends TestCase
         new UnionSchemaData([new BooleanSchemaData()], 'dis');
     }
 
-    #[DataProvider(methodName: 'dpTestNullable')]
+    #[DataProvider('dpTestNullable')]
     public function testNullable(bool $isPossibleSchemaNullable, bool $isUnionSchemaNullable, bool $result): void
     {
         $schema = new UnionSchemaData([new BooleanSchemaData($isPossibleSchemaNullable)], null, $isUnionSchemaNullable);

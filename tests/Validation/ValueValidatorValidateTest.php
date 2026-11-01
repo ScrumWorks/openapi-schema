@@ -29,17 +29,17 @@ class ValueValidatorValidateTest extends TestCase
      * @param mixed $data
      * @param array<int, array<mixed>> $expectedViolations
      */
-    #[DataProvider(methodName: 'dpTestArray')]
-    #[DataProvider(methodName: 'dpTestBoolean')]
-    #[DataProvider(methodName: 'dpTestEnum')]
-    #[DataProvider(methodName: 'dpTestFloat')]
-    #[DataProvider(methodName: 'dpTestInteger')]
-    #[DataProvider(methodName: 'dpTestObject')]
-    #[DataProvider(methodName: 'dpTestHashmap')]
-    #[DataProvider(methodName: 'dpTestString')]
-    #[DataProvider(methodName: 'dpTestMixed')]
-    #[DataProvider(methodName: 'dpTestUnion')]
-    #[DataProvider(methodName: 'dpTestCombined')]
+    #[DataProvider('dpTestArray')]
+    #[DataProvider('dpTestBoolean')]
+    #[DataProvider('dpTestEnum')]
+    #[DataProvider('dpTestFloat')]
+    #[DataProvider('dpTestInteger')]
+    #[DataProvider('dpTestObject')]
+    #[DataProvider('dpTestHashmap')]
+    #[DataProvider('dpTestString')]
+    #[DataProvider('dpTestMixed')]
+    #[DataProvider('dpTestUnion')]
+    #[DataProvider('dpTestCombined')]
     public function test(ValueSchemaInterface $schema, $data, array $expectedViolations): void
     {
         $result = $this->createValueValidator()->validate($schema, $data);

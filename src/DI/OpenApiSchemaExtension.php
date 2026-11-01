@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ScrumWorks\OpenApiSchema\DI;
 
 use Nette\DI\CompilerExtension;
-use Nette\DI\Definitions\Definition;
 use Nette\DI\Definitions\Reference;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\PhpGenerator\ClassType;
@@ -68,7 +67,7 @@ class OpenApiSchemaExtension extends CompilerExtension
         }
     }
 
-    private function addService(string $name, string $class): Definition
+    private function addService(string $name, string $class): ServiceDefinition
     {
         return $this->getContainerBuilder()->addDefinition($this->prefix($name))->setType($class);
     }

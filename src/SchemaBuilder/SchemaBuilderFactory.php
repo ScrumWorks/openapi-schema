@@ -112,11 +112,14 @@ class SchemaBuilderFactory
             $schemaBuilder->withMaximum($variableType->getMaxValue());
 
             return $schemaBuilder;
-        } elseif ($variableType instanceof FloatVariableType) {
+        }
+        if ($variableType instanceof FloatVariableType) {
             return new FloatSchemaBuilder();
-        } elseif ($variableType instanceof BooleanVariableType) {
+        }
+        if ($variableType instanceof BooleanVariableType) {
             return new BooleanSchemaBuilder();
-        } elseif ($variableType instanceof StringVariableType) {
+        }
+        if ($variableType instanceof StringVariableType) {
             $schemaBuilder = new StringSchemaBuilder();
             if ($variableType->getTypeExtension() === 'non-empty-string') {
                 $schemaBuilder->withMinLength(1);
